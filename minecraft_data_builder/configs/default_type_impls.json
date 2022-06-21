@@ -1,0 +1,135 @@
+[
+  {
+    "name": "varint",
+    "type": {
+      "PreDefined": {
+        "path": "crate::common::data::VarInt"
+      }
+    }
+  },
+  {
+    "name": "string",
+    "type": {
+      "Native": {
+        "type": "String"
+      }
+    }
+  },
+  {
+    "name": "u8",
+    "type": {
+      "Native": {
+        "type": "u8"
+      }
+    }
+  },
+  {
+    "name": "u16",
+    "type": {
+      "Native": {
+        "type": "u16"
+      }
+    }
+  },
+  {
+    "name": "u32",
+    "type": {
+      "Native": {
+        "type": "u32"
+      }
+    }
+  },
+  {
+    "name": "u64",
+    "type": {
+      "Native": {
+        "type": "u64"
+      }
+    }
+  },
+  {
+    "name": "i8",
+    "type": {
+      "Native": {
+        "type": "i8"
+      }
+    }
+  },
+  {
+    "name": "i16",
+    "type": {
+      "Native": {
+        "type": "i16"
+      }
+    }
+  },
+  {
+    "name": "i32",
+    "type": {
+      "Native": {
+        "type": "i32"
+      }
+    }
+  },
+  {
+    "name": "i64",
+    "type": {
+      "Native": {
+        "type": "i64"
+      }
+    }
+  },
+  {
+    "name": "f32",
+    "type": {
+      "Native": {
+        "type": "f32"
+      }
+    }
+  },
+  {
+    "name": "f64",
+    "type": {
+      "Native": {
+        "type": "f64"
+      }
+    }
+  },
+  {
+    "name": "bool",
+    "type": {
+      "Native": {
+        "type": "bool"
+      }
+    }
+  },
+  {
+    "name": "void",
+    "type": {
+      "PreDefined": {
+        "path": "crate::common::data::Void"
+      }
+    }
+  },  {
+    "name": "optionalNbt",
+    "type": {
+      "PreDefined": {
+        "path": "crate::common::data::nbt::OptionalNbt"
+      }
+    }
+  }, {
+    "name": "nbt",
+    "type": {
+      "PreDefined": {
+        "path": "crate::common::data::nbt::Nbt"
+      }
+    }
+  }, {
+    "name": "position",
+    "type": {
+      "PreDefined": {
+        "path": "crate::common::data::position::Position"
+      }
+    }
+  }
+]

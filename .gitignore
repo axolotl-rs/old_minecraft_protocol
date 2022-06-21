@@ -1,0 +1,8 @@
+/target
+minecraft_data_builder/target
+
+Cargo.lock
+src/generated/
+
+.idea
+*.iml
