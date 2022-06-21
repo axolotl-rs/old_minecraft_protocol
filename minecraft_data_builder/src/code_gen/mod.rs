@@ -27,11 +27,24 @@ impl Field {
         let data_type = &self.data_type;
         if let Some(switch) = &self.switch {
             quote! {
-                    let {{case field.name "snake"}}: {{field.type}}= PacketSwitch::switch_read({{field.switch}},::reader)?;
+                    total_bytes += PacketSwitch::switch_write({{field.switch}},writer)?;
                 }
         } else {
-             quote! {
-                #name = buf.read_#data_type()?;
+            quote! {
+               total_bytes += PacketContent::write(writer)?;
+            }
+        }
+    }
+    pub fn generate_write(&self) -> Tokens<Rust> {
+        let name = &self.name;
+        let data_type = &self.data_type;
+        if let Some(switch) = &self.switch {
+            quote! {
+                    let #name: #data_type = PacketSwitch::switch_write(reader)?;
+                }
+        } else {
+            quote! {
+                let #name: #data_type = PacketContent::read(reader)?;
             }
         }
     }
