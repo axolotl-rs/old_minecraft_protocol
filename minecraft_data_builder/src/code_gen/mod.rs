@@ -32,7 +32,17 @@ pub struct DataType {
     pub inner_type: InnerType,
     pub language_type: LanguageType,
 }
-
+impl Default for DataType{
+    fn default() -> Self {
+        DataType {
+            minecraft_name: "void".to_string(),
+            inner_type: InnerType::Native,
+            language_type: LanguageType::Rust {
+                absolute_path: "void".to_string(),
+            },
+        }
+    }
+}
 impl DataType {
     pub fn new_generated_type(minecraft_name: String, inner_type: InnerType) -> Self {
         let string = minecraft_name.to_case(Case::UpperCamel);
@@ -120,7 +130,7 @@ impl Display for Field {
 impl Field {
     pub fn new(name: &TypeName, data_type: DataType) -> Self {
         Field {
-            name: name.to_string(),
+            name: Self::create_field_name(name),
             data_type,
         }
     }

@@ -40,7 +40,8 @@ impl TypesGenerator {
     pub fn get_data_type(&self, name: &str) -> Option<&DataType> {
         self.data_types.iter().find(|x| x.minecraft_name == name)
     }
-    pub fn generate(&mut self) -> Result<(), GenError> {
+    pub fn generate(&mut self) -> Result<Vec<GenerateType>, GenError> {
+        let mut generate_types = Vec::new();
         while let Some(type_to_be_generated) = self.types_to_be_generated.pop_front() {
             match type_to_be_generated {
                 PacketDataType::Native(key) => {
@@ -78,7 +79,7 @@ impl TypesGenerator {
                     match value {
                         GenerationResult::Success { generate, data_types } => {
                             self.data_types.push(data_types);
-                            generate.generate_type();
+                            generate_types.push(generate);
                         }
                         GenerationResult::FailureMissingSubType(retu) => {
                             if self.types_to_be_generated.is_empty() {
@@ -104,7 +105,7 @@ impl TypesGenerator {
                 }
             }
         }
-        Ok(())
+        Ok(generate_types)
     }
     pub fn sub_type(&self, parent_name: String, packet_data_type: Box<PacketDataType>) -> Result<SubTypeResponse, GenError> {
         match *packet_data_type {

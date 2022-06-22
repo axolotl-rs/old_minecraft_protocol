@@ -19,7 +19,7 @@ use std::str::FromStr;
 use crate::code_gen::DataType;
 use crate::configs::type_impls::PacketContentType;
 
-pub struct ProtocolGenerator{
+pub struct ProtocolGenerator {
     pub data_types: Vec<DataType>,
     pub types_to_be_generated: VecDeque<PacketDataType>,
     pub types_failed_to_generate: Vec<PacketDataType>,
@@ -30,6 +30,17 @@ pub fn generate_protocol(file: PathBuf, json: Protocol) -> GenResult<()> {
     create_dir_all(&file)?;
 
     info!("Generating protocol file: {}", file.display());
+    let mut generator = types::TypesGenerator::new(json.types)?;
+    let generates = generator.generate()?;
+    let types_rs = file.join("types.rs");
+    let mut file_file = OpenOptions::new().write(true).create(true).open(&types_rs)?;
+    for x in generates.into_iter() {
+        debug!("Generating {:?}", x);
+        let content = x.generate_type().to_string().unwrap();
+        println!("{}", content);
+        file_file.write_all(content.as_bytes())?;
+        file_file.write(b"\n")?;
+    }
 
     Ok(()) // Everything is fine
 }
