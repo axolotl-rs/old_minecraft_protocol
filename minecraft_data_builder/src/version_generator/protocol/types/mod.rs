@@ -1,5 +1,6 @@
 mod container;
 mod switch;
+mod array;
 
 use std::collections::VecDeque;
 use log::{info, warn};
@@ -65,6 +66,9 @@ impl TypesGenerator {
                         NativeType::Switch { compare_to, default, fields } => {
                             switch::generate_top_level_switch(name, compare_to, default, fields, self)?
                         }
+                        NativeType::Array { count_type, array_type } => {
+                            array::generate_top_level_array(name, *count_type, *array_type, self)?
+                        }
                         v => {
                             warn!("Top Level Built type is not a supported type, skipping {:?}", name);
                             self.types_failed_to_generate.push(PacketDataType::Built { name, value: v });
@@ -96,7 +100,7 @@ impl TypesGenerator {
                 }
                 PacketDataType::Other { name, value } => {
                     warn!("Top Level Other type found, skipping {:?}", name);
-                    self.types_failed_to_generate.push(PacketDataType::Other { name: name, value: value });
+                    self.types_failed_to_generate.push(PacketDataType::Other { name, value });
                 }
             }
         }
@@ -109,11 +113,56 @@ impl TypesGenerator {
                     Ok(SubTypeResponse::AlreadyBuilt(data.clone()))
                 } else {
                     match native {
-                        NativeType::Container(_) => {}
-                        NativeType::Switch { .. } => {}
+                        NativeType::Container(fields) => {
+                            let response = container::generate_child_level_container(parent_name, fields, self)?;
+                            match response {
+                                GenerationResult::Success { generate, data_types } => {
+                                    Ok(SubTypeResponse::SubType {
+                                        data_type: data_types,
+                                        generate,
+                                    })
+                                }
+                                GenerationResult::FailureMissingSubType(data) => {
+                                    Ok(SubTypeResponse::NotBuiltYet(Box::new(data)))
+                                }
+                                GenerationResult::Failure(data) => {
+                                    Ok(SubTypeResponse::CanNotBuild(Box::new(data)))
+                                }
+                            }
+                        }
+                        NativeType::Switch { compare_to, default, fields } => {
+                            let response = switch::generate_child_level_switch(parent_name, compare_to, default, fields, self)?;
+                            match response {
+                                GenerationResult::Success { generate, data_types } => {
+                                    Ok(SubTypeResponse::SubType {
+                                        data_type: data_types,
+                                        generate,
+                                    })
+                                }
+                                GenerationResult::FailureMissingSubType(data) => {
+                                    Ok(SubTypeResponse::NotBuiltYet(Box::new(data)))
+                                }
+                                GenerationResult::Failure(data) => {
+                                    Ok(SubTypeResponse::CanNotBuild(Box::new(data)))
+                                }
+                            }
+                        }
                         NativeType::Array { count_type, array_type } => {
-                            let count_type = self.get_data_type(&native.to_string());
-                            let array_type = self.sub_type(parent_name, array_type.into())?;
+                            let response = array::generate_child_level_array(parent_name, *count_type, *array_type, self)?;
+                            match response {
+                                GenerationResult::Success { generate, data_types } => {
+                                    Ok(SubTypeResponse::SubType {
+                                        data_type: data_types,
+                                        generate,
+                                    })
+                                }
+                                GenerationResult::FailureMissingSubType(data) => {
+                                    Ok(SubTypeResponse::NotBuiltYet(Box::new(data)))
+                                }
+                                GenerationResult::Failure(data) => {
+                                    Ok(SubTypeResponse::CanNotBuild(Box::new(data)))
+                                }
+                            }
                         }
                         _ => {
                             Ok(SubTypeResponse::CanNotBuild(Box::from(PacketDataType::Native(native))))
@@ -126,14 +175,13 @@ impl TypesGenerator {
                 self.sub_type(name.to_string(), Box::new(PacketDataType::Native(value)))
             }
             PacketDataType::Other { name, value } => {
-                if let Some(inner_name) = name.as_ref(){
+                if let Some(inner_name) = name.as_ref() {
                     if let Some(data) = self.get_data_type(&inner_name.to_string()) {
                         Ok(SubTypeResponse::AlreadyBuilt(data.clone()))
                     } else {
                         Ok(SubTypeResponse::NotBuiltYet(Box::new(PacketDataType::Other { name, value })))
                     }
-                }
-             else {
+                } else {
                     Ok(SubTypeResponse::NotBuiltYet(Box::new(PacketDataType::Other { name, value })))
                 }
             }
@@ -149,7 +197,6 @@ pub enum SubTypeResponse {
     NotBuiltYet(Box<PacketDataType>),
     CanNotBuild(Box<PacketDataType>),
     AlreadyBuilt(DataType),
-
     SubType {
         data_type: DataType,
         generate: GenerateType,

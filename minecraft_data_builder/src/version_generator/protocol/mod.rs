@@ -9,7 +9,6 @@ use std::fs::{create_dir_all, remove_file, OpenOptions};
 use std::path::PathBuf;
 
 use crate::error::GenError;
-use crate::handlesbars::{Field, GenerateType};
 use convert_case::{Case, Casing};
 use log::{debug, error, info, warn};
 use minecraft_data_rs::models::protocol::types::{TypeName};

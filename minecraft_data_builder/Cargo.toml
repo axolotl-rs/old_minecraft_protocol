@@ -16,6 +16,5 @@ minecraft-data-rs = { git = "https://github.com/axolotl-rs/minecraft-data-rs.git
 #minecraft-data-rs = { path = "../../minecraft-data-rs" }
 log = "0.4.0"
 simplelog = "0.12.0"
-handlebars = "4.3.1"
 rust-embed = { version = "6.4.0", features = ["interpolate-folder-path"] }
 genco = { version = "0.16.1" }

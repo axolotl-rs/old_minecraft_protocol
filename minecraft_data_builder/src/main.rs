@@ -8,7 +8,6 @@ use crate::version_generator::{Version, VersionGenerator};
 pub mod data;
 pub mod version_generator;
 pub mod error;
-pub mod handlesbars;
 pub mod code_gen;
 pub mod configs;
 
@@ -18,9 +17,6 @@ use rust_embed::RustEmbed;
 use simplelog::{ColorChoice, CombinedLogger, Config, TerminalMode, TermLogger};
 
 
-#[derive(RustEmbed)]
-#[folder = "$CARGO_MANIFEST_DIR/templates"]
-struct Templates;
 #[derive(RustEmbed)]
 #[folder = "$CARGO_MANIFEST_DIR/configs"]
 struct Configs;
