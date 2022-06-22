@@ -1,8 +1,10 @@
 use std::fmt::{Display, Formatter};
+use std::str::FromStr;
 use convert_case::{Case, Casing};
 use serde::Serialize;
 use genco::fmt;
 use genco::prelude::*;
+use minecraft_data_rs::models::protocol::types::TypeName;
 
 #[derive(Debug, Clone)]
 pub enum CompareTo {
@@ -116,6 +118,26 @@ impl Display for Field {
 
 
 impl Field {
+    pub fn new(name: &TypeName, data_type: DataType) -> Self {
+        Field {
+            name: name.to_string(),
+            data_type,
+        }
+    }
+    pub fn create_field_name(name_name: &TypeName) -> String {
+        match name_name {
+            TypeName::Anonymous => "content".to_string(),
+            TypeName::Named(name) => {
+                if name.eq("type") {
+                    "data_type".to_string()
+                } else if name.contains(":") {
+                    name.replace(":", "_")
+                } else {
+                    name.to_string()
+                }
+            }
+        }
+    }
     pub fn generate_field_definition(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::Snake);
         let data_type = &self.data_type;
@@ -253,6 +275,26 @@ pub struct SwitchVariant {
 }
 
 impl SwitchVariant {
+
+    pub fn new(requirement: String,variant_type: SwitchVariantType) -> Self {
+        SwitchVariant {
+            name: SwitchVariant::requirement_to_name(requirement.as_str()),
+            requirement,
+            switch_variant_type: variant_type,
+        }
+    }
+    /// Converts the requirements to the name.
+    pub fn requirement_to_name(requirement: &str) -> String {
+        if let Ok(v) = bool::from_str(requirement) {
+            format!("Switch{}", v)
+        } else if i64::from_str(str).is_ok() {
+            format!("Switch{}", str)
+        } else if str.contains(":") {
+            str.replace(":", "_")
+        } else {
+            str.to_string()
+        }.to_case(Case::UpperCamel)
+    }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::UpperCamel);
         let requirement = &self.requirement;

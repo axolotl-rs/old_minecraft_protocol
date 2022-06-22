@@ -10,6 +10,7 @@ pub mod version_generator;
 pub mod error;
 pub mod handlesbars;
 pub mod code_gen;
+pub mod configs;
 
 use clap::Parser;
 use log::LevelFilter;
