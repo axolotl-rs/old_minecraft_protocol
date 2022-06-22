@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 use convert_case::{Case, Casing};
 
 
@@ -8,6 +9,7 @@ use minecraft_data_rs::models::protocol::types::{SwitchType, TypeName};
 use crate::error::GenError;
 use crate::handlesbars::{Field, GenerateType, SwitchVariant};
 use crate::version_generator::protocol::{find_type, generate_packet_content, PacketContentLocation, prepare_field, prepare_key, switch_compare};
+
 #[derive(Debug, Clone)]
 pub enum CompareTo {
     Specified {
@@ -15,6 +17,15 @@ pub enum CompareTo {
         compare_to_type: String,
     },
     Generic,
+}
+
+impl Display for CompareTo {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CompareTo::Specified { compare_to, .. } => write!(f, "{}", compare_to),
+            CompareTo::Generic => write!(f, "Generic"),
+        }
+    }
 }
 
 

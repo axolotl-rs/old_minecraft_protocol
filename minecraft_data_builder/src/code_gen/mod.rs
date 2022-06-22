@@ -1,17 +1,119 @@
+use std::fmt::{Display, Formatter};
 use convert_case::{Case, Casing};
 use serde::Serialize;
-use crate::version_generator::protocol::switch_compare::CompareTo;
 use genco::fmt;
 use genco::prelude::*;
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Clone)]
+pub enum CompareTo {
+    Specified {
+        compare_to: String,
+        compare_to_type: Box<DataType>,
+    },
+    Generic{
+        compare_to_type: Box<DataType>,
+    },
+}
+
+impl Display for CompareTo {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CompareTo::Specified { compare_to, .. } => write!(f, "{}", compare_to),
+            CompareTo::Generic{..} => write!(f, "compare_to"),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct DataType {
+    pub minecraft_name: String,
+    pub inner_type: InnerType,
+    pub language_type: LanguageType,
+}
+
+impl DataType {
+    pub fn new_generated_type(minecraft_name: String, inner_type: InnerType) -> Self {
+        let string = minecraft_name.to_case(Case::UpperCamel);
+        DataType {
+            minecraft_name,
+            inner_type,
+            language_type: LanguageType::Rust {
+                absolute_path: format!("minecraft_data::generated::{}", string),
+            },
+        }
+    }
+    pub fn new_builtin_type(minecraft_name: String, inner_type: InnerType) -> Self {
+        let string = minecraft_name.to_case(Case::UpperCamel);
+        DataType {
+            minecraft_name,
+            inner_type,
+            language_type: LanguageType::Rust {
+                absolute_path: format!("minecraft_data::common::data::{}", string),
+            },
+        }
+    }
+    pub fn new_rust_type(minecraft_name: String, rust_type: String) -> Self {
+        DataType {
+            minecraft_name,
+            inner_type: InnerType::Native,
+            language_type: LanguageType::Rust {
+                absolute_path: rust_type,
+            },
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum LanguageType {
+    Rust {
+        /// The absolute path of the type. Such as Uuid::Uuid or minecraft_data::generated::types::Slot
+        absolute_path: String,
+    }
+}
+
+
+impl Display for LanguageType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LanguageType::Rust { absolute_path } => write!(f, "{}", absolute_path),
+        }
+    }
+}
+
+impl<'data_type> FormatInto<Rust> for &'data_type DataType {
+    fn format_into(self, tokens: &mut Tokens<Rust>) {
+        match &self.language_type {
+            LanguageType::Rust { absolute_path } => {
+                tokens.append(quote! {
+                    #absolute_path
+                });
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum InnerType {
+    Container,
+    Switch {
+        // The variable that should be passed into for the compare_to
+        compare_to: CompareTo,
+    },
+    Native,
+}
+
+#[derive(Debug, Clone)]
 pub struct Field {
     pub name: String,
-    #[serde(rename = "type")]
-    pub data_type: String,
-    pub switch: Option<String>,
-
+    pub data_type: DataType,
 }
+
+impl Display for Field {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name.to_case(Case::Snake))
+    }
+}
+
 
 impl Field {
     pub fn generate_field_definition(&self) -> Tokens<Rust> {
@@ -25,23 +127,25 @@ impl Field {
     pub fn generate_write(&self) -> Tokens<Rust> {
         let name = &self.name;
         let data_type = &self.data_type;
-        if let Some(switch) = &self.switch {
+        if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                    total_bytes += self.#name.switch_write(writer)?;
+                    total_bytes += #(format!("self.{}.switch_write(writer)?;",self));
                 }
         } else {
             quote! {
-               total_bytes += self.#name.write(writer)?;
+               total_bytes += #(format!("self.{}.write(writer)?;",self));
             }
         }
     }
     pub fn generate_read(&self) -> (Tokens<Rust>, Tokens<Rust>) {
         let name = &self.name;
         let data_type = &self.data_type;
-        let v1 = if let Some(switch) = &self.switch {
+
+
+        let v1 = if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                let #name: #data_type = PacketSwitch::switch_read(#switch,reader)?;
-                }
+                let #name: #data_type = #(format!("self.{}.switch_read({},writer)?;",self,compare_to));
+            }
         } else {
             quote! {
                 let #name: #data_type = PacketContent::read(reader)?;
@@ -62,8 +166,11 @@ pub mod test {
     pub fn test() {
         let tokens = Field {
             name: "test".to_string(),
-            data_type: "i32".to_string(),
-            switch: None,
+            data_type: DataType {
+                minecraft_name: "".to_string(),
+                inner_type: InnerType::Container,
+                language_type: LanguageType::Rust { absolute_path: "".to_string() },
+            },
         };
 
         let variant = SwitchVariant {
@@ -76,32 +183,69 @@ pub mod test {
 
     #[test]
     pub fn container_test() {
-        let tokens = Field {
-            name: "test".to_string(),
-            data_type: "i32".to_string(),
-            switch: None,
-        };
-        let tokens2 = Field {
-            name: "test2".to_string(),
-            data_type: "i32".to_string(),
-            switch: None,
-        };
-        let tokens3 = Field {
-            name: "test3".to_string(),
-            data_type: "i32".to_string(),
-            switch: None,
-        };
+        // Generate 5 fields
+        let mut fields = Vec::with_capacity(5);
+        for i in 0..5 {
+            fields.push(Field {
+                name: format!("field_{}", i),
+                data_type: DataType::new_generated_type(format!("field_{}", i), InnerType::Container),
+            });
+        }
         // Create a container
         let container = GenerateType::Container {
             content_name: "y Variant".to_string(),
-            fields: vec![tokens, tokens2, tokens3],
-            children: vec![]
+            fields: fields,
+            children: vec![],
         };
         println!("{}", container.generate_type().to_string().unwrap());
     }
+
+    #[test]
+    pub fn specified_switch_test() {
+        // Generate 3 different variants with different requirements One that is Single One that is Container and one that is Void
+        let mut variants = Vec::with_capacity(3);
+
+        let mut fields = Vec::with_capacity(5);
+        for j in 0..5 {
+            fields.push(Field {
+                name: format!("field_{}", j),
+                data_type: DataType::new_generated_type(format!("field_{}", j), InnerType::Container),
+            });
+        }
+        variants.push(SwitchVariant {
+            name: format!("variant_container"),
+            requirement: format!("\"variant_container\""),
+            switch_variant_type: SwitchVariantType::Container(fields),
+        });
+        variants.push(SwitchVariant {
+            name: format!("variant_single"),
+            requirement: format!("\"variant_single\""),
+            switch_variant_type: SwitchVariantType::Single(Field {
+                name: format!("field"),
+                data_type: DataType::new_generated_type(format!("field"), InnerType::Container),
+            }),
+        });
+        variants.push(SwitchVariant {
+            name: "variant_void".to_string(),
+            requirement: "\"void\"".to_string(),
+            switch_variant_type: SwitchVariantType::Void,
+        });
+        // Create a GenerateType::Switch
+        let switch = GenerateType::SwitchEnum {
+            content_name: "y Variant".to_string(),
+            compare_to: CompareTo::Specified {
+                compare_to: "test".to_string(),
+                compare_to_type: Box::new(DataType::new_rust_type("string".to_string(), "String".to_string())),
+            },
+
+            variants: variants,
+            children: vec![],
+        };
+        println!("{}", switch.generate_type().to_string().unwrap());
+    }
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Clone)]
 pub struct SwitchVariant {
     pub name: String,
     pub requirement: String,
@@ -114,14 +258,24 @@ impl SwitchVariant {
         let requirement = &self.requirement;
         let switch_variant_type = self.switch_variant_type.generate_variant_type();
         quote! {
-            #[doc = "This switch variant requires a value #requirement in the compare_to field"]
+            #(format!("/// This switch variant requires a value {requirement} in the compare_to field"))
             #<line>
             #name #switch_variant_type,
         }
     }
+    pub fn generate_read_call(&self) -> Tokens<Rust> {
+        let name = &self.name.to_case(Case::Snake);
+        let requirement = &self.requirement;
+        let read_def = self.switch_variant_type.generate_read_call(name.as_str());
+        quote! {
+            #requirement =>{
+                #read_def
+            }
+        }
+    }
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Clone)]
 pub enum SwitchVariantType {
     Void,
     Container(Vec<Field>),
@@ -152,6 +306,41 @@ impl SwitchVariantType {
             }
         }
     }
+    pub fn generate_read_call(&self, name: &str) -> Tokens<Rust> {
+        match self {
+            SwitchVariantType::Void => quote! {
+                Self::#name
+            },
+            SwitchVariantType::Container(fields) => {
+                let reads: Vec<(Tokens<Rust>, Tokens<Rust>)> = fields.iter().map(|field| field.generate_read()).collect();
+                // Split the reads into two vectors, one for the reads and one for the names
+                let mut read_calls: Vec<Tokens<Rust>> = Vec::with_capacity(reads.len());
+                let mut reads_values: Vec<Tokens<Rust>> = Vec::with_capacity(reads.len());
+                for (name, value) in reads {
+                    read_calls.push(name);
+                    reads_values.push(value);
+                }
+                quote! {
+                    {
+                        #(for read_call in read_calls => #read_call #<line>)
+                        Self::#name {
+                            #(for read_value in reads_values join (, )  =>  #read_value)
+                        }
+                    }
+               }
+            }
+            SwitchVariantType::Single(data_type) => {
+                let (call, variable) = &data_type.generate_read();
+                quote! {
+                    {
+                        #call
+                        #<line>
+                        Self::#name(#variable)
+                    }
+                }
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -170,6 +359,27 @@ pub enum GenerateType {
 }
 
 impl GenerateType {
+    pub fn generate_type_wrap_as_mod(&self) -> Tokens<Rust> {
+        let mod_name = match self {
+            GenerateType::Container { content_name, .. } => {
+                content_name
+            }
+            GenerateType::SwitchEnum { content_name, .. } => {
+                content_name
+            }
+        }.to_case(Case::Snake);
+        let tokens = self.generate_type();
+        quote! {
+            mod #&mod_name {
+                use super::*;
+                use crate::common::protocol::PacketContent;
+                use crate::common::protocol::PacketSwitch;
+                use std::io::{BufRead, Error, ErrorKind, Result, Write};
+                use std::str::FromStr;
+                #tokens
+            }
+        }
+    }
     pub fn generate_type(&self) -> Tokens<Rust> {
         match self {
             GenerateType::Container { content_name, fields, children } => {
@@ -206,9 +416,67 @@ impl GenerateType {
                     #(for my_child in children => #my_child #<line>)
                 }
             }
-            GenerateType::SwitchEnum { .. } => {
-                quote! {
+            GenerateType::SwitchEnum { children, content_name, compare_to, variants } => {
+                let content_name = &content_name.to_case(Case::UpperCamel);
+                let variants_defs: Vec<Tokens<Rust>> = variants.iter().map(|variant| variant.generate_variant_def()).collect();
+                let variants_reads: Vec<Tokens<Rust>> = variants.iter().map(|variant| variant.generate_read_call()).collect();
+                let children: Vec<Tokens<Rust>> = children.iter().map(|child| child.generate_type()).collect();
+                match compare_to {
+                    CompareTo::Specified { compare_to_type, compare_to } => {
+                        let compare_to_type = compare_to_type.as_ref();
+                        let match_call = if compare_to_type.minecraft_name.eq_ignore_ascii_case("string") {
+                            format!("{}.as_str()", compare_to)
+                        } else {
+                            format!("{}", compare_to)
+                        };
+                        quote! {
 
+                            pub enum #content_name {
+                                #(for my_variant in variants_defs => #my_variant #<line>)
+                            }
+                            impl PacketSwitch for #content_name {
+                                type CompareType = #compare_to_type;
+                                fn switch_read<Reader: BufRead>(#compare_to: &Self::CompareType, reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
+                                    match #match_call {
+                                        #(for my_variant in variants_reads => #my_variant #<line>)
+                                        _ => panic!("Unknown switch variant"),
+                                    }
+                                }
+                            }
+                            #(for my_child in children => #my_child #<line>)
+
+                        }
+
+                    }
+                    CompareTo::Generic {compare_to_type} => {
+                        let compare_to_type = compare_to_type.as_ref();
+
+                        let match_call = if compare_to_type.minecraft_name.eq_ignore_ascii_case("string") {
+                            format!("compare_to.as_str()")
+                        } else {
+                            format!("compare_to")
+                        };
+                        quote! {
+                            pub enum #content_name {
+                                #(for my_variant in variants_defs => #my_variant #<line>)
+                            }
+                            impl PacketSwitch for #content_name {
+                                type CompareType = #compare_to_type;
+
+                                fn switch_read<Reader: BufRead>(compare_to: &Self::CompareType, reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
+                                    match #match_call {
+                                        #(for my_variant in variants_reads => #my_variant #<line>)
+                                        _ => std::io::Result(std::io::Error::new(std::io::ErrorKind::InvalidData, "Unknown switch variant")),
+                                    }
+                                }
+                                fn switch_write<Writer: Write>(self, write_compare: bool, writer: &mut Writer) -> std::io::Result<usize> where Self: Sized {
+                                    todo!()
+                                }
+                            }
+                            #(for my_child in children => #my_child #<line>)
+
+                        }
+                    }
                 }
             }
         }
