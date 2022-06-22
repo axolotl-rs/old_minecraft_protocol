@@ -286,13 +286,13 @@ impl SwitchVariant {
     /// Converts the requirements to the name.
     pub fn requirement_to_name(requirement: &str) -> String {
         if let Ok(v) = bool::from_str(requirement) {
-            format!("Switch{}", v)
-        } else if i64::from_str(str).is_ok() {
-            format!("Switch{}", str)
-        } else if str.contains(":") {
-            str.replace(":", "_")
+            format!("Switch{}", requirement)
+        } else if i64::from_str(requirement).is_ok() {
+            format!("Switch{}", requirement)
+        } else if requirement.contains(":") {
+            requirement.replace(":", "_")
         } else {
-            str.to_string()
+            requirement.to_string()
         }.to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {

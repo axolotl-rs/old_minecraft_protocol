@@ -74,15 +74,15 @@ pub mod tests {
         A,
         B,
     }
-
-    impl PacketSwitch for MyGenericSwitch {
-        type CompareType = VarInt;
-
         fn switch_read<Reader: BufRead>(key: &Self::CompareType, reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
             if key.eq(&0) {
                 Ok(MyGenericSwitch::A)
             } else {
-                Ok(MyGenericSwitch::B)
+
+                impl PacketSwitch for MyGenericSwitch {
+                    type CompareType = VarInt;
+
+                    Ok(MyGenericSwitch::B)
             }
         }
 

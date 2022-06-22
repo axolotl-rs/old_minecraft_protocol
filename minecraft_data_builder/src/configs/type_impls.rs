@@ -54,5 +54,5 @@ pub fn get_default_type_impl() -> Result<Vec<PacketContentLocation>, GenError> {
             .unwrap()
             .data
             .as_ref(),
-    )?
+    ).map_err(|e| GenError::from(e))
 }

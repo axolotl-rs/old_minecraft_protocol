@@ -15,9 +15,9 @@ pub struct TypesGenerator {
 }
 
 pub enum GenerationResult {
-    Success{
+    Success {
         data_types: DataType,
-        generate: GenerateType
+        generate: GenerateType,
     },
     FailureMissingSubType(PacketDataType),
     Failure(PacketDataType),
@@ -36,6 +36,9 @@ impl TypesGenerator {
     pub fn contains_data_type(&self, name: &str) -> bool {
         self.data_types.iter().any(|x| x.minecraft_name == name)
     }
+    pub fn get_data_type(&self, name: &str) -> Option<&DataType> {
+        self.data_types.iter().find(|x| x.minecraft_name == name)
+    }
     pub fn generate(&mut self) -> Result<(), GenError> {
         while let Some(type_to_be_generated) = self.types_to_be_generated.pop_front() {
             match type_to_be_generated {
@@ -44,13 +47,13 @@ impl TypesGenerator {
                     self.types_failed_to_generate.push(PacketDataType::Native(key));
                 }
 
-                PacketDataType::UnknownNativeType(v) => {
+                PacketDataType::UnknownNativeType(key) => {
                     warn!("Top Level UnknownNativeType type , skipping {:?}", key);
-                    self.types_failed_to_generate.push(PacketDataType::UnknownNativeType(v));
+                    self.types_failed_to_generate.push(PacketDataType::UnknownNativeType(key));
                 }
                 PacketDataType::Built { name, value } => {
                     if self.contains_data_type(&name.to_string()) {
-                        warn!("Top Level Built type already found, skipping {:?}", key);
+                        warn!("Top Level Built type already found, skipping {:?}", name);
                         self.types_failed_to_generate.push(PacketDataType::Built { name, value });
                         continue;
                     }
@@ -63,23 +66,23 @@ impl TypesGenerator {
                             switch::generate_top_level_switch(name, compare_to, default, fields, self)?
                         }
                         v => {
-                            warn!("Top Level Built type is not a supported type, skipping {:?}", key);
+                            warn!("Top Level Built type is not a supported type, skipping {:?}", name);
                             self.types_failed_to_generate.push(PacketDataType::Built { name, value: v });
                             continue;
                         }
                     };
                     match value {
-                        GenerationResult::Success { generate,data_types } => {
+                        GenerationResult::Success { generate, data_types } => {
                             self.data_types.push(data_types);
                             generate.generate_type();
                         }
                         GenerationResult::FailureMissingSubType(retu) => {
-                            if self.types_to_be_generated.is_empty(){
+                            if self.types_to_be_generated.is_empty() {
                                 warn!("Type could not be generated.");
                                 self.types_failed_to_generate.push(retu);
-                            }else{
+                            } else {
                                 warn!("Type could not be generated. Going to try again later");
-                                self.types_to_be_generated.push(retu);
+                                self.types_to_be_generated.push_back(retu);
                             }
 
                             continue;
@@ -91,12 +94,64 @@ impl TypesGenerator {
                         }
                     }
                 }
-                PacketDataType::Other(key, v) => {
-                    warn!("Top Level Other type found, skipping {:?}", key);
-                    self.types_failed_to_generate.push(PacketDataType::Other(key, v));
+                PacketDataType::Other { name, value } => {
+                    warn!("Top Level Other type found, skipping {:?}", name);
+                    self.types_failed_to_generate.push(PacketDataType::Other { name: name, value: value });
                 }
             }
         }
         Ok(())
     }
+    pub fn sub_type(&self, parent_name: String, packet_data_type: Box<PacketDataType>) -> Result<SubTypeResponse, GenError> {
+        match *packet_data_type {
+            PacketDataType::Native(native) => {
+                if let Some(data) = self.get_data_type(&native.to_string()) {
+                    Ok(SubTypeResponse::AlreadyBuilt(data.clone()))
+                } else {
+                    match native {
+                        NativeType::Container(_) => {}
+                        NativeType::Switch { .. } => {}
+                        NativeType::Array { count_type, array_type } => {
+                            let count_type = self.get_data_type(&native.to_string());
+                            let array_type = self.sub_type(parent_name, array_type.into())?;
+                        }
+                        _ => {
+                            Ok(SubTypeResponse::CanNotBuild(Box::from(PacketDataType::Native(native))))
+                        }
+                    }
+                }
+            }
+            PacketDataType::Built { name, value } => {
+                warn!("Trying to build a built type as a sub type");
+                self.sub_type(name.to_string(), Box::new(PacketDataType::Native(value)))
+            }
+            PacketDataType::Other { name, value } => {
+                if let Some(inner_name) = name.as_ref(){
+                    if let Some(data) = self.get_data_type(&inner_name.to_string()) {
+                        Ok(SubTypeResponse::AlreadyBuilt(data.clone()))
+                    } else {
+                        Ok(SubTypeResponse::NotBuiltYet(Box::new(PacketDataType::Other { name, value })))
+                    }
+                }
+             else {
+                    Ok(SubTypeResponse::NotBuiltYet(Box::new(PacketDataType::Other { name, value })))
+                }
+            }
+            data => {
+                Ok(SubTypeResponse::NotBuiltYet(Box::new(data)))
+            }
+        }
+    }
+}
+
+
+pub enum SubTypeResponse {
+    NotBuiltYet(Box<PacketDataType>),
+    CanNotBuild(Box<PacketDataType>),
+    AlreadyBuilt(DataType),
+
+    SubType {
+        data_type: DataType,
+        generate: GenerateType,
+    },
 }
