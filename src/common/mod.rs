@@ -2,6 +2,7 @@ pub mod attributes;
 pub mod biomes;
 pub mod block_collision_shapes;
 pub mod blocks;
+pub mod data;
 pub mod effects;
 pub mod enchantments;
 pub mod entities;
@@ -15,7 +16,6 @@ pub mod recipes;
 pub mod tints;
 pub mod version;
 pub mod windows;
-pub mod data;
 
 pub trait Variation {
     type Metadata;

@@ -1,23 +1,21 @@
+use crate::common::protocol::PacketContent;
+use byteorder::ReadBytesExt;
 use std::fmt::{Debug, Display};
 use std::io::{BufRead, Write};
 use std::num::ParseIntError;
 use std::str::FromStr;
-use crate::common::protocol::PacketContent;
-use byteorder::ReadBytesExt;
 
 pub struct VarInt(pub i32);
 
 impl PacketContent for VarInt {
     fn read<R: BufRead>(buf: &mut R) -> std::io::Result<Self>
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         inline::read(buf)
     }
 
-    fn write<W: Write>(
-        self,
-        write: &mut W) -> std::io::Result<usize> {
+    fn write<W: Write>(self, write: &mut W) -> std::io::Result<usize> {
         inline::write(self, write)
     }
 }
@@ -57,7 +55,7 @@ impl Debug for VarInt {
         write!(f, "{:?}", self.0)
     }
 }
-impl Display for VarInt{
+impl Display for VarInt {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
@@ -66,13 +64,12 @@ impl Display for VarInt{
 /// It is a very marginal performance difference but could be worth it
 /// https://nnethercote.github.io/perf-book/inlining.html
 pub mod inline {
-    use std::io::{BufRead, Write};
-    use byteorder::ReadBytesExt;
     use crate::common::data::VarInt;
+    use byteorder::ReadBytesExt;
+    use std::io::{BufRead, Write};
 
     #[inline(always)]
-    pub fn read<R: BufRead>(buf: &mut R) -> std::io::Result<VarInt>
-    {
+    pub fn read<R: BufRead>(buf: &mut R) -> std::io::Result<VarInt> {
         let mut number_of_reads = 0;
         let mut result = 0;
         loop {
@@ -83,7 +80,10 @@ pub mod inline {
 
             number_of_reads += 1;
             if number_of_reads > 5 {
-                return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "VarInt too long"));
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    "VarInt too long",
+                ));
             }
             if read & 0x80 == 0 {
                 break;
@@ -93,9 +93,7 @@ pub mod inline {
     }
 
     #[inline(always)]
-    pub fn write<W: Write, VI: Into<i32>>(
-        var_int: VI,
-        write: &mut W) -> std::io::Result<usize> {
+    pub fn write<W: Write, VI: Into<i32>>(var_int: VI, write: &mut W) -> std::io::Result<usize> {
         let mut x = var_int.into();
         let mut iterations = 0;
         loop {

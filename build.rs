@@ -4,5 +4,4 @@ fn main() {
         println!("Generating mod.rs for src/generated/");
         //TODO generate the mod.rs
     }
-
 }

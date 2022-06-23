@@ -46,14 +46,16 @@ impl Default for DataType {
 }
 
 impl DataType {
-    pub fn new_generated_type(minecraft_name: String, inner_type: InnerType) -> Self {
+    pub fn new_generated_type(
+        minecraft_name: String,
+        inner_type: InnerType,
+        language_type: LanguageType,
+    ) -> Self {
         let string = minecraft_name.to_case(Case::UpperCamel);
         DataType {
             minecraft_name,
             inner_type,
-            language_type: LanguageType::Rust {
-                absolute_path: format!("minecraft_data::generated::{}", string),
-            },
+            language_type,
         }
     }
     pub fn new_builtin_type(minecraft_name: String, inner_type: InnerType) -> Self {
@@ -62,7 +64,7 @@ impl DataType {
             minecraft_name,
             inner_type,
             language_type: LanguageType::Rust {
-                absolute_path: format!("minecraft_data::common::data::{}", string),
+                absolute_path: format!("crate::common::data::{}", string),
             },
         }
     }
@@ -162,7 +164,7 @@ impl Field {
         let data_type = &self.data_type;
         if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                total_bytes += #(format!("self.{}.switch_write(writer)?;",self))
+                total_bytes += #(format!("self.{}.switch_write(false,writer)?;",self))
             }
         } else {
             quote! {
@@ -227,6 +229,9 @@ pub mod test {
                 data_type: DataType::new_generated_type(
                     format!("field_{}", i),
                     InnerType::Container,
+                    LanguageType::Rust {
+                        absolute_path: "field_one".to_string(),
+                    },
                 ),
             });
         }
@@ -264,7 +269,13 @@ pub mod test {
             requirement: format!("\"variant_single\""),
             switch_variant_type: SwitchVariantType::Single(Field {
                 name: format!("field"),
-                data_type: DataType::new_generated_type(format!("field"), InnerType::Container),
+                data_type: DataType::new_generated_type(
+                    format!("field"),
+                    InnerType::Container,
+                    LanguageType::Rust {
+                        absolute_path: "field_one".to_string(),
+                    },
+                ),
             }),
         });
         variants.push(SwitchVariant {
@@ -316,7 +327,7 @@ impl SwitchVariant {
         } else {
             requirement.to_string()
         }
-            .to_case(Case::UpperCamel)
+        .to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::UpperCamel);
@@ -433,12 +444,12 @@ pub enum GenerateType {
 
 impl GenerateType {
     pub fn generate_type_wrap_as_mod(&self) -> Tokens<Rust> {
-        let mod_name = match self {
+        let mod_name = &match self {
             GenerateType::Container { content_name, .. } => content_name,
             GenerateType::SwitchEnum { content_name, .. } => content_name,
-            GenerateType::Array { content_name, .. } => content_name
+            GenerateType::Array { content_name, .. } => content_name,
         }
-            .to_case(Case::Snake);
+        .to_case(Case::Snake);
         let tokens = self.generate_type();
         quote! {
             mod #mod_name {
@@ -449,7 +460,10 @@ impl GenerateType {
                 use std::str::FromStr;
                 #<line>
                 #tokens
+
             }
+            #<line>
+            pub use #mod_name::*;
         }
     }
     pub fn generate_type(&self) -> Tokens<Rust> {
@@ -579,7 +593,12 @@ impl GenerateType {
                 }
             }
 
-            GenerateType::Array { count_type, data_type, children, content_name } => {
+            GenerateType::Array {
+                count_type,
+                data_type,
+                children,
+                content_name,
+            } => {
                 let children: Vec<Tokens<Rust>> =
                     children.iter().map(|child| child.generate_type()).collect();
                 quote! {

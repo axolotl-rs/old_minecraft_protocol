@@ -1,9 +1,9 @@
-use std::fs::write;
-use std::path::PathBuf;
 use crate::error::GenError;
 use crate::GenResult;
-use serde::Serialize;
 use serde::Deserialize;
+use serde::Serialize;
+use std::fs::write;
+use std::path::PathBuf;
 
 pub type Root = Vec<Root2>;
 

@@ -5,8 +5,8 @@ pub mod common;
 #[cfg(not(feature = "generic_data"))]
 pub mod generated;
 
+mod protocol_verison;
 /// Contains Version types that can not be auto generated.
 pub mod versions;
-mod protocol_verison;
 
-pub use protocol_verison::{ProtocolVersion, JavaProtocolVersion};
+pub use protocol_verison::{JavaProtocolVersion, ProtocolVersion};

@@ -1,11 +1,10 @@
-use std::fs::write;
-use std::path::PathBuf;
-use convert_case::{Case, Casing};
 use crate::error::GenError;
 use crate::{GenResult, Version};
+use convert_case::{Case, Casing};
 use serde::Deserialize;
 use serde::Serialize;
-
+use std::fs::write;
+use std::path::PathBuf;
 
 pub type Root = Vec<Biome>;
 
@@ -23,7 +22,7 @@ pub struct Biome {
     pub color: u32,
     pub rainfall: f64,
     pub depth: Option<f64>,
-    pub climates: Option<Vec<Climate>>
+    pub climates: Option<Vec<Climate>>,
 }
 
 pub struct Root2 {
@@ -105,32 +104,94 @@ pub fn generate_biomes(version: Version, file: PathBuf, json: Root) -> GenResult
         string += "    type Climates = ();\n\n";
     }
 
-    generate_property(&mut string, version, None, "id", &json, |biome| biome.id.to_string());
-    generate_property(&mut string, version, None, "name", &json, |biome| format!("\"{}\".to_string()", biome.name));
-    generate_property(&mut string, version, None, "category", &json, |biome| format!("\"{}\".to_string()", biome.category));
-    generate_property(&mut string, version, None, "temperature_level", &json, |biome| biome.temperature.to_string());
-    generate_property(&mut string, version, None, "precipitation_type", &json, |biome| format!("\"{}\".to_string()", biome.precipitation));
-    generate_property(&mut string, version, None, "dimension_type", &json, |biome| format!("\"{}\".to_string()", biome.dimension));
-    generate_property(&mut string, version, None, "color", &json, |biome| biome.color.to_string());
-    generate_property(&mut string, version, None, "rainfall_level", &json, |biome| biome.rainfall.to_string());
-    generate_property(&mut string, version, Some(Version::One8), "name_legacy", &json, |biome| format!("\"{}\".to_string()", biome.name_legacy.as_ref().unwrap_or(&String::new())));
-    generate_property(&mut string, version, Some(Version::One8), "depth", &json, |biome| biome.depth.unwrap_or(0.0).to_string());
-    generate_property(&mut string, version, Some(Version::One8), "climates", &json, |biome| {
-        let mut string = String::from("vec![");
+    generate_property(&mut string, version, None, "id", &json, |biome| {
+        biome.id.to_string()
+    });
+    generate_property(&mut string, version, None, "name", &json, |biome| {
+        format!("\"{}\".to_string()", biome.name)
+    });
+    generate_property(&mut string, version, None, "category", &json, |biome| {
+        format!("\"{}\".to_string()", biome.category)
+    });
+    generate_property(
+        &mut string,
+        version,
+        None,
+        "temperature_level",
+        &json,
+        |biome| biome.temperature.to_string(),
+    );
+    generate_property(
+        &mut string,
+        version,
+        None,
+        "precipitation_type",
+        &json,
+        |biome| format!("\"{}\".to_string()", biome.precipitation),
+    );
+    generate_property(
+        &mut string,
+        version,
+        None,
+        "dimension_type",
+        &json,
+        |biome| format!("\"{}\".to_string()", biome.dimension),
+    );
+    generate_property(&mut string, version, None, "color", &json, |biome| {
+        biome.color.to_string()
+    });
+    generate_property(
+        &mut string,
+        version,
+        None,
+        "rainfall_level",
+        &json,
+        |biome| biome.rainfall.to_string(),
+    );
+    generate_property(
+        &mut string,
+        version,
+        Some(Version::One8),
+        "name_legacy",
+        &json,
+        |biome| {
+            format!(
+                "\"{}\".to_string()",
+                biome.name_legacy.as_ref().unwrap_or(&String::new())
+            )
+        },
+    );
+    generate_property(
+        &mut string,
+        version,
+        Some(Version::One8),
+        "depth",
+        &json,
+        |biome| biome.depth.unwrap_or(0.0).to_string(),
+    );
+    generate_property(
+        &mut string,
+        version,
+        Some(Version::One8),
+        "climates",
+        &json,
+        |biome| {
+            let mut string = String::from("vec![");
 
-        if let Some(climates) = &biome.climates {
-            string += climates.iter()
+            if let Some(climates) = &biome.climates {
+                string += climates.iter()
                 .map(|climate| format!("Climate {{ temperature: {}, humidity: {}, altitude: {}, weirdness: {}, offset: {} }}",
                                        climate.temperature, climate.humidity, climate.altitude, climate.weirdness, climate.offset))
                 .collect::<Vec<_>>()
                 .join(",\n            ")
                 .as_str();
-        }
+            }
 
-        string += "]";
+            string += "]";
 
-        string
-    });
+            string
+        },
+    );
 
     string += "}";
 
@@ -143,7 +204,7 @@ pub fn generate_property<T: Fn(&Biome) -> String>(
     required_version: Option<Version>,
     name: &str,
     json: &Root,
-    prop: T
+    prop: T,
 ) {
     let name_pascal = name.to_case(Case::Pascal);
 

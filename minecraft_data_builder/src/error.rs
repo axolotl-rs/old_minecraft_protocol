@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 use thiserror::Error;
-pub type GenResult< T> = Result<T, GenError>;
+pub type GenResult<T> = Result<T, GenError>;
 
 #[derive(Debug, Error)]
 pub enum GenError {

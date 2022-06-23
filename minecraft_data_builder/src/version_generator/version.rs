@@ -1,11 +1,9 @@
+use crate::GenResult;
+use minecraft_data_rs::models::version::Version;
 use std::fs::write;
 use std::path::PathBuf;
-use minecraft_data_rs::models::version::Version;
-use crate::GenResult;
-
 
 use crate::error::GenError;
-
 
 pub type Root = Version;
 

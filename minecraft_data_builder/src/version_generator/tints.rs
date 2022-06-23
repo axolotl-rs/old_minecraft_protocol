@@ -1,10 +1,10 @@
+use crate::GenResult;
 use std::fs::write;
 use std::path::PathBuf;
-use crate::GenResult;
 
+use crate::error::GenError;
 use serde::Deserialize;
 use serde::Serialize;
-use crate::error::GenError;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

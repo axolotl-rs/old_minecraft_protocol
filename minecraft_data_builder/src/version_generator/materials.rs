@@ -1,13 +1,12 @@
+use crate::error::GenError;
+use crate::GenResult;
+use serde::Deserialize;
+use serde::Serialize;
 use std::fs::write;
 use std::path::PathBuf;
-use crate::GenResult;
-use serde::Serialize;
-use serde::Deserialize;
-use crate::error::GenError;
 
 #[derive(Serialize, Deserialize)]
-pub struct Root {
-}
+pub struct Root {}
 
 pub fn generate_materials(file: PathBuf, _json: Root) -> GenResult<()> {
     let string = String::new();

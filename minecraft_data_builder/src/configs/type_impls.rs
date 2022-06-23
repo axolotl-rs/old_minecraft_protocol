@@ -1,6 +1,6 @@
-pub use serde::Deserialize;
 use crate::code_gen::{DataType, InnerType, LanguageType};
 use crate::error::GenError;
+pub use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct PacketContentLocation {
@@ -24,16 +24,12 @@ pub enum PacketContentType {
 impl From<PacketContentType> for LanguageType {
     fn from(value: PacketContentType) -> Self {
         match value {
-            PacketContentType::Native { rust_type } => {
-                LanguageType::Rust {
-                    absolute_path: rust_type
-                }
-            }
-            PacketContentType::PreDefined { path } => {
-                LanguageType::Rust {
-                    absolute_path: path
-                }
-            }
+            PacketContentType::Native { rust_type } => LanguageType::Rust {
+                absolute_path: rust_type,
+            },
+            PacketContentType::PreDefined { path } => LanguageType::Rust {
+                absolute_path: path,
+            },
         }
     }
 }
@@ -54,5 +50,6 @@ pub fn get_default_type_impl() -> Result<Vec<PacketContentLocation>, GenError> {
             .unwrap()
             .data
             .as_ref(),
-    ).map_err(|e| GenError::from(e))
+    )
+    .map_err(|e| GenError::from(e))
 }
