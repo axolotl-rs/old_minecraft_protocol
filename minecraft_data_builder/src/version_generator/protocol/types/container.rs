@@ -122,7 +122,7 @@ pub fn generate_top_level_container(
         InnerType::Container,
         LanguageType::Rust {
             absolute_path: format!(
-                "super::{}::{}",
+                "{}::{}",
                 name.to_string().to_case(Case::Snake),
                 name.to_string().to_case(Case::UpperCamel)
             ),

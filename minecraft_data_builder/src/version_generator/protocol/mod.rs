@@ -1,7 +1,7 @@
 pub mod types;
 pub mod packet_generator;
 
-use crate::GenResult;
+use crate::{GenResult, Version};
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes, Protocol};
 use std::cmp::Ordering;
 use std::collections::{HashMap, VecDeque};
@@ -27,12 +27,13 @@ pub struct ProtocolGenerator {
     pub types_failed_to_generate: Vec<PacketDataType>,
 }
 
-pub fn generate_protocol(file: PathBuf, json: Protocol) -> GenResult<()> {
+pub fn generate_protocol(file: PathBuf, json: Protocol, version: Version) -> GenResult<()> {
+    let crate_path = format!("crate::generated::v{}::protocol", version.safe_name());
     create_dir_all(&file)?;
 
     info!("Generating protocol file: {}", file.display());
     let mut type_generator = types::TypesGenerator::new(json.types)?;
-    let generates = type_generator.generate()?;
+    let generates = type_generator.generate(&crate_path)?;
     let types_rs = file.join("types.rs");
     if types_rs.exists() {
         remove_file(&types_rs)?;
@@ -63,7 +64,7 @@ pub fn generate_protocol(file: PathBuf, json: Protocol) -> GenResult<()> {
     Ok(()) // Everything is fine
 }
 
-fn create_packets(packet_generator: &mut PacketGenerator, handshake: &mut PathBuf)->Result<(), GenError>{
+fn create_packets(packet_generator: &mut PacketGenerator, handshake: &mut PathBuf) -> Result<(), GenError> {
     create_dir_all(&handshake)?;
     for generate in packet_generator.generate()?.into_iter() {
         let my_file = handshake.join(format!("{}.rs", generate.content_name().to_case(Case::Snake)));
@@ -78,5 +79,4 @@ fn create_packets(packet_generator: &mut PacketGenerator, handshake: &mut PathBu
         file_file.write_all(content.as_bytes())?;
     }
     Ok(())
-
 }

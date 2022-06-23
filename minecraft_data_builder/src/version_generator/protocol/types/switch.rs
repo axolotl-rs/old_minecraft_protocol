@@ -91,7 +91,7 @@ pub fn generate_top_level_switch(
         },
         LanguageType::Rust {
             absolute_path: format!(
-                "super::{}::{}",
+                "{}::{}",
                 name.to_string().to_case(Case::Snake),
                 name.to_string().to_case(Case::UpperCamel)
             ),

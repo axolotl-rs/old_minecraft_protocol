@@ -2,7 +2,7 @@ mod array;
 mod container;
 mod switch;
 
-use crate::code_gen::{CompareTo, DataType, GenerateType, InnerType};
+use crate::code_gen::{CompareTo, DataType, GenerateType, InnerType, LanguageType};
 use crate::configs::type_impls::get_default_type_impl;
 use crate::error::GenError;
 use convert_case::{Case, Casing};
@@ -42,7 +42,7 @@ impl TypesGenerator {
     pub fn get_data_type(&self, name: &str) -> Option<&DataType> {
         self.data_types.iter().find(|x| x.minecraft_name == name)
     }
-    pub fn generate(&mut self) -> Result<Vec<GenerateType>, GenError> {
+    pub fn generate(&mut self, crate_path: &str) -> Result<Vec<GenerateType>, GenError> {
         let mut generate_types = Vec::new();
         while let Some(type_to_be_generated) = self.types_to_be_generated.pop_front() {
             match type_to_be_generated {
@@ -93,8 +93,12 @@ impl TypesGenerator {
                     match value {
                         GenerationResult::Success {
                             generate,
-                            data_types,
+                            mut data_types,
                         } => {
+                            data_types.language_type = LanguageType::Rust {
+                                absolute_path: format!("{}::types::{}", crate_path, data_types.language_type.to_string()),
+                            };
+                            println!("{:?}", data_types.language_type);
                             self.data_types.push(data_types);
                             generate_types.push(generate);
                         }
@@ -131,8 +135,8 @@ impl TypesGenerator {
         packet_data_type: Box<PacketDataType>,
         ct: CT,
     ) -> Result<SubTypeResponse, GenError>
-    where
-        CT: FnOnce(String) -> CompareTo,
+        where
+            CT: FnOnce(String) -> CompareTo,
     {
         match *packet_data_type {
             PacketDataType::Native(native) => {

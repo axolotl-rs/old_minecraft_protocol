@@ -4,6 +4,7 @@ pub mod position;
 pub mod sints;
 pub mod uints;
 mod var_int;
+pub mod bitfield;
 
 use crate::common::protocol::PacketContent;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};

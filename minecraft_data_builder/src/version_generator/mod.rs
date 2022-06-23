@@ -86,7 +86,7 @@ impl VersionGenerator {
         }
 
         if let Some(json) = version_data.protocol {
-            protocol::generate_protocol(version_dir.join("protocol"), json)?;
+            protocol::generate_protocol(version_dir.join("protocol"), json,version)?;
         }
 
         if let Some(_json) = version_data.recipes {

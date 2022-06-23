@@ -625,6 +625,7 @@ impl GenerateType {
                 let packet_id = packet_id.clone();
                 let children: Vec<Tokens<Rust>> =
                     children.iter().map(|child| child.generate_type()).collect();
+                let content_name = &content_name.to_case(Case::UpperCamel);
                 quote! {
                 pub struct #content_name;
 
