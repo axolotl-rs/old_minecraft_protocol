@@ -74,6 +74,7 @@ pub fn generate_top_level_switch(
                     GenerateType::Array { .. } => {
                         warn!("A array was being put directly in a switch{}", requirement);
                     }
+                    _ => {}
                 },
             };
         }
@@ -172,6 +173,7 @@ pub fn generate_child_level_switch(
                     GenerateType::Array { .. } => {
                         warn!("A array was being put directly in a switch{}", requirement);
                     }
+                    _ => {}
                 },
             };
         }

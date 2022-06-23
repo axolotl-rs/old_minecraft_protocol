@@ -1,4 +1,5 @@
 pub mod types;
+pub mod packet_generator;
 
 use crate::GenResult;
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes, Protocol};
@@ -18,6 +19,7 @@ use serde::Deserialize;
 use std::io::Write;
 use std::process::Command;
 use std::str::FromStr;
+use crate::version_generator::protocol::packet_generator::PacketGenerator;
 
 pub struct ProtocolGenerator {
     pub data_types: Vec<DataType>,
@@ -29,8 +31,8 @@ pub fn generate_protocol(file: PathBuf, json: Protocol) -> GenResult<()> {
     create_dir_all(&file)?;
 
     info!("Generating protocol file: {}", file.display());
-    let mut generator = types::TypesGenerator::new(json.types)?;
-    let generates = generator.generate()?;
+    let mut type_generator = types::TypesGenerator::new(json.types)?;
+    let generates = type_generator.generate()?;
     let types_rs = file.join("types.rs");
     if types_rs.exists() {
         remove_file(&types_rs)?;
@@ -45,5 +47,36 @@ pub fn generate_protocol(file: PathBuf, json: Protocol) -> GenResult<()> {
         file_file.write(b"\n")?;
     }
 
+
+    let mut packet_generator = packet_generator::PacketGenerator::new(&type_generator, json.handshaking)?;
+    let mut handshake = file.join("handshake");
+    create_packets(&mut packet_generator, &mut handshake);
+    let mut packet_generator = packet_generator::PacketGenerator::new(&type_generator, json.login)?;
+    let mut handshake = file.join("login");
+    create_packets(&mut packet_generator, &mut handshake);
+    let mut packet_generator = packet_generator::PacketGenerator::new(&type_generator, json.status)?;
+    let mut handshake = file.join("status");
+    create_packets(&mut packet_generator, &mut handshake);
+    let mut packet_generator = packet_generator::PacketGenerator::new(&type_generator, json.play)?;
+    let mut handshake = file.join("play");
+    create_packets(&mut packet_generator, &mut handshake);
     Ok(()) // Everything is fine
+}
+
+fn create_packets(packet_generator: &mut PacketGenerator, handshake: &mut PathBuf)->Result<(), GenError>{
+    create_dir_all(&handshake)?;
+    for generate in packet_generator.generate()?.into_iter() {
+        let my_file = handshake.join(format!("{}.rs", generate.content_name().to_case(Case::Snake)));
+        if my_file.exists() {
+            remove_file(&my_file)?;
+        }
+        let mut file_file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open(&my_file)?;
+        let content = generate.generate_type_wrap_as_mod().to_file_string().unwrap();
+        file_file.write_all(content.as_bytes())?;
+    }
+    Ok(())
+
 }

@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use std::num::ParseIntError;
 use thiserror::Error;
 pub type GenResult<T> = Result<T, GenError>;
 
@@ -10,6 +11,8 @@ pub enum GenError {
     Serde(&'static str, serde_json::Error),
     #[error("Io error: {0}")]
     Io(std::io::Error),
+    #[error(" error: {0}")]
+    ParseIntError(ParseIntError),
 }
 
 impl From<serde_json::Error> for GenError {
@@ -20,5 +23,10 @@ impl From<serde_json::Error> for GenError {
 impl From<std::io::Error> for GenError {
     fn from(err: std::io::Error) -> Self {
         GenError::Io(err)
+    }
+}
+impl From<ParseIntError> for GenError{
+    fn from(value: ParseIntError) -> Self {
+        GenError::ParseIntError(value)
     }
 }

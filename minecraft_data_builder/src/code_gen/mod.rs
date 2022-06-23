@@ -327,7 +327,7 @@ impl SwitchVariant {
         } else {
             requirement.to_string()
         }
-        .to_case(Case::UpperCamel)
+            .to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::UpperCamel);
@@ -440,22 +440,32 @@ pub enum GenerateType {
         data_type: DataType,
         children: Vec<GenerateType>,
     },
+    Packet {
+        content_name: String,
+        packet_id: i32,
+        data_type: DataType,
+        children: Vec<GenerateType>,
+    },
 }
 
 impl GenerateType {
-    pub fn generate_type_wrap_as_mod(&self) -> Tokens<Rust> {
-        let mod_name = &match self {
+    pub fn content_name(&self) -> &str {
+        match &self {
             GenerateType::Container { content_name, .. } => content_name,
             GenerateType::SwitchEnum { content_name, .. } => content_name,
             GenerateType::Array { content_name, .. } => content_name,
+            GenerateType::Packet { content_name, .. } => content_name,
         }
-        .to_case(Case::Snake);
+    }
+    pub fn generate_type_wrap_as_mod(&self) -> Tokens<Rust> {
+        let mod_name = &self.content_name().to_case(Case::Snake);
         let tokens = self.generate_type();
         quote! {
             mod #mod_name {
                 use super::*;
                 use crate::common::protocol::PacketContent;
                 use crate::common::protocol::PacketSwitch;
+                use crate::common::protocol::Packet;
                 use std::io::{BufRead, Error, ErrorKind, Result, Write};
                 use std::str::FromStr;
                 #<line>
@@ -605,6 +615,26 @@ impl GenerateType {
                     pub type #content_name = Vec<#data_type>;
 
                     #(for my_child in children => #my_child #<line>)
+                }
+            }
+            GenerateType::Packet {
+                packet_id,
+                content_name,
+                ..
+            } => {
+                let packet_id = packet_id.clone();
+                quote! {
+                pub struct #content_name;
+
+                impl Packet for #content_name {
+                    type PacketIDType = i32;
+
+                    fn packet_id() -> Self::PacketIDType
+                        where
+                            Self: Sized{
+                            #packet_id
+                        }
+                }
                 }
             }
         }
