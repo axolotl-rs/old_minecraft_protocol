@@ -16,7 +16,7 @@ impl Packet for SbPacketPing {
     }
 }
 pub struct PacketPingContent {
-    time: i64,
+    pub time: i64,
 }
 impl PacketContent for PacketPingContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {

@@ -1,20 +1,20 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketRespawn ; impl Packet for CbPacketRespawn { type PacketIDType = i32 ; type PacketContent = PacketRespawnContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 61 } } pub struct PacketRespawnContent { dimension: minecraft_data::data::nbt::Nbt ,
+ pub struct CbPacketRespawn ; impl Packet for CbPacketRespawn { type PacketIDType = i32 ; type PacketContent = PacketRespawnContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 61 } } pub struct PacketRespawnContent { pub dimension: minecraft_data::data::nbt::Nbt ,
 
-world_name: String ,
+pub world_name: String ,
 
-hashed_seed: i64 ,
+pub hashed_seed: i64 ,
 
-gamemode: u8 ,
+pub gamemode: u8 ,
 
-previous_gamemode: u8 ,
+pub previous_gamemode: u8 ,
 
-is_debug: bool ,
+pub is_debug: bool ,
 
-is_flat: bool ,
+pub is_flat: bool ,
 
-copy_metadata: bool ,
+pub copy_metadata: bool ,
 
  } impl PacketContent for PacketRespawnContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.dimension.write(writer)?;;
 

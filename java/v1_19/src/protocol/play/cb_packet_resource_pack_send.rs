@@ -1,12 +1,12 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketResourcePackSend ; impl Packet for CbPacketResourcePackSend { type PacketIDType = i32 ; type PacketContent = PacketResourcePackSendContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 60 } } pub struct PacketResourcePackSendContent { url: String ,
+ pub struct CbPacketResourcePackSend ; impl Packet for CbPacketResourcePackSend { type PacketIDType = i32 ; type PacketContent = PacketResourcePackSendContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 60 } } pub struct PacketResourcePackSendContent { pub url: String ,
 
-hash: String ,
+pub hash: String ,
 
-forced: bool ,
+pub forced: bool ,
 
-prompt_message: void ,
+pub prompt_message: void ,
 
  } impl PacketContent for PacketResourcePackSendContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.url.write(writer)?;;
 

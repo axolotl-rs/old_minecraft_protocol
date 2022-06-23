@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketLook ; impl Packet for SbPacketLook { type PacketIDType = i32 ; type PacketContent = PacketLookContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 19 } } pub struct PacketLookContent { yaw: f32 ,
+ pub struct SbPacketLook ; impl Packet for SbPacketLook { type PacketIDType = i32 ; type PacketContent = PacketLookContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 19 } } pub struct PacketLookContent { pub yaw: f32 ,
 
-pitch: f32 ,
+pub pitch: f32 ,
 
-on_ground: bool ,
+pub on_ground: bool ,
 
  } impl PacketContent for PacketLookContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.yaw.write(writer)?;;
 

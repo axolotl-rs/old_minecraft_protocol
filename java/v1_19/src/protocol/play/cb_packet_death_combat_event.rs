@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketDeathCombatEvent ; impl Packet for CbPacketDeathCombatEvent { type PacketIDType = i32 ; type PacketContent = PacketDeathCombatEventContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 53 } } pub struct PacketDeathCombatEventContent { player_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketDeathCombatEvent ; impl Packet for CbPacketDeathCombatEvent { type PacketIDType = i32 ; type PacketContent = PacketDeathCombatEventContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 53 } } pub struct PacketDeathCombatEventContent { pub player_id: minecraft_data::data::VarInt ,
 
-entity_id: i32 ,
+pub entity_id: i32 ,
 
-message: String ,
+pub message: String ,
 
  } impl PacketContent for PacketDeathCombatEventContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.player_id.write(writer)?;;
 

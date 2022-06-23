@@ -16,7 +16,7 @@ impl Packet for CbPacketServerInfo {
     }
 }
 pub struct PacketServerInfoContent {
-    response: String,
+    pub response: String,
 }
 impl PacketContent for PacketServerInfoContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {

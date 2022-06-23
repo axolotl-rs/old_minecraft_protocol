@@ -7,9 +7,9 @@ mod slot {
     use std::str::FromStr;
 
     pub struct Slot {
-        present: bool,
+        pub present: bool,
 
-        content: SlotContent,
+        pub content: SlotContent,
     }
     impl PacketContent for Slot {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -29,9 +29,6 @@ mod slot {
         }
     }
     pub enum SlotContent {
-        /// This switch variant requires a value false in the compare_to field
-        Switchfalse(minecraft_data::data::Void),
-
         /// This switch variant requires a value true in the compare_to field
         Switchtrue {
             item_id: minecraft_data::data::VarInt,
@@ -40,6 +37,9 @@ mod slot {
 
             nbt_data: minecraft_data::data::nbt::OptionalNbt,
         },
+
+        /// This switch variant requires a value false in the compare_to field
+        Switchfalse(minecraft_data::data::Void),
     }
     impl PacketSwitch for SlotContent {
         type CompareType = bool;
@@ -76,43 +76,6 @@ mod particle_data {
     use std::str::FromStr;
 
     pub enum ParticleData {
-        /// This switch variant requires a value 2 in the compare_to field
-        Switch2 {
-            block_state: minecraft_data::data::VarInt,
-        },
-
-        /// This switch variant requires a value 24 in the compare_to field
-        Switch24 {
-            block_state: minecraft_data::data::VarInt,
-        },
-
-        /// This switch variant requires a value 36 in the compare_to field
-        Switch36 {
-            origin: minecraft_data::data::position::Position,
-
-            position_type: String,
-
-            destination: ParticleDataContentContent,
-
-            ticks: minecraft_data::data::VarInt,
-        },
-
-        /// This switch variant requires a value 14 in the compare_to field
-        Switch14 {
-            red: f32,
-
-            green: f32,
-
-            blue: f32,
-
-            scale: f32,
-        },
-
-        /// This switch variant requires a value 3 in the compare_to field
-        Switch3 {
-            block_state: minecraft_data::data::VarInt,
-        },
-
         /// This switch variant requires a value 15 in the compare_to field
         Switch15 {
             from_red: f32,
@@ -130,9 +93,46 @@ mod particle_data {
             to_blue: f32,
         },
 
+        /// This switch variant requires a value 24 in the compare_to field
+        Switch24 {
+            block_state: minecraft_data::data::VarInt,
+        },
+
+        /// This switch variant requires a value 3 in the compare_to field
+        Switch3 {
+            block_state: minecraft_data::data::VarInt,
+        },
+
         /// This switch variant requires a value 35 in the compare_to field
         Switch35 {
             item: crate::protocol::types::slot::Slot,
+        },
+
+        /// This switch variant requires a value 14 in the compare_to field
+        Switch14 {
+            red: f32,
+
+            green: f32,
+
+            blue: f32,
+
+            scale: f32,
+        },
+
+        /// This switch variant requires a value 2 in the compare_to field
+        Switch2 {
+            block_state: minecraft_data::data::VarInt,
+        },
+
+        /// This switch variant requires a value 36 in the compare_to field
+        Switch36 {
+            origin: minecraft_data::data::position::Position,
+
+            position_type: String,
+
+            destination: ParticleDataContentContent,
+
+            ticks: minecraft_data::data::VarInt,
         },
     }
     impl PacketSwitch for ParticleData {
@@ -212,15 +212,15 @@ mod minecraft_smelting_format {
     use std::str::FromStr;
 
     pub struct MinecraftSmeltingFormat {
-        group: String,
+        pub group: String,
 
-        ingredient: crate::protocol::types::ingredient::Ingredient,
+        pub ingredient: crate::protocol::types::ingredient::Ingredient,
 
-        result: crate::protocol::types::slot::Slot,
+        pub result: crate::protocol::types::slot::Slot,
 
-        experience: f32,
+        pub experience: f32,
 
-        cook_time: minecraft_data::data::VarInt,
+        pub cook_time: minecraft_data::data::VarInt,
     }
     impl PacketContent for MinecraftSmeltingFormat {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -272,9 +272,9 @@ mod tags {
 
     pub type Tags = Vec<TagsContent>;
     pub struct TagsContent {
-        tag_name: String,
+        pub tag_name: String,
 
-        entries: TagsContentArray,
+        pub entries: TagsContentArray,
     }
     impl PacketContent for TagsContent {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -307,13 +307,13 @@ mod chunk_block_entity {
     use std::str::FromStr;
 
     pub struct ChunkBlockEntity {
-        content: minecraft_data::data::bitfield::BitField,
+        pub content: minecraft_data::data::bitfield::BitField,
 
-        y: i16,
+        pub y: i16,
 
-        data_type: minecraft_data::data::VarInt,
+        pub data_type: minecraft_data::data::VarInt,
 
-        nbt_data: minecraft_data::data::nbt::OptionalNbt,
+        pub nbt_data: minecraft_data::data::nbt::OptionalNbt,
     }
     impl PacketContent for ChunkBlockEntity {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -358,9 +358,9 @@ mod particle {
     use std::str::FromStr;
 
     pub struct Particle {
-        particle_id: minecraft_data::data::VarInt,
+        pub particle_id: minecraft_data::data::VarInt,
 
-        data: crate::protocol::types::particle_data::ParticleData,
+        pub data: crate::protocol::types::particle_data::ParticleData,
     }
     impl PacketContent for Particle {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {

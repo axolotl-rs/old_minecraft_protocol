@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketGenerateStructure ; impl Packet for SbPacketGenerateStructure { type PacketIDType = i32 ; type PacketContent = PacketGenerateStructureContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 14 } } pub struct PacketGenerateStructureContent { location: minecraft_data::data::position::Position ,
+ pub struct SbPacketGenerateStructure ; impl Packet for SbPacketGenerateStructure { type PacketIDType = i32 ; type PacketContent = PacketGenerateStructureContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 14 } } pub struct PacketGenerateStructureContent { pub location: minecraft_data::data::position::Position ,
 
-levels: minecraft_data::data::VarInt ,
+pub levels: minecraft_data::data::VarInt ,
 
-keep_jigsaws: bool ,
+pub keep_jigsaws: bool ,
 
  } impl PacketContent for PacketGenerateStructureContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.location.write(writer)?;;
 

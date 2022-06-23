@@ -16,7 +16,7 @@ impl Packet for CbPacketDisconnect {
     }
 }
 pub struct PacketDisconnectContent {
-    reason: String,
+    pub reason: String,
 }
 impl PacketContent for PacketDisconnectContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {

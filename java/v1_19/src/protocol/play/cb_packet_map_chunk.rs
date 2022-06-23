@@ -1,28 +1,28 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketMapChunk ; impl Packet for CbPacketMapChunk { type PacketIDType = i32 ; type PacketContent = PacketMapChunkContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 34 } } pub struct PacketMapChunkContent { x: i32 ,
+ pub struct CbPacketMapChunk ; impl Packet for CbPacketMapChunk { type PacketIDType = i32 ; type PacketContent = PacketMapChunkContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 34 } } pub struct PacketMapChunkContent { pub x: i32 ,
 
-z: i32 ,
+pub z: i32 ,
 
-heightmaps: minecraft_data::data::nbt::Nbt ,
+pub heightmaps: minecraft_data::data::nbt::Nbt ,
 
-chunk_data: void ,
+pub chunk_data: void ,
 
-block_entities: PacketMapChunkContentArray ,
+pub block_entities: PacketMapChunkContentArray ,
 
-trust_edges: bool ,
+pub trust_edges: bool ,
 
-sky_light_mask: PacketMapChunkContentArray ,
+pub sky_light_mask: PacketMapChunkContentArray ,
 
-block_light_mask: PacketMapChunkContentArray ,
+pub block_light_mask: PacketMapChunkContentArray ,
 
-empty_sky_light_mask: PacketMapChunkContentArray ,
+pub empty_sky_light_mask: PacketMapChunkContentArray ,
 
-empty_block_light_mask: PacketMapChunkContentArray ,
+pub empty_block_light_mask: PacketMapChunkContentArray ,
 
-sky_light: PacketMapChunkContentArray ,
+pub sky_light: PacketMapChunkContentArray ,
 
-block_light: PacketMapChunkContentArray ,
+pub block_light: PacketMapChunkContentArray ,
 
  } impl PacketContent for PacketMapChunkContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.x.write(writer)?;;
 

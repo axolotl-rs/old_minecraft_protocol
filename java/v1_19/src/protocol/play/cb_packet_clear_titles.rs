@@ -1,6 +1,6 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketClearTitles ; impl Packet for CbPacketClearTitles { type PacketIDType = i32 ; type PacketContent = PacketClearTitlesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 16 } } pub struct PacketClearTitlesContent { reset: bool ,
+ pub struct CbPacketClearTitles ; impl Packet for CbPacketClearTitles { type PacketIDType = i32 ; type PacketContent = PacketClearTitlesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 16 } } pub struct PacketClearTitlesContent { pub reset: bool ,
 
  } impl PacketContent for PacketClearTitlesContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.reset.write(writer)?;;
 

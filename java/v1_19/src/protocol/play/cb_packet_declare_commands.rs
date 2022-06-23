@@ -1,8 +1,8 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketDeclareCommands ; impl Packet for CbPacketDeclareCommands { type PacketIDType = i32 ; type PacketContent = PacketDeclareCommandsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 18 } } pub struct PacketDeclareCommandsContent { nodes: PacketDeclareCommandsContentArray ,
+ pub struct CbPacketDeclareCommands ; impl Packet for CbPacketDeclareCommands { type PacketIDType = i32 ; type PacketContent = PacketDeclareCommandsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 18 } } pub struct PacketDeclareCommandsContent { pub nodes: PacketDeclareCommandsContentArray ,
 
-root_index: minecraft_data::data::VarInt ,
+pub root_index: minecraft_data::data::VarInt ,
 
  } impl PacketContent for PacketDeclareCommandsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.nodes.write(writer)?;;
 
@@ -12,13 +12,13 @@ total_bytes += self.root_index.write(writer)?;;
 
 let root_index : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { nodes, root_index } ) } } pub type PacketDeclareCommandsContentArray = Vec <PacketDeclareCommandsContentArrayContent >; pub struct PacketDeclareCommandsContentArrayContent { flags: minecraft_data::data::bitfield::BitField ,
+ Ok ( Self { nodes, root_index } ) } } pub type PacketDeclareCommandsContentArray = Vec <PacketDeclareCommandsContentArrayContent >; pub struct PacketDeclareCommandsContentArrayContent { pub flags: minecraft_data::data::bitfield::BitField ,
 
-children: PacketDeclareCommandsContentArrayContentArray ,
+pub children: PacketDeclareCommandsContentArrayContentArray ,
 
-redirect_node: PacketDeclareCommandsContentArrayContentContent ,
+pub redirect_node: PacketDeclareCommandsContentArrayContentContent ,
 
-extra_node_data: PacketDeclareCommandsContentArrayContentContent ,
+pub extra_node_data: PacketDeclareCommandsContentArrayContentContent ,
 
  } impl PacketContent for PacketDeclareCommandsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.flags.write(writer)?;;
 
@@ -66,13 +66,25 @@ suggests: PacketDeclareCommandsContentArrayContentContentContentContent ,
 
  } ,
 
- } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } } pub enum PacketDeclareCommandsContentArrayContentContentContentContent { /// This switch variant requires a value minecraft:score_holder in the compare_to field
+ } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } } pub enum PacketDeclareCommandsContentArrayContentContentContentContent { /// This switch variant requires a value minecraft:entity in the compare_to field
 
- MinecraftScoreHolder (i8 ) ,
+ MinecraftEntity (i8 ) ,
 
 /// This switch variant requires a value brigadier:double in the compare_to field
 
  BrigadierDouble {
+
+ flags: minecraft_data::data::bitfield::BitField ,
+
+min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
+
+max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
+
+ } ,
+
+/// This switch variant requires a value brigadier:float in the compare_to field
+
+ BrigadierFloat {
 
  flags: minecraft_data::data::bitfield::BitField ,
 
@@ -94,30 +106,6 @@ max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent
 
  } ,
 
-/// This switch variant requires a value brigadier:string in the compare_to field
-
- BrigadierString (minecraft_data::data::VarInt ) ,
-
-/// This switch variant requires a value brigadier:float in the compare_to field
-
- BrigadierFloat {
-
- flags: minecraft_data::data::bitfield::BitField ,
-
-min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
-
-max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
-
- } ,
-
-/// This switch variant requires a value minecraft:entity in the compare_to field
-
- MinecraftEntity (i8 ) ,
-
-/// This switch variant requires a value minecraft:range in the compare_to field
-
- MinecraftRange (bool ) ,
-
 /// This switch variant requires a value brigadier:long in the compare_to field
 
  BrigadierLong {
@@ -129,6 +117,18 @@ min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent
 max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
 
  } ,
+
+/// This switch variant requires a value brigadier:string in the compare_to field
+
+ BrigadierString (minecraft_data::data::VarInt ) ,
+
+/// This switch variant requires a value minecraft:range in the compare_to field
+
+ MinecraftRange (bool ) ,
+
+/// This switch variant requires a value minecraft:score_holder in the compare_to field
+
+ MinecraftScoreHolder (i8 ) ,
 
  } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContent { type CompareType = String ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } } pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
 
@@ -144,18 +144,6 @@ pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentCon
 
 pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
 
- Switch1 (i32 ) ,
-
- } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContentContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
-
-pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
-
- Switch1 (i32 ) ,
-
- } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContentContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
-
-pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
-
  Switch1 (f32 ) ,
 
  } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContentContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
@@ -163,6 +151,18 @@ pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentCon
 pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
 
  Switch1 (f32 ) ,
+
+ } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContentContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+
+pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
+
+ Switch1 (i32 ) ,
+
+ } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContentContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+
+pub enum PacketDeclareCommandsContentArrayContentContentContentContentContentContent { /// This switch variant requires a value 1 in the compare_to field
+
+ Switch1 (i32 ) ,
 
  } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContentContentContentContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 

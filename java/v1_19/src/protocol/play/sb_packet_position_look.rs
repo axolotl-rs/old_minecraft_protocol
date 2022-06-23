@@ -1,16 +1,16 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketPositionLook ; impl Packet for SbPacketPositionLook { type PacketIDType = i32 ; type PacketContent = PacketPositionLookContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 18 } } pub struct PacketPositionLookContent { x: f64 ,
+ pub struct SbPacketPositionLook ; impl Packet for SbPacketPositionLook { type PacketIDType = i32 ; type PacketContent = PacketPositionLookContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 18 } } pub struct PacketPositionLookContent { pub x: f64 ,
 
-y: f64 ,
+pub y: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-yaw: f32 ,
+pub yaw: f32 ,
 
-pitch: f32 ,
+pub pitch: f32 ,
 
-on_ground: bool ,
+pub on_ground: bool ,
 
  } impl PacketContent for PacketPositionLookContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.x.write(writer)?;;
 

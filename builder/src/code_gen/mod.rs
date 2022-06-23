@@ -515,7 +515,7 @@ impl GenerateType {
                     children.iter().map(|child| child.generate_type()).collect();
                 quote! {
                     pub struct #content_name {
-                        #(for my_field in fields_defs => #my_field #<line>)
+                        #(for my_field in fields_defs => pub #my_field #<line>)
                     }
 
                     impl PacketContent for #content_name {

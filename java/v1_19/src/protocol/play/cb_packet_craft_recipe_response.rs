@@ -1,8 +1,8 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketCraftRecipeResponse ; impl Packet for CbPacketCraftRecipeResponse { type PacketIDType = i32 ; type PacketContent = PacketCraftRecipeResponseContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 49 } } pub struct PacketCraftRecipeResponseContent { window_id: i8 ,
+ pub struct CbPacketCraftRecipeResponse ; impl Packet for CbPacketCraftRecipeResponse { type PacketIDType = i32 ; type PacketContent = PacketCraftRecipeResponseContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 49 } } pub struct PacketCraftRecipeResponseContent { pub window_id: i8 ,
 
-recipe: String ,
+pub recipe: String ,
 
  } impl PacketContent for PacketCraftRecipeResponseContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
 

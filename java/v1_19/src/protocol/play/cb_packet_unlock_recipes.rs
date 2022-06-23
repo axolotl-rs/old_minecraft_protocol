@@ -1,26 +1,26 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketUnlockRecipes ; impl Packet for CbPacketUnlockRecipes { type PacketIDType = i32 ; type PacketContent = PacketUnlockRecipesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 57 } } pub struct PacketUnlockRecipesContent { action: minecraft_data::data::VarInt ,
+ pub struct CbPacketUnlockRecipes ; impl Packet for CbPacketUnlockRecipes { type PacketIDType = i32 ; type PacketContent = PacketUnlockRecipesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 57 } } pub struct PacketUnlockRecipesContent { pub action: minecraft_data::data::VarInt ,
 
-crafting_book_open: bool ,
+pub crafting_book_open: bool ,
 
-filtering_craftable: bool ,
+pub filtering_craftable: bool ,
 
-smelting_book_open: bool ,
+pub smelting_book_open: bool ,
 
-filtering_smeltable: bool ,
+pub filtering_smeltable: bool ,
 
-blast_furnace_open: bool ,
+pub blast_furnace_open: bool ,
 
-filtering_blast_furnace: bool ,
+pub filtering_blast_furnace: bool ,
 
-smoker_book_open: bool ,
+pub smoker_book_open: bool ,
 
-filtering_smoker: bool ,
+pub filtering_smoker: bool ,
 
-recipes_1: PacketUnlockRecipesContentArray ,
+pub recipes_1: PacketUnlockRecipesContentArray ,
 
-recipes_2: PacketUnlockRecipesContentContent ,
+pub recipes_2: PacketUnlockRecipesContentContent ,
 
  } impl PacketContent for PacketUnlockRecipesContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.action.write(writer)?;;
 

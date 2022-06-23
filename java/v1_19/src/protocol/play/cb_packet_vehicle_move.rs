@@ -1,14 +1,14 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketVehicleMove ; impl Packet for CbPacketVehicleMove { type PacketIDType = i32 ; type PacketContent = PacketVehicleMoveContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 44 } } pub struct PacketVehicleMoveContent { x: f64 ,
+ pub struct CbPacketVehicleMove ; impl Packet for CbPacketVehicleMove { type PacketIDType = i32 ; type PacketContent = PacketVehicleMoveContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 44 } } pub struct PacketVehicleMoveContent { pub x: f64 ,
 
-y: f64 ,
+pub y: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-yaw: f32 ,
+pub yaw: f32 ,
 
-pitch: f32 ,
+pub pitch: f32 ,
 
  } impl PacketContent for PacketVehicleMoveContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.x.write(writer)?;;
 

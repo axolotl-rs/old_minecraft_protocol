@@ -1,18 +1,18 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketWindowClick ; impl Packet for SbPacketWindowClick { type PacketIDType = i32 ; type PacketContent = PacketWindowClickContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 8 } } pub struct PacketWindowClickContent { window_id: u8 ,
+ pub struct SbPacketWindowClick ; impl Packet for SbPacketWindowClick { type PacketIDType = i32 ; type PacketContent = PacketWindowClickContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 8 } } pub struct PacketWindowClickContent { pub window_id: u8 ,
 
-state_id: minecraft_data::data::VarInt ,
+pub state_id: minecraft_data::data::VarInt ,
 
-slot: i16 ,
+pub slot: i16 ,
 
-mouse_button: i8 ,
+pub mouse_button: i8 ,
 
-mode: minecraft_data::data::VarInt ,
+pub mode: minecraft_data::data::VarInt ,
 
-changed_slots: PacketWindowClickContentArray ,
+pub changed_slots: PacketWindowClickContentArray ,
 
-cursor_item: crate::protocol::types::slot::Slot ,
+pub cursor_item: crate::protocol::types::slot::Slot ,
 
  } impl PacketContent for PacketWindowClickContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
 
@@ -42,9 +42,9 @@ let changed_slots : PacketWindowClickContentArray = PacketContent :: read ( read
 
 let cursor_item : crate::protocol::types::slot::Slot = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { window_id, state_id, slot, mouse_button, mode, changed_slots, cursor_item } ) } } pub type PacketWindowClickContentArray = Vec <PacketWindowClickContentArrayContent >; pub struct PacketWindowClickContentArrayContent { location: i16 ,
+ Ok ( Self { window_id, state_id, slot, mouse_button, mode, changed_slots, cursor_item } ) } } pub type PacketWindowClickContentArray = Vec <PacketWindowClickContentArrayContent >; pub struct PacketWindowClickContentArrayContent { pub location: i16 ,
 
-item: crate::protocol::types::slot::Slot ,
+pub item: crate::protocol::types::slot::Slot ,
 
  } impl PacketContent for PacketWindowClickContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.location.write(writer)?;;
 

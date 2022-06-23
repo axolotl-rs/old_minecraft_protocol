@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketMultiBlockChange ; impl Packet for CbPacketMultiBlockChange { type PacketIDType = i32 ; type PacketContent = PacketMultiBlockChangeContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 63 } } pub struct PacketMultiBlockChangeContent { chunk_coordinates: minecraft_data::data::bitfield::BitField ,
+ pub struct CbPacketMultiBlockChange ; impl Packet for CbPacketMultiBlockChange { type PacketIDType = i32 ; type PacketContent = PacketMultiBlockChangeContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 63 } } pub struct PacketMultiBlockChangeContent { pub chunk_coordinates: minecraft_data::data::bitfield::BitField ,
 
-not_trust_edges: bool ,
+pub not_trust_edges: bool ,
 
-records: PacketMultiBlockChangeContentArray ,
+pub records: PacketMultiBlockChangeContentArray ,
 
  } impl PacketContent for PacketMultiBlockChangeContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.chunk_coordinates.write(writer)?;;
 

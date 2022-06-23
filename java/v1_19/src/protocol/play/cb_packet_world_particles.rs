@@ -1,26 +1,26 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketWorldParticles ; impl Packet for CbPacketWorldParticles { type PacketIDType = i32 ; type PacketContent = PacketWorldParticlesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 36 } } pub struct PacketWorldParticlesContent { particle_id: i32 ,
+ pub struct CbPacketWorldParticles ; impl Packet for CbPacketWorldParticles { type PacketIDType = i32 ; type PacketContent = PacketWorldParticlesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 36 } } pub struct PacketWorldParticlesContent { pub particle_id: i32 ,
 
-long_distance: bool ,
+pub long_distance: bool ,
 
-x: f64 ,
+pub x: f64 ,
 
-y: f64 ,
+pub y: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-offset_x: f32 ,
+pub offset_x: f32 ,
 
-offset_y: f32 ,
+pub offset_y: f32 ,
 
-offset_z: f32 ,
+pub offset_z: f32 ,
 
-particle_data: f32 ,
+pub particle_data: f32 ,
 
-particles: i32 ,
+pub particles: i32 ,
 
-data: crate::protocol::types::particle_data::ParticleData ,
+pub data: crate::protocol::types::particle_data::ParticleData ,
 
  } impl PacketContent for PacketWorldParticlesContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.particle_id.write(writer)?;;
 

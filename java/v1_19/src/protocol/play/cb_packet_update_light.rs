@@ -1,22 +1,22 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketUpdateLight ; impl Packet for CbPacketUpdateLight { type PacketIDType = i32 ; type PacketContent = PacketUpdateLightContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 37 } } pub struct PacketUpdateLightContent { chunk_x: minecraft_data::data::VarInt ,
+ pub struct CbPacketUpdateLight ; impl Packet for CbPacketUpdateLight { type PacketIDType = i32 ; type PacketContent = PacketUpdateLightContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 37 } } pub struct PacketUpdateLightContent { pub chunk_x: minecraft_data::data::VarInt ,
 
-chunk_z: minecraft_data::data::VarInt ,
+pub chunk_z: minecraft_data::data::VarInt ,
 
-trust_edges: bool ,
+pub trust_edges: bool ,
 
-sky_light_mask: PacketUpdateLightContentArray ,
+pub sky_light_mask: PacketUpdateLightContentArray ,
 
-block_light_mask: PacketUpdateLightContentArray ,
+pub block_light_mask: PacketUpdateLightContentArray ,
 
-empty_sky_light_mask: PacketUpdateLightContentArray ,
+pub empty_sky_light_mask: PacketUpdateLightContentArray ,
 
-empty_block_light_mask: PacketUpdateLightContentArray ,
+pub empty_block_light_mask: PacketUpdateLightContentArray ,
 
-sky_light: PacketUpdateLightContentArray ,
+pub sky_light: PacketUpdateLightContentArray ,
 
-block_light: PacketUpdateLightContentArray ,
+pub block_light: PacketUpdateLightContentArray ,
 
  } impl PacketContent for PacketUpdateLightContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.chunk_x.write(writer)?;;
 

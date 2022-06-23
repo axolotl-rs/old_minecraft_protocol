@@ -1,12 +1,12 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketAdvancements ; impl Packet for CbPacketAdvancements { type PacketIDType = i32 ; type PacketContent = PacketAdvancementsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 99 } } pub struct PacketAdvancementsContent { reset: bool ,
+ pub struct CbPacketAdvancements ; impl Packet for CbPacketAdvancements { type PacketIDType = i32 ; type PacketContent = PacketAdvancementsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 99 } } pub struct PacketAdvancementsContent { pub reset: bool ,
 
-advancement_mapping: PacketAdvancementsContentArray ,
+pub advancement_mapping: PacketAdvancementsContentArray ,
 
-identifiers: PacketAdvancementsContentArray ,
+pub identifiers: PacketAdvancementsContentArray ,
 
-progress_mapping: PacketAdvancementsContentArray ,
+pub progress_mapping: PacketAdvancementsContentArray ,
 
  } impl PacketContent for PacketAdvancementsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.reset.write(writer)?;;
 
@@ -24,9 +24,9 @@ let identifiers : PacketAdvancementsContentArray = PacketContent :: read ( reade
 
 let progress_mapping : PacketAdvancementsContentArray = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { reset, advancement_mapping, identifiers, progress_mapping } ) } } pub type PacketAdvancementsContentArray = Vec <PacketAdvancementsContentArrayContent >; pub struct PacketAdvancementsContentArrayContent { key: String ,
+ Ok ( Self { reset, advancement_mapping, identifiers, progress_mapping } ) } } pub type PacketAdvancementsContentArray = Vec <PacketAdvancementsContentArrayContent >; pub struct PacketAdvancementsContentArrayContent { pub key: String ,
 
-value: PacketAdvancementsContentArrayContentContent ,
+pub value: PacketAdvancementsContentArrayContentContent ,
 
  } impl PacketContent for PacketAdvancementsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
@@ -36,13 +36,13 @@ total_bytes += self.value.write(writer)?;;
 
 let value : PacketAdvancementsContentArrayContentContent = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { key, value } ) } } pub struct PacketAdvancementsContentArrayContentContent { parent_id: void ,
+ Ok ( Self { key, value } ) } } pub struct PacketAdvancementsContentArrayContentContent { pub parent_id: void ,
 
-display_data: void ,
+pub display_data: void ,
 
-criteria: PacketAdvancementsContentArrayContentContentArray ,
+pub criteria: PacketAdvancementsContentArrayContentContentArray ,
 
-requirements: PacketAdvancementsContentArrayContentContentArray ,
+pub requirements: PacketAdvancementsContentArrayContentContentArray ,
 
  } impl PacketContent for PacketAdvancementsContentArrayContentContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.parent_id.write(writer)?;;
 
@@ -60,9 +60,9 @@ let criteria : PacketAdvancementsContentArrayContentContentArray = PacketContent
 
 let requirements : PacketAdvancementsContentArrayContentContentArray = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { parent_id, display_data, criteria, requirements } ) } } pub type PacketAdvancementsContentArrayContentContentArray = Vec <PacketAdvancementsContentArrayContentContentArrayContent >; pub struct PacketAdvancementsContentArrayContentContentArrayContent { key: String ,
+ Ok ( Self { parent_id, display_data, criteria, requirements } ) } } pub type PacketAdvancementsContentArrayContentContentArray = Vec <PacketAdvancementsContentArrayContentContentArrayContent >; pub struct PacketAdvancementsContentArrayContentContentArrayContent { pub key: String ,
 
-value: minecraft_data::data::Void ,
+pub value: minecraft_data::data::Void ,
 
  } impl PacketContent for PacketAdvancementsContentArrayContentContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
@@ -78,9 +78,9 @@ pub type PacketAdvancementsContentArrayContentContentArray = Vec <PacketAdvancem
 
 pub type PacketAdvancementsContentArray = Vec <String >;
 
-pub type PacketAdvancementsContentArray = Vec <PacketAdvancementsContentArrayContent >; pub struct PacketAdvancementsContentArrayContent { key: String ,
+pub type PacketAdvancementsContentArray = Vec <PacketAdvancementsContentArrayContent >; pub struct PacketAdvancementsContentArrayContent { pub key: String ,
 
-value: PacketAdvancementsContentArrayContentArray ,
+pub value: PacketAdvancementsContentArrayContentArray ,
 
  } impl PacketContent for PacketAdvancementsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
@@ -90,9 +90,9 @@ total_bytes += self.value.write(writer)?;;
 
 let value : PacketAdvancementsContentArrayContentArray = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { key, value } ) } } pub type PacketAdvancementsContentArrayContentArray = Vec <PacketAdvancementsContentArrayContentArrayContent >; pub struct PacketAdvancementsContentArrayContentArrayContent { criterion_identifier: String ,
+ Ok ( Self { key, value } ) } } pub type PacketAdvancementsContentArrayContentArray = Vec <PacketAdvancementsContentArrayContentArrayContent >; pub struct PacketAdvancementsContentArrayContentArrayContent { pub criterion_identifier: String ,
 
-criterion_progress: void ,
+pub criterion_progress: void ,
 
  } impl PacketContent for PacketAdvancementsContentArrayContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.criterion_identifier.write(writer)?;;
 

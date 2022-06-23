@@ -1,18 +1,18 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUseEntity ; impl Packet for SbPacketUseEntity { type PacketIDType = i32 ; type PacketContent = PacketUseEntityContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 13 } } pub struct PacketUseEntityContent { target: minecraft_data::data::VarInt ,
+ pub struct SbPacketUseEntity ; impl Packet for SbPacketUseEntity { type PacketIDType = i32 ; type PacketContent = PacketUseEntityContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 13 } } pub struct PacketUseEntityContent { pub target: minecraft_data::data::VarInt ,
 
-mouse: minecraft_data::data::VarInt ,
+pub mouse: minecraft_data::data::VarInt ,
 
-x: PacketUseEntityContentContent ,
+pub x: PacketUseEntityContentContent ,
 
-y: PacketUseEntityContentContent ,
+pub y: PacketUseEntityContentContent ,
 
-z: PacketUseEntityContentContent ,
+pub z: PacketUseEntityContentContent ,
 
-hand: PacketUseEntityContentContent ,
+pub hand: PacketUseEntityContentContent ,
 
-sneaking: bool ,
+pub sneaking: bool ,
 
  } impl PacketContent for PacketUseEntityContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.target.write(writer)?;;
 
@@ -60,12 +60,12 @@ pub enum PacketUseEntityContentContent { /// This switch variant requires a valu
 
  } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
-pub enum PacketUseEntityContentContent { /// This switch variant requires a value 2 in the compare_to field
-
- Switch2 (minecraft_data::data::VarInt ) ,
-
-/// This switch variant requires a value 0 in the compare_to field
+pub enum PacketUseEntityContentContent { /// This switch variant requires a value 0 in the compare_to field
 
  Switch0 (minecraft_data::data::VarInt ) ,
+
+/// This switch variant requires a value 2 in the compare_to field
+
+ Switch2 (minecraft_data::data::VarInt ) ,
 
  } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }

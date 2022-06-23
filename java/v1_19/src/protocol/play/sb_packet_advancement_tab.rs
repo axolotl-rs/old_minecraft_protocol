@@ -1,8 +1,8 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketAdvancementTab ; impl Packet for SbPacketAdvancementTab { type PacketIDType = i32 ; type PacketContent = PacketAdvancementTabContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 34 } } pub struct PacketAdvancementTabContent { action: minecraft_data::data::VarInt ,
+ pub struct SbPacketAdvancementTab ; impl Packet for SbPacketAdvancementTab { type PacketIDType = i32 ; type PacketContent = PacketAdvancementTabContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 34 } } pub struct PacketAdvancementTabContent { pub action: minecraft_data::data::VarInt ,
 
-tab_id: PacketAdvancementTabContentContent ,
+pub tab_id: PacketAdvancementTabContentContent ,
 
  } impl PacketContent for PacketAdvancementTabContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.action.write(writer)?;;
 

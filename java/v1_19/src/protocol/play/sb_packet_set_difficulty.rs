@@ -1,6 +1,6 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketSetDifficulty ; impl Packet for SbPacketSetDifficulty { type PacketIDType = i32 ; type PacketContent = PacketSetDifficultyContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 2 } } pub struct PacketSetDifficultyContent { new_difficulty: u8 ,
+ pub struct SbPacketSetDifficulty ; impl Packet for SbPacketSetDifficulty { type PacketIDType = i32 ; type PacketContent = PacketSetDifficultyContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 2 } } pub struct PacketSetDifficultyContent { pub new_difficulty: u8 ,
 
  } impl PacketContent for PacketSetDifficultyContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.new_difficulty.write(writer)?;;
 

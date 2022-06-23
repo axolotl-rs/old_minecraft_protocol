@@ -1,18 +1,18 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketBlockPlace ; impl Packet for SbPacketBlockPlace { type PacketIDType = i32 ; type PacketContent = PacketBlockPlaceContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 46 } } pub struct PacketBlockPlaceContent { hand: minecraft_data::data::VarInt ,
+ pub struct SbPacketBlockPlace ; impl Packet for SbPacketBlockPlace { type PacketIDType = i32 ; type PacketContent = PacketBlockPlaceContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 46 } } pub struct PacketBlockPlaceContent { pub hand: minecraft_data::data::VarInt ,
 
-location: minecraft_data::data::position::Position ,
+pub location: minecraft_data::data::position::Position ,
 
-direction: minecraft_data::data::VarInt ,
+pub direction: minecraft_data::data::VarInt ,
 
-cursor_x: f32 ,
+pub cursor_x: f32 ,
 
-cursor_y: f32 ,
+pub cursor_y: f32 ,
 
-cursor_z: f32 ,
+pub cursor_z: f32 ,
 
-inside_block: bool ,
+pub inside_block: bool ,
 
  } impl PacketContent for PacketBlockPlaceContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.hand.write(writer)?;;
 

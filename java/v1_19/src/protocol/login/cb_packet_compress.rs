@@ -16,7 +16,7 @@ impl Packet for CbPacketCompress {
     }
 }
 pub struct PacketCompressContent {
-    threshold: minecraft_data::data::VarInt,
+    pub threshold: minecraft_data::data::VarInt,
 }
 impl PacketContent for PacketCompressContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {

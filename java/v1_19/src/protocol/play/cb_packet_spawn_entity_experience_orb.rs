@@ -1,14 +1,14 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketSpawnEntityExperienceOrb ; impl Packet for CbPacketSpawnEntityExperienceOrb { type PacketIDType = i32 ; type PacketContent = PacketSpawnEntityExperienceOrbContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 1 } } pub struct PacketSpawnEntityExperienceOrbContent { entity_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketSpawnEntityExperienceOrb ; impl Packet for CbPacketSpawnEntityExperienceOrb { type PacketIDType = i32 ; type PacketContent = PacketSpawnEntityExperienceOrbContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 1 } } pub struct PacketSpawnEntityExperienceOrbContent { pub entity_id: minecraft_data::data::VarInt ,
 
-x: f64 ,
+pub x: f64 ,
 
-y: f64 ,
+pub y: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-count: i16 ,
+pub count: i16 ,
 
  } impl PacketContent for PacketSpawnEntityExperienceOrbContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

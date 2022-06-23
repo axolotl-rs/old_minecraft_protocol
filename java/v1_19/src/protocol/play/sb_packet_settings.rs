@@ -1,20 +1,20 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketSettings ; impl Packet for SbPacketSettings { type PacketIDType = i32 ; type PacketContent = PacketSettingsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 5 } } pub struct PacketSettingsContent { locale: String ,
+ pub struct SbPacketSettings ; impl Packet for SbPacketSettings { type PacketIDType = i32 ; type PacketContent = PacketSettingsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 5 } } pub struct PacketSettingsContent { pub locale: String ,
 
-view_distance: i8 ,
+pub view_distance: i8 ,
 
-chat_flags: minecraft_data::data::VarInt ,
+pub chat_flags: minecraft_data::data::VarInt ,
 
-chat_colors: bool ,
+pub chat_colors: bool ,
 
-skin_parts: u8 ,
+pub skin_parts: u8 ,
 
-main_hand: minecraft_data::data::VarInt ,
+pub main_hand: minecraft_data::data::VarInt ,
 
-enable_text_filtering: bool ,
+pub enable_text_filtering: bool ,
 
-enable_server_listing: bool ,
+pub enable_server_listing: bool ,
 
  } impl PacketContent for PacketSettingsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.locale.write(writer)?;;
 

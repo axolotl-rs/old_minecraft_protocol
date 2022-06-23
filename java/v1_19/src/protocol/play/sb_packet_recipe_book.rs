@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketRecipeBook ; impl Packet for SbPacketRecipeBook { type PacketIDType = i32 ; type PacketContent = PacketRecipeBookContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 30 } } pub struct PacketRecipeBookContent { book_id: minecraft_data::data::VarInt ,
+ pub struct SbPacketRecipeBook ; impl Packet for SbPacketRecipeBook { type PacketIDType = i32 ; type PacketContent = PacketRecipeBookContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 30 } } pub struct PacketRecipeBookContent { pub book_id: minecraft_data::data::VarInt ,
 
-book_open: bool ,
+pub book_open: bool ,
 
-filter_active: bool ,
+pub filter_active: bool ,
 
  } impl PacketContent for PacketRecipeBookContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.book_id.write(writer)?;;
 

@@ -1,6 +1,6 @@
-use std::io::{BufRead, Write};
 use crate::data::VarInt;
 use crate::protocol::{Packet, PacketContent};
+use std::io::{BufRead, Write};
 
 pub struct SetProtocol;
 
@@ -8,18 +8,18 @@ impl Packet for SetProtocol {
     type PacketIDType = i32;
     type PacketContent = PacketSetProtocolContent;
     fn packet_id() -> Self::PacketIDType
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         0
     }
 }
 
 pub struct PacketSetProtocolContent {
-    protocol_version: VarInt,
-    server_host: String,
-    server_port: u16,
-    next_state: VarInt,
+    pub protocol_version: VarInt,
+    pub server_host: String,
+    pub server_port: u16,
+    pub next_state: VarInt,
 }
 
 impl PacketContent for PacketSetProtocolContent {
@@ -59,8 +59,8 @@ impl Packet for SbPacketLegacyServerListPing {
     type PacketIDType = i32;
     type PacketContent = PacketLegacyServerListPingContent;
     fn packet_id() -> Self::PacketIDType
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         254
     }

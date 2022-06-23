@@ -1,12 +1,12 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUpdateCommandBlock ; impl Packet for SbPacketUpdateCommandBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateCommandBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 38 } } pub struct PacketUpdateCommandBlockContent { location: minecraft_data::data::position::Position ,
+ pub struct SbPacketUpdateCommandBlock ; impl Packet for SbPacketUpdateCommandBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateCommandBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 38 } } pub struct PacketUpdateCommandBlockContent { pub location: minecraft_data::data::position::Position ,
 
-command: String ,
+pub command: String ,
 
-mode: minecraft_data::data::VarInt ,
+pub mode: minecraft_data::data::VarInt ,
 
-flags: u8 ,
+pub flags: u8 ,
 
  } impl PacketContent for PacketUpdateCommandBlockContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.location.write(writer)?;;
 

@@ -1,12 +1,12 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketEntityVelocity ; impl Packet for CbPacketEntityVelocity { type PacketIDType = i32 ; type PacketContent = PacketEntityVelocityContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 79 } } pub struct PacketEntityVelocityContent { entity_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketEntityVelocity ; impl Packet for CbPacketEntityVelocity { type PacketIDType = i32 ; type PacketContent = PacketEntityVelocityContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 79 } } pub struct PacketEntityVelocityContent { pub entity_id: minecraft_data::data::VarInt ,
 
-velocity_x: i16 ,
+pub velocity_x: i16 ,
 
-velocity_y: i16 ,
+pub velocity_y: i16 ,
 
-velocity_z: i16 ,
+pub velocity_z: i16 ,
 
  } impl PacketContent for PacketEntityVelocityContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

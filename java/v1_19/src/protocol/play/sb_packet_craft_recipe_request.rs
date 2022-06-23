@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketCraftRecipeRequest ; impl Packet for SbPacketCraftRecipeRequest { type PacketIDType = i32 ; type PacketContent = PacketCraftRecipeRequestContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 24 } } pub struct PacketCraftRecipeRequestContent { window_id: i8 ,
+ pub struct SbPacketCraftRecipeRequest ; impl Packet for SbPacketCraftRecipeRequest { type PacketIDType = i32 ; type PacketContent = PacketCraftRecipeRequestContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 24 } } pub struct PacketCraftRecipeRequestContent { pub window_id: i8 ,
 
-recipe: String ,
+pub recipe: String ,
 
-make_all: bool ,
+pub make_all: bool ,
 
  } impl PacketContent for PacketCraftRecipeRequestContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
 

@@ -1,20 +1,20 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketInitializeWorldBorder ; impl Packet for CbPacketInitializeWorldBorder { type PacketIDType = i32 ; type PacketContent = PacketInitializeWorldBorderContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 32 } } pub struct PacketInitializeWorldBorderContent { x: f64 ,
+ pub struct CbPacketInitializeWorldBorder ; impl Packet for CbPacketInitializeWorldBorder { type PacketIDType = i32 ; type PacketContent = PacketInitializeWorldBorderContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 32 } } pub struct PacketInitializeWorldBorderContent { pub x: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-old_diameter: f64 ,
+pub old_diameter: f64 ,
 
-new_diameter: f64 ,
+pub new_diameter: f64 ,
 
-speed: minecraft_data::data::VarInt ,
+pub speed: minecraft_data::data::VarInt ,
 
-portal_teleport_boundary: minecraft_data::data::VarInt ,
+pub portal_teleport_boundary: minecraft_data::data::VarInt ,
 
-warning_blocks: minecraft_data::data::VarInt ,
+pub warning_blocks: minecraft_data::data::VarInt ,
 
-warning_time: minecraft_data::data::VarInt ,
+pub warning_time: minecraft_data::data::VarInt ,
 
  } impl PacketContent for PacketInitializeWorldBorderContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.x.write(writer)?;;
 

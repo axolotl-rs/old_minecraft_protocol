@@ -1,22 +1,22 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketMap ; impl Packet for CbPacketMap { type PacketIDType = i32 ; type PacketContent = PacketMapContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 39 } } pub struct PacketMapContent { item_damage: minecraft_data::data::VarInt ,
+ pub struct CbPacketMap ; impl Packet for CbPacketMap { type PacketIDType = i32 ; type PacketContent = PacketMapContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 39 } } pub struct PacketMapContent { pub item_damage: minecraft_data::data::VarInt ,
 
-scale: i8 ,
+pub scale: i8 ,
 
-locked: bool ,
+pub locked: bool ,
 
-icons: void ,
+pub icons: void ,
 
-columns: u8 ,
+pub columns: u8 ,
 
-rows: PacketMapContentContent ,
+pub rows: PacketMapContentContent ,
 
-x: PacketMapContentContent ,
+pub x: PacketMapContentContent ,
 
-y: PacketMapContentContent ,
+pub y: PacketMapContentContent ,
 
-data: PacketMapContentContent ,
+pub data: PacketMapContentContent ,
 
  } impl PacketContent for PacketMapContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.item_damage.write(writer)?;;
 

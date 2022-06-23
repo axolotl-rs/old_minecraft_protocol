@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketAbilities ; impl Packet for CbPacketAbilities { type PacketIDType = i32 ; type PacketContent = PacketAbilitiesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 50 } } pub struct PacketAbilitiesContent { flags: i8 ,
+ pub struct CbPacketAbilities ; impl Packet for CbPacketAbilities { type PacketIDType = i32 ; type PacketContent = PacketAbilitiesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 50 } } pub struct PacketAbilitiesContent { pub flags: i8 ,
 
-flying_speed: f32 ,
+pub flying_speed: f32 ,
 
-walking_speed: f32 ,
+pub walking_speed: f32 ,
 
  } impl PacketContent for PacketAbilitiesContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.flags.write(writer)?;;
 

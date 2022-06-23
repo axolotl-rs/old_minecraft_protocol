@@ -1,14 +1,14 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketEntityEffect ; impl Packet for CbPacketEntityEffect { type PacketIDType = i32 ; type PacketContent = PacketEntityEffectContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 101 } } pub struct PacketEntityEffectContent { entity_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketEntityEffect ; impl Packet for CbPacketEntityEffect { type PacketIDType = i32 ; type PacketContent = PacketEntityEffectContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 101 } } pub struct PacketEntityEffectContent { pub entity_id: minecraft_data::data::VarInt ,
 
-effect_id: minecraft_data::data::VarInt ,
+pub effect_id: minecraft_data::data::VarInt ,
 
-amplifier: i8 ,
+pub amplifier: i8 ,
 
-duration: minecraft_data::data::VarInt ,
+pub duration: minecraft_data::data::VarInt ,
 
-hide_particles: i8 ,
+pub hide_particles: i8 ,
 
  } impl PacketContent for PacketEntityEffectContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

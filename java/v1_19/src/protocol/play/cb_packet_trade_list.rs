@@ -1,16 +1,16 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketTradeList ; impl Packet for CbPacketTradeList { type PacketIDType = i32 ; type PacketContent = PacketTradeListContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 40 } } pub struct PacketTradeListContent { window_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketTradeList ; impl Packet for CbPacketTradeList { type PacketIDType = i32 ; type PacketContent = PacketTradeListContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 40 } } pub struct PacketTradeListContent { pub window_id: minecraft_data::data::VarInt ,
 
-trades: PacketTradeListContentArray ,
+pub trades: PacketTradeListContentArray ,
 
-villager_level: minecraft_data::data::VarInt ,
+pub villager_level: minecraft_data::data::VarInt ,
 
-experience: minecraft_data::data::VarInt ,
+pub experience: minecraft_data::data::VarInt ,
 
-is_regular_villager: bool ,
+pub is_regular_villager: bool ,
 
-can_restock: bool ,
+pub can_restock: bool ,
 
  } impl PacketContent for PacketTradeListContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
 
@@ -36,25 +36,25 @@ let is_regular_villager : bool = PacketContent :: read ( reader ) ?;;
 
 let can_restock : bool = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { window_id, trades, villager_level, experience, is_regular_villager, can_restock } ) } } pub type PacketTradeListContentArray = Vec <PacketTradeListContentArrayContent >; pub struct PacketTradeListContentArrayContent { input_item_1: crate::protocol::types::slot::Slot ,
+ Ok ( Self { window_id, trades, villager_level, experience, is_regular_villager, can_restock } ) } } pub type PacketTradeListContentArray = Vec <PacketTradeListContentArrayContent >; pub struct PacketTradeListContentArrayContent { pub input_item_1: crate::protocol::types::slot::Slot ,
 
-output_item: crate::protocol::types::slot::Slot ,
+pub output_item: crate::protocol::types::slot::Slot ,
 
-input_item_2: void ,
+pub input_item_2: void ,
 
-trade_disabled: bool ,
+pub trade_disabled: bool ,
 
-nb_trade_uses: i32 ,
+pub nb_trade_uses: i32 ,
 
-maximum_nb_trade_uses: i32 ,
+pub maximum_nb_trade_uses: i32 ,
 
-xp: i32 ,
+pub xp: i32 ,
 
-special_price: i32 ,
+pub special_price: i32 ,
 
-price_multiplier: f32 ,
+pub price_multiplier: f32 ,
 
-demand: i32 ,
+pub demand: i32 ,
 
  } impl PacketContent for PacketTradeListContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.input_item_1.write(writer)?;;
 

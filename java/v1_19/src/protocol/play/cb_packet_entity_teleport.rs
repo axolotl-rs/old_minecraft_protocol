@@ -1,18 +1,18 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketEntityTeleport ; impl Packet for CbPacketEntityTeleport { type PacketIDType = i32 ; type PacketContent = PacketEntityTeleportContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 98 } } pub struct PacketEntityTeleportContent { entity_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketEntityTeleport ; impl Packet for CbPacketEntityTeleport { type PacketIDType = i32 ; type PacketContent = PacketEntityTeleportContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 98 } } pub struct PacketEntityTeleportContent { pub entity_id: minecraft_data::data::VarInt ,
 
-x: f64 ,
+pub x: f64 ,
 
-y: f64 ,
+pub y: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-yaw: i8 ,
+pub yaw: i8 ,
 
-pitch: i8 ,
+pub pitch: i8 ,
 
-on_ground: bool ,
+pub on_ground: bool ,
 
  } impl PacketContent for PacketEntityTeleportContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

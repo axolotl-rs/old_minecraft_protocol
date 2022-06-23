@@ -1,8 +1,8 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketEntityStatus ; impl Packet for CbPacketEntityStatus { type PacketIDType = i32 ; type PacketContent = PacketEntityStatusContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 27 } } pub struct PacketEntityStatusContent { entity_id: i32 ,
+ pub struct CbPacketEntityStatus ; impl Packet for CbPacketEntityStatus { type PacketIDType = i32 ; type PacketContent = PacketEntityStatusContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 27 } } pub struct PacketEntityStatusContent { pub entity_id: i32 ,
 
-entity_status: i8 ,
+pub entity_status: i8 ,
 
  } impl PacketContent for PacketEntityStatusContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

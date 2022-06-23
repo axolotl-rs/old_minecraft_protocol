@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUpdateCommandBlockMinecart ; impl Packet for SbPacketUpdateCommandBlockMinecart { type PacketIDType = i32 ; type PacketContent = PacketUpdateCommandBlockMinecartContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 39 } } pub struct PacketUpdateCommandBlockMinecartContent { entity_id: minecraft_data::data::VarInt ,
+ pub struct SbPacketUpdateCommandBlockMinecart ; impl Packet for SbPacketUpdateCommandBlockMinecart { type PacketIDType = i32 ; type PacketContent = PacketUpdateCommandBlockMinecartContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 39 } } pub struct PacketUpdateCommandBlockMinecartContent { pub entity_id: minecraft_data::data::VarInt ,
 
-command: String ,
+pub command: String ,
 
-track_output: bool ,
+pub track_output: bool ,
 
  } impl PacketContent for PacketUpdateCommandBlockMinecartContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

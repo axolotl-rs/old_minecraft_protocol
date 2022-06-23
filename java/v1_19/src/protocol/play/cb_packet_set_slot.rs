@@ -1,12 +1,12 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketSetSlot ; impl Packet for CbPacketSetSlot { type PacketIDType = i32 ; type PacketContent = PacketSetSlotContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 22 } } pub struct PacketSetSlotContent { window_id: i8 ,
+ pub struct CbPacketSetSlot ; impl Packet for CbPacketSetSlot { type PacketIDType = i32 ; type PacketContent = PacketSetSlotContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 22 } } pub struct PacketSetSlotContent { pub window_id: i8 ,
 
-state_id: minecraft_data::data::VarInt ,
+pub state_id: minecraft_data::data::VarInt ,
 
-slot: i16 ,
+pub slot: i16 ,
 
-item: crate::protocol::types::slot::Slot ,
+pub item: crate::protocol::types::slot::Slot ,
 
  } impl PacketContent for PacketSetSlotContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
 

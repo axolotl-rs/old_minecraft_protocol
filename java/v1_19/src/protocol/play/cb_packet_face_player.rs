@@ -1,18 +1,18 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketFacePlayer ; impl Packet for CbPacketFacePlayer { type PacketIDType = i32 ; type PacketContent = PacketFacePlayerContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 55 } } pub struct PacketFacePlayerContent { feet_eyes: minecraft_data::data::VarInt ,
+ pub struct CbPacketFacePlayer ; impl Packet for CbPacketFacePlayer { type PacketIDType = i32 ; type PacketContent = PacketFacePlayerContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 55 } } pub struct PacketFacePlayerContent { pub feet_eyes: minecraft_data::data::VarInt ,
 
-x: f64 ,
+pub x: f64 ,
 
-y: f64 ,
+pub y: f64 ,
 
-z: f64 ,
+pub z: f64 ,
 
-is_entity: bool ,
+pub is_entity: bool ,
 
-entity_id: PacketFacePlayerContentContent ,
+pub entity_id: PacketFacePlayerContentContent ,
 
-entity_feet_eyes: PacketFacePlayerContentContent ,
+pub entity_feet_eyes: PacketFacePlayerContentContent ,
 
  } impl PacketContent for PacketFacePlayerContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.feet_eyes.write(writer)?;;
 

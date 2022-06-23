@@ -1,6 +1,6 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketEntityDestroy ; impl Packet for CbPacketEntityDestroy { type PacketIDType = i32 ; type PacketContent = PacketEntityDestroyContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 58 } } pub struct PacketEntityDestroyContent { entity_ids: PacketEntityDestroyContentArray ,
+ pub struct CbPacketEntityDestroy ; impl Packet for CbPacketEntityDestroy { type PacketIDType = i32 ; type PacketContent = PacketEntityDestroyContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 58 } } pub struct PacketEntityDestroyContent { pub entity_ids: PacketEntityDestroyContentArray ,
 
  } impl PacketContent for PacketEntityDestroyContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_ids.write(writer)?;;
 

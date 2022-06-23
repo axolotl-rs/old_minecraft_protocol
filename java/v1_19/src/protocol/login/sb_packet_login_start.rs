@@ -16,7 +16,7 @@ impl Packet for SbPacketLoginStart {
     }
 }
 pub struct PacketLoginStartContent {
-    username: String,
+    pub username: String,
 }
 impl PacketContent for PacketLoginStartContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {

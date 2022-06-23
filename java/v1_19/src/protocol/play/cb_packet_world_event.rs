@@ -1,12 +1,12 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketWorldEvent ; impl Packet for CbPacketWorldEvent { type PacketIDType = i32 ; type PacketContent = PacketWorldEventContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 35 } } pub struct PacketWorldEventContent { effect_id: i32 ,
+ pub struct CbPacketWorldEvent ; impl Packet for CbPacketWorldEvent { type PacketIDType = i32 ; type PacketContent = PacketWorldEventContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 35 } } pub struct PacketWorldEventContent { pub effect_id: i32 ,
 
-location: minecraft_data::data::position::Position ,
+pub location: minecraft_data::data::position::Position ,
 
-data: i32 ,
+pub data: i32 ,
 
-global: bool ,
+pub global: bool ,
 
  } impl PacketContent for PacketWorldEventContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.effect_id.write(writer)?;;
 

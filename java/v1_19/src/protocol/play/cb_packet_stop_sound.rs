@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketStopSound ; impl Packet for CbPacketStopSound { type PacketIDType = i32 ; type PacketContent = PacketStopSoundContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 94 } } pub struct PacketStopSoundContent { flags: i8 ,
+ pub struct CbPacketStopSound ; impl Packet for CbPacketStopSound { type PacketIDType = i32 ; type PacketContent = PacketStopSoundContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 94 } } pub struct PacketStopSoundContent { pub flags: i8 ,
 
-source: PacketStopSoundContentContent ,
+pub source: PacketStopSoundContentContent ,
 
-sound: PacketStopSoundContentContent ,
+pub sound: PacketStopSoundContentContent ,
 
  } impl PacketContent for PacketStopSoundContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.flags.write(writer)?;;
 
@@ -18,13 +18,13 @@ let source : PacketStopSoundContentContent = PacketSwitch::switch_read(&flags,re
 
 let sound : PacketStopSoundContentContent = PacketSwitch::switch_read(&flags,reader)?;;
 
- Ok ( Self { flags, source, sound } ) } } pub enum PacketStopSoundContentContent { /// This switch variant requires a value 1 in the compare_to field
-
- Switch1 (minecraft_data::data::VarInt ) ,
-
-/// This switch variant requires a value 3 in the compare_to field
+ Ok ( Self { flags, source, sound } ) } } pub enum PacketStopSoundContentContent { /// This switch variant requires a value 3 in the compare_to field
 
  Switch3 (minecraft_data::data::VarInt ) ,
+
+/// This switch variant requires a value 1 in the compare_to field
+
+ Switch1 (minecraft_data::data::VarInt ) ,
 
  } impl PacketSwitch for PacketStopSoundContentContent { type CompareType = i8 ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 

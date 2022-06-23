@@ -1,18 +1,18 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketNamedSoundEffect ; impl Packet for CbPacketNamedSoundEffect { type PacketIDType = i32 ; type PacketContent = PacketNamedSoundEffectContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 25 } } pub struct PacketNamedSoundEffectContent { sound_name: String ,
+ pub struct CbPacketNamedSoundEffect ; impl Packet for CbPacketNamedSoundEffect { type PacketIDType = i32 ; type PacketContent = PacketNamedSoundEffectContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 25 } } pub struct PacketNamedSoundEffectContent { pub sound_name: String ,
 
-sound_category: minecraft_data::data::VarInt ,
+pub sound_category: minecraft_data::data::VarInt ,
 
-x: i32 ,
+pub x: i32 ,
 
-y: i32 ,
+pub y: i32 ,
 
-z: i32 ,
+pub z: i32 ,
 
-volume: f32 ,
+pub volume: f32 ,
 
-pitch: f32 ,
+pub pitch: f32 ,
 
  } impl PacketContent for PacketNamedSoundEffectContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.sound_name.write(writer)?;;
 

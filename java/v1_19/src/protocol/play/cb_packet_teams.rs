@@ -1,24 +1,24 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketTeams ; impl Packet for CbPacketTeams { type PacketIDType = i32 ; type PacketContent = PacketTeamsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 85 } } pub struct PacketTeamsContent { team: String ,
+ pub struct CbPacketTeams ; impl Packet for CbPacketTeams { type PacketIDType = i32 ; type PacketContent = PacketTeamsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 85 } } pub struct PacketTeamsContent { pub team: String ,
 
-mode: i8 ,
+pub mode: i8 ,
 
-name: PacketTeamsContentContent ,
+pub name: PacketTeamsContentContent ,
 
-friendly_fire: PacketTeamsContentContent ,
+pub friendly_fire: PacketTeamsContentContent ,
 
-name_tag_visibility: PacketTeamsContentContent ,
+pub name_tag_visibility: PacketTeamsContentContent ,
 
-collision_rule: PacketTeamsContentContent ,
+pub collision_rule: PacketTeamsContentContent ,
 
-formatting: PacketTeamsContentContent ,
+pub formatting: PacketTeamsContentContent ,
 
-prefix: PacketTeamsContentContent ,
+pub prefix: PacketTeamsContentContent ,
 
-suffix: PacketTeamsContentContent ,
+pub suffix: PacketTeamsContentContent ,
 
-players: PacketTeamsContentContent ,
+pub players: PacketTeamsContentContent ,
 
  } impl PacketContent for PacketTeamsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.team.write(writer)?;;
 
@@ -90,23 +90,23 @@ pub enum PacketTeamsContentContent { /// This switch variant requires a value 2 
 
  } impl PacketSwitch for PacketTeamsContentContent { type CompareType = i8 ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
-pub enum PacketTeamsContentContent { /// This switch variant requires a value 0 in the compare_to field
-
- Switch0 (String ) ,
-
-/// This switch variant requires a value 2 in the compare_to field
+pub enum PacketTeamsContentContent { /// This switch variant requires a value 2 in the compare_to field
 
  Switch2 (String ) ,
 
+/// This switch variant requires a value 0 in the compare_to field
+
+ Switch0 (String ) ,
+
  } impl PacketSwitch for PacketTeamsContentContent { type CompareType = i8 ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
-pub enum PacketTeamsContentContent { /// This switch variant requires a value 0 in the compare_to field
-
- Switch0 (minecraft_data::data::VarInt ) ,
-
-/// This switch variant requires a value 2 in the compare_to field
+pub enum PacketTeamsContentContent { /// This switch variant requires a value 2 in the compare_to field
 
  Switch2 (minecraft_data::data::VarInt ) ,
+
+/// This switch variant requires a value 0 in the compare_to field
+
+ Switch0 (minecraft_data::data::VarInt ) ,
 
  } impl PacketSwitch for PacketTeamsContentContent { type CompareType = i8 ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 

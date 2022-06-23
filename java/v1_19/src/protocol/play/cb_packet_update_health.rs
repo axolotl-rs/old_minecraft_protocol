@@ -1,10 +1,10 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketUpdateHealth ; impl Packet for CbPacketUpdateHealth { type PacketIDType = i32 ; type PacketContent = PacketUpdateHealthContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 82 } } pub struct PacketUpdateHealthContent { health: f32 ,
+ pub struct CbPacketUpdateHealth ; impl Packet for CbPacketUpdateHealth { type PacketIDType = i32 ; type PacketContent = PacketUpdateHealthContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 82 } } pub struct PacketUpdateHealthContent { pub health: f32 ,
 
-food: minecraft_data::data::VarInt ,
+pub food: minecraft_data::data::VarInt ,
 
-food_saturation: f32 ,
+pub food_saturation: f32 ,
 
  } impl PacketContent for PacketUpdateHealthContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.health.write(writer)?;;
 

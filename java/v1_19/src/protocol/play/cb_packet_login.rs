@@ -1,36 +1,36 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketLogin ; impl Packet for CbPacketLogin { type PacketIDType = i32 ; type PacketContent = PacketLoginContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 38 } } pub struct PacketLoginContent { entity_id: i32 ,
+ pub struct CbPacketLogin ; impl Packet for CbPacketLogin { type PacketIDType = i32 ; type PacketContent = PacketLoginContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 38 } } pub struct PacketLoginContent { pub entity_id: i32 ,
 
-is_hardcore: bool ,
+pub is_hardcore: bool ,
 
-game_mode: u8 ,
+pub game_mode: u8 ,
 
-previous_game_mode: i8 ,
+pub previous_game_mode: i8 ,
 
-world_names: PacketLoginContentArray ,
+pub world_names: PacketLoginContentArray ,
 
-dimension_codec: minecraft_data::data::nbt::Nbt ,
+pub dimension_codec: minecraft_data::data::nbt::Nbt ,
 
-dimension: minecraft_data::data::nbt::Nbt ,
+pub dimension: minecraft_data::data::nbt::Nbt ,
 
-world_name: String ,
+pub world_name: String ,
 
-hashed_seed: i64 ,
+pub hashed_seed: i64 ,
 
-max_players: minecraft_data::data::VarInt ,
+pub max_players: minecraft_data::data::VarInt ,
 
-view_distance: minecraft_data::data::VarInt ,
+pub view_distance: minecraft_data::data::VarInt ,
 
-simulation_distance: minecraft_data::data::VarInt ,
+pub simulation_distance: minecraft_data::data::VarInt ,
 
-reduced_debug_info: bool ,
+pub reduced_debug_info: bool ,
 
-enable_respawn_screen: bool ,
+pub enable_respawn_screen: bool ,
 
-is_debug: bool ,
+pub is_debug: bool ,
 
-is_flat: bool ,
+pub is_flat: bool ,
 
  } impl PacketContent for PacketLoginContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.entity_id.write(writer)?;;
 

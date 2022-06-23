@@ -1,36 +1,36 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUpdateStructureBlock ; impl Packet for SbPacketUpdateStructureBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateStructureBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 42 } } pub struct PacketUpdateStructureBlockContent { location: minecraft_data::data::position::Position ,
+ pub struct SbPacketUpdateStructureBlock ; impl Packet for SbPacketUpdateStructureBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateStructureBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 42 } } pub struct PacketUpdateStructureBlockContent { pub location: minecraft_data::data::position::Position ,
 
-action: minecraft_data::data::VarInt ,
+pub action: minecraft_data::data::VarInt ,
 
-mode: minecraft_data::data::VarInt ,
+pub mode: minecraft_data::data::VarInt ,
 
-name: String ,
+pub name: String ,
 
-offset_x: u8 ,
+pub offset_x: u8 ,
 
-offset_y: u8 ,
+pub offset_y: u8 ,
 
-offset_z: u8 ,
+pub offset_z: u8 ,
 
-size_x: u8 ,
+pub size_x: u8 ,
 
-size_y: u8 ,
+pub size_y: u8 ,
 
-size_z: u8 ,
+pub size_z: u8 ,
 
-mirror: minecraft_data::data::VarInt ,
+pub mirror: minecraft_data::data::VarInt ,
 
-rotation: minecraft_data::data::VarInt ,
+pub rotation: minecraft_data::data::VarInt ,
 
-metadata: String ,
+pub metadata: String ,
 
-integrity: f32 ,
+pub integrity: f32 ,
 
-seed: minecraft_data::data::VarInt ,
+pub seed: minecraft_data::data::VarInt ,
 
-flags: u8 ,
+pub flags: u8 ,
 
  } impl PacketContent for PacketUpdateStructureBlockContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.location.write(writer)?;;
 

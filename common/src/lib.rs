@@ -10,6 +10,7 @@ pub mod foods;
 pub mod instruments;
 pub mod items;
 pub mod materials;
+pub mod packets;
 pub mod particles;
 pub mod protocol;
 /// The common version types
@@ -18,7 +19,6 @@ pub mod recipes;
 pub mod tints;
 pub mod version;
 pub mod windows;
-pub mod packets;
 
 pub use protocol_verison::{JavaProtocolVersion, ProtocolVersion};
 

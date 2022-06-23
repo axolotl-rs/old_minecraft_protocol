@@ -1,6 +1,6 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketKeepAlive ; impl Packet for SbPacketKeepAlive { type PacketIDType = i32 ; type PacketContent = PacketKeepAliveContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 15 } } pub struct PacketKeepAliveContent { keep_alive_id: i64 ,
+ pub struct SbPacketKeepAlive ; impl Packet for SbPacketKeepAlive { type PacketIDType = i32 ; type PacketContent = PacketKeepAliveContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 15 } } pub struct PacketKeepAliveContent { pub keep_alive_id: i64 ,
 
  } impl PacketContent for PacketKeepAliveContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.keep_alive_id.write(writer)?;;
 

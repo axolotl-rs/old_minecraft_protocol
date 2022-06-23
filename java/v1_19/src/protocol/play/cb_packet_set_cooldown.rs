@@ -1,8 +1,8 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketSetCooldown ; impl Packet for CbPacketSetCooldown { type PacketIDType = i32 ; type PacketContent = PacketSetCooldownContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 23 } } pub struct PacketSetCooldownContent { item_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketSetCooldown ; impl Packet for CbPacketSetCooldown { type PacketIDType = i32 ; type PacketContent = PacketSetCooldownContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 23 } } pub struct PacketSetCooldownContent { pub item_id: minecraft_data::data::VarInt ,
 
-cooldown_ticks: minecraft_data::data::VarInt ,
+pub cooldown_ticks: minecraft_data::data::VarInt ,
 
  } impl PacketContent for PacketSetCooldownContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.item_id.write(writer)?;;
 

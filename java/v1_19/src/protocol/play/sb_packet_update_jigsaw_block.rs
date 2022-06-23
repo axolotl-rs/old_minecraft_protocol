@@ -1,16 +1,16 @@
 use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUpdateJigsawBlock ; impl Packet for SbPacketUpdateJigsawBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateJigsawBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 41 } } pub struct PacketUpdateJigsawBlockContent { location: minecraft_data::data::position::Position ,
+ pub struct SbPacketUpdateJigsawBlock ; impl Packet for SbPacketUpdateJigsawBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateJigsawBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 41 } } pub struct PacketUpdateJigsawBlockContent { pub location: minecraft_data::data::position::Position ,
 
-name: String ,
+pub name: String ,
 
-target: String ,
+pub target: String ,
 
-pool: String ,
+pub pool: String ,
 
-final_state: String ,
+pub final_state: String ,
 
-joint_type: String ,
+pub joint_type: String ,
 
  } impl PacketContent for PacketUpdateJigsawBlockContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.location.write(writer)?;;
 
