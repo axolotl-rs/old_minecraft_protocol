@@ -1,10 +1,10 @@
-use std::fmt::{Display, Formatter};
-use std::str::FromStr;
 use convert_case::{Case, Casing};
-use serde::Serialize;
 use genco::fmt;
 use genco::prelude::*;
 use minecraft_data_rs::models::protocol::types::TypeName;
+use serde::Serialize;
+use std::fmt::{Display, Formatter};
+use std::str::FromStr;
 
 #[derive(Debug, Clone)]
 pub enum CompareTo {
@@ -82,9 +82,8 @@ pub enum LanguageType {
     Rust {
         /// The absolute path of the type. Such as Uuid::Uuid or minecraft_data::generated::types::Slot
         absolute_path: String,
-    }
+    },
 }
-
 
 impl Display for LanguageType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -128,7 +127,6 @@ impl Display for Field {
     }
 }
 
-
 impl Field {
     pub fn new(name: &TypeName, data_type: DataType) -> Self {
         Field {
@@ -163,8 +161,8 @@ impl Field {
         let data_type = &self.data_type;
         if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                    total_bytes += #(format!("self.{}.switch_write(writer)?;",self))
-                }
+                total_bytes += #(format!("self.{}.switch_write(writer)?;",self))
+            }
         } else {
             quote! {
                total_bytes += #(format!("self.{}.write(writer)?;",self))
@@ -175,7 +173,6 @@ impl Field {
         let name = &self.name.to_case(Case::Snake);
         let data_type = &self.data_type;
 
-
         let v1 = if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
                 let #name: #data_type = #(format!("PacketSwitch::switch_read(&{},reader)?;",compare_to))
@@ -185,12 +182,14 @@ impl Field {
                 let #name: #data_type = PacketContent::read(reader)?;
             }
         };
-        (v1, quote! {
-            #name
-        })
+        (
+            v1,
+            quote! {
+                #name
+            },
+        )
     }
 }
-
 
 #[cfg(test)]
 pub mod test {
@@ -203,7 +202,9 @@ pub mod test {
             data_type: DataType {
                 minecraft_name: "".to_string(),
                 inner_type: InnerType::Container,
-                language_type: LanguageType::Rust { absolute_path: "".to_string() },
+                language_type: LanguageType::Rust {
+                    absolute_path: "".to_string(),
+                },
             },
         };
 
@@ -222,7 +223,10 @@ pub mod test {
         for i in 0..5 {
             fields.push(Field {
                 name: format!("field_{}", i),
-                data_type: DataType::new_generated_type(format!("field_{}", i), InnerType::Container),
+                data_type: DataType::new_generated_type(
+                    format!("field_{}", i),
+                    InnerType::Container,
+                ),
             });
         }
         // Create a container
@@ -243,7 +247,10 @@ pub mod test {
         for j in 0..5 {
             fields.push(Field {
                 name: format!("field_{}", j),
-                data_type: DataType::new_generated_type(format!("field_{}", j), InnerType::Container),
+                data_type: DataType::new_generated_type(
+                    format!("field_{}", j),
+                    InnerType::Container,
+                ),
             });
         }
         variants.push(SwitchVariant {
@@ -269,7 +276,10 @@ pub mod test {
             content_name: "y Variant".to_string(),
             compare_to: CompareTo::Specified {
                 compare_to: "test".to_string(),
-                compare_to_type: Box::new(DataType::new_rust_type("string".to_string(), "String".to_string())),
+                compare_to_type: Box::new(DataType::new_rust_type(
+                    "string".to_string(),
+                    "String".to_string(),
+                )),
             },
 
             variants: variants,
@@ -304,7 +314,8 @@ impl SwitchVariant {
             requirement.replace(":", "_")
         } else {
             requirement.to_string()
-        }.to_case(Case::UpperCamel)
+        }
+        .to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::UpperCamel);
@@ -338,17 +349,18 @@ pub enum SwitchVariantType {
 impl SwitchVariantType {
     pub fn generate_variant_type(&self) -> Tokens<Rust> {
         match self {
-            SwitchVariantType::Void => quote! {
-
-            },
+            SwitchVariantType::Void => quote! {},
             SwitchVariantType::Container(fields) => {
-                let fields: Vec<Tokens<Rust>> = fields.iter().map(|field| field.generate_field_definition()).collect();
+                let fields: Vec<Tokens<Rust>> = fields
+                    .iter()
+                    .map(|field| field.generate_field_definition())
+                    .collect();
                 quote! {
-                    {
-                        #<line>
-                        #(for my_field in fields => #my_field #<line>)
-                    }
-               }
+                     {
+                         #<line>
+                         #(for my_field in fields => #my_field #<line>)
+                     }
+                }
             }
             SwitchVariantType::Single(data_type) => {
                 let data_type = &data_type.data_type;
@@ -362,10 +374,11 @@ impl SwitchVariantType {
     pub fn generate_read_call(&self, name: &str) -> Tokens<Rust> {
         match self {
             SwitchVariantType::Void => quote! {
-                Self::#name
+                Ok(Self::#name)
             },
             SwitchVariantType::Container(fields) => {
-                let reads: Vec<(Tokens<Rust>, Tokens<Rust>)> = fields.iter().map(|field| field.generate_read()).collect();
+                let reads: Vec<(Tokens<Rust>, Tokens<Rust>)> =
+                    fields.iter().map(|field| field.generate_read()).collect();
                 // Split the reads into two vectors, one for the reads and one for the names
                 let mut read_calls: Vec<Tokens<Rust>> = Vec::with_capacity(reads.len());
                 let mut reads_values: Vec<Tokens<Rust>> = Vec::with_capacity(reads.len());
@@ -374,13 +387,13 @@ impl SwitchVariantType {
                     reads_values.push(value);
                 }
                 quote! {
-                    {
-                        #(for read_call in read_calls => #read_call #<line>)
-                        Self::#name {
-                            #(for read_value in reads_values join (, )  =>  #read_value)
-                        }
-                    }
-               }
+                     {
+                         #(for read_call in read_calls => #read_call #<line>)
+                         Ok(Self::#name {
+                             #(for read_value in reads_values join (, )  =>  #read_value)
+                         })
+                     }
+                }
             }
             SwitchVariantType::Single(data_type) => {
                 let (call, variable) = &data_type.generate_read();
@@ -388,7 +401,7 @@ impl SwitchVariantType {
                     {
                         #call
                         #<line>
-                        Self::#name(#variable)
+                        Ok(Self::#name(#variable))
                     }
                 }
             }
@@ -414,13 +427,10 @@ pub enum GenerateType {
 impl GenerateType {
     pub fn generate_type_wrap_as_mod(&self) -> Tokens<Rust> {
         let mod_name = match self {
-            GenerateType::Container { content_name, .. } => {
-                content_name
-            }
-            GenerateType::SwitchEnum { content_name, .. } => {
-                content_name
-            }
-        }.to_case(Case::Snake);
+            GenerateType::Container { content_name, .. } => content_name,
+            GenerateType::SwitchEnum { content_name, .. } => content_name,
+        }
+        .to_case(Case::Snake);
         let tokens = self.generate_type();
         quote! {
             mod #mod_name {
@@ -436,11 +446,20 @@ impl GenerateType {
     }
     pub fn generate_type(&self) -> Tokens<Rust> {
         match self {
-            GenerateType::Container { content_name, fields, children } => {
+            GenerateType::Container {
+                content_name,
+                fields,
+                children,
+            } => {
                 let content_name = &content_name.to_case(Case::UpperCamel);
-                let fields_defs: Vec<Tokens<Rust>> = fields.iter().map(|field| field.generate_field_definition()).collect();
-                let writes: Vec<Tokens<Rust>> = fields.iter().map(|field| field.generate_write()).collect();
-                let reads: Vec<(Tokens<Rust>, Tokens<Rust>)> = fields.iter().map(|field| field.generate_read()).collect();
+                let fields_defs: Vec<Tokens<Rust>> = fields
+                    .iter()
+                    .map(|field| field.generate_field_definition())
+                    .collect();
+                let writes: Vec<Tokens<Rust>> =
+                    fields.iter().map(|field| field.generate_write()).collect();
+                let reads: Vec<(Tokens<Rust>, Tokens<Rust>)> =
+                    fields.iter().map(|field| field.generate_read()).collect();
                 // Split the reads into two vectors, one for the reads and one for the names
                 let mut read_calls: Vec<Tokens<Rust>> = Vec::with_capacity(reads.len());
                 let mut reads_values: Vec<Tokens<Rust>> = Vec::with_capacity(reads.len());
@@ -448,7 +467,8 @@ impl GenerateType {
                     read_calls.push(name);
                     reads_values.push(value);
                 }
-                let children: Vec<Tokens<Rust>> = children.iter().map(|child| child.generate_type()).collect();
+                let children: Vec<Tokens<Rust>> =
+                    children.iter().map(|child| child.generate_type()).collect();
                 quote! {
                     pub struct #content_name {
                         #(for my_field in fields_defs => #my_field #<line>)
@@ -462,23 +482,41 @@ impl GenerateType {
                         }
                         fn read<Reader: BufRead>(reader: &mut Reader) -> Result<Self>  {
                             #(for my_read in read_calls =>  #my_read; #<line>)
-                            Self{
+                            Ok(Self{
                                 #(for my_read in reads_values join (, )  =>  #my_read)
-                            }
+                            })
                         }
                     }
                     #(for my_child in children => #my_child #<line>)
                 }
             }
-            GenerateType::SwitchEnum { children, content_name, compare_to, variants } => {
+            GenerateType::SwitchEnum {
+                children,
+                content_name,
+                compare_to,
+                variants,
+            } => {
                 let content_name = &content_name.to_case(Case::UpperCamel);
-                let variants_defs: Vec<Tokens<Rust>> = variants.iter().map(|variant| variant.generate_variant_def()).collect();
-                let variants_reads: Vec<Tokens<Rust>> = variants.iter().map(|variant| variant.generate_read_call()).collect();
-                let children: Vec<Tokens<Rust>> = children.iter().map(|child| child.generate_type()).collect();
+                let variants_defs: Vec<Tokens<Rust>> = variants
+                    .iter()
+                    .map(|variant| variant.generate_variant_def())
+                    .collect();
+                let variants_reads: Vec<Tokens<Rust>> = variants
+                    .iter()
+                    .map(|variant| variant.generate_read_call())
+                    .collect();
+                let children: Vec<Tokens<Rust>> =
+                    children.iter().map(|child| child.generate_type()).collect();
                 match compare_to {
-                    CompareTo::Specified { compare_to_type, compare_to } => {
+                    CompareTo::Specified {
+                        compare_to_type,
+                        compare_to,
+                    } => {
                         let compare_to_type = compare_to_type.as_ref();
-                        let match_call = if compare_to_type.minecraft_name.eq_ignore_ascii_case("string") {
+                        let match_call = if compare_to_type
+                            .minecraft_name
+                            .eq_ignore_ascii_case("string")
+                        {
                             format!("compare_to.as_str()")
                         } else {
                             format!("compare_to")
@@ -504,7 +542,10 @@ impl GenerateType {
                     CompareTo::Generic { compare_to_type } => {
                         let compare_to_type = compare_to_type.as_ref();
 
-                        let match_call = if compare_to_type.minecraft_name.eq_ignore_ascii_case("string") {
+                        let match_call = if compare_to_type
+                            .minecraft_name
+                            .eq_ignore_ascii_case("string")
+                        {
                             format!("compare_to.as_str()")
                         } else {
                             format!("compare_to")
