@@ -55,9 +55,9 @@ impl PacketContent for String {
         Self: Sized,
     {
         let len = VarInt::read(reader)?;
-        let mut buf = BytesMut::with_capacity(len.0 as usize);
-        reader.read_exact(&mut buf)?;
-        Ok(String::from_utf8_lossy(buf.freeze().as_ref()).into_owned())
+        let mut buf = Vec::with_capacity(len.0 as usize);
+        reader.take(len.0 as u64).read_to_end(&mut buf)?;
+        Ok(String::from_utf8_lossy(buf.as_ref()).into_owned())
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
@@ -121,9 +121,8 @@ where
     {
         let mut length = 0;
         if let Some(item) = self {
-            let mut content = BytesMut::with_capacity(1).writer();
+            let mut content = Vec::with_capacity(1);
             item.write(&mut content)?;
-            let mut content = content.into_inner();
             length = VarInt(content.len() as i32).write(writer)?;
             length += content.len();
             writer.write_all(&mut content)?;
@@ -160,9 +159,9 @@ impl PacketContent for bytes::Bytes {
     {
         let len = VarInt::read(reader)?;
 
-        let mut buffer = BytesMut::with_capacity(len.0 as usize);
-        reader.read_exact(&mut buffer)?;
-        Ok(buffer.freeze())
+        let mut buffer = Vec::with_capacity(len.0 as usize);
+        reader.take(len.0 as u64).read_to_end(&mut buffer)?;
+        Ok(bytes::Bytes::from(buffer))
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
