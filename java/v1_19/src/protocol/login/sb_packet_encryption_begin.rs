@@ -1,15 +1,36 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_data::protocol::PacketContent;
+use minecraft_data::protocol::PacketSwitch;
+use minecraft_data::protocol::Packet;
+use std::io::{BufRead, Error, ErrorKind, Result, Write};
+use std::str::FromStr;
+use bytes::Bytes;
+use crate::protocol::login::SigData;
 
- pub struct SbPacketEncryptionBegin ; impl Packet for SbPacketEncryptionBegin { type PacketIDType = i32 ; type PacketContent = PacketEncryptionBeginContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 1 } } pub struct PacketEncryptionBeginContent { pub shared_secret: void ,
+pub struct SbPacketEncryptionBegin;
 
-pub verify_token: void ,
+impl Packet for SbPacketEncryptionBegin {
+    type PacketIDType = i32;
+    type PacketContent = PacketEncryptionBeginContent;
+    fn packet_id() -> Self::PacketIDType where Self: Sized { 1 }
+}
 
- } impl PacketContent for PacketEncryptionBeginContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.shared_secret.write(writer)?;;
+pub struct PacketEncryptionBeginContent {
+    pub server_id: String,
+    pub sig: SigData,
+}
 
-total_bytes += self.verify_token.write(writer)?;;
+impl PacketContent for PacketEncryptionBeginContent {
+    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
+        let mut total_bytes = 0;
+        total_bytes += self.server_id.write(writer)?;
+        total_bytes += self.sig.write(writer)?;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let shared_secret : void = PacketContent :: read ( reader ) ?;;
+        Ok(total_bytes)
+    }
+    fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
+        let server_id: String = PacketContent::read(reader)?;
 
-let verify_token : void = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { shared_secret, verify_token } ) } }
+        Ok(Self { server_id, sig: SigData::read(reader)? })
+    }
+}

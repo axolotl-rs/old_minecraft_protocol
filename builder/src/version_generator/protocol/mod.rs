@@ -35,18 +35,18 @@ pub fn generate_protocol(file: PathBuf, json: Protocol, version: Version) -> Gen
     let mut type_generator = types::TypesGenerator::new(json.types)?;
     let generates = type_generator.generate(&crate_path)?;
     let types_rs = file.join("types.rs");
-    if types_rs.exists() {
-        remove_file(&types_rs)?;
+    if !types_rs.exists() {
+        let mut file_file = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open(&types_rs)?;
+        for x in generates.into_iter() {
+            let content = x.generate_type_wrap_as_mod().to_file_string().unwrap();
+            file_file.write_all(content.as_bytes())?;
+            file_file.write(b"\n")?;
+        }
     }
-    let mut file_file = OpenOptions::new()
-        .write(true)
-        .create(true)
-        .open(&types_rs)?;
-    for x in generates.into_iter() {
-        let content = x.generate_type_wrap_as_mod().to_file_string().unwrap();
-        file_file.write_all(content.as_bytes())?;
-        file_file.write(b"\n")?;
-    }
+
 
     let mut packet_generator =
         packet_generator::PacketGenerator::new(&type_generator, json.handshaking)?;
@@ -76,7 +76,7 @@ fn create_packets(
             generate.content_name().to_case(Case::Snake)
         ));
         if my_file.exists() {
-            remove_file(&my_file)?;
+            continue;
         }
         let mut file_file = OpenOptions::new().write(true).create(true).open(&my_file)?;
         let content = generate.generate_with_imports().to_file_string().unwrap();
