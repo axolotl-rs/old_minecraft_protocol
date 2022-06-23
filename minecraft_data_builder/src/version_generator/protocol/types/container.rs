@@ -26,8 +26,8 @@ pub fn generate_child_level_container(parent_name: String, built: Vec<(TypeName,
             }
         })?;
         let data_type = match result {
-            SubTypeResponse::NotBuiltYet(built) => {
-                return Ok(GenerationResult::FailureMissingSubType(*built));
+            SubTypeResponse::NotBuiltYet(_) => {
+                return Ok(GenerationResult::FailureMissingSubType(PacketDataType::Built { name: TypeName::Anonymous, value: NativeType::Container(built) }));
             }
             SubTypeResponse::CanNotBuild(build) => {
                 warn!("Can not build type: {}", field_name);
@@ -57,11 +57,11 @@ pub fn generate_child_level_container(parent_name: String, built: Vec<(TypeName,
 pub fn generate_top_level_container(name: TypeName, built: Vec<(TypeName, Box<PacketDataType>)>, state: &TypesGenerator) -> Result<GenerationResult, GenError> {
     let mut fields: Vec<Field> = Vec::with_capacity(built.len());
     let mut children = Vec::with_capacity(1);
-    for (field_name, field_type) in built {
-        let result = state.sub_type(name.to_string(), field_type,|v|{
+    for (field_name, field_type) in &built {
+        let result = state.sub_type(name.to_string(), field_type.clone(),|v|{
             if let Some(v)=fields.iter().find(|f| f.name == v){
                 CompareTo::Specified {
-                    compare_to: v.name.to_string(),
+                    compare_to: v.name.to_string().to_case(Case::Snake),
                     compare_to_type: Box::new(v.data_type.clone())
                 }
             }else{
@@ -72,8 +72,8 @@ pub fn generate_top_level_container(name: TypeName, built: Vec<(TypeName, Box<Pa
             }
         })?;
         let data_type = match result {
-            SubTypeResponse::NotBuiltYet(built) => {
-                return Ok(GenerationResult::FailureMissingSubType(*built));
+            SubTypeResponse::NotBuiltYet(_) => {
+                return Ok(GenerationResult::FailureMissingSubType(PacketDataType::Built { name, value: NativeType::Container(built) }));
             }
             SubTypeResponse::CanNotBuild(build) => {
                 warn!("Can not build type: {}", field_name);

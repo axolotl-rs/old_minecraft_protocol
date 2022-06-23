@@ -178,7 +178,7 @@ impl Field {
 
         let v1 = if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                let #name: #data_type = #(format!("PacketSwitch::switch_read({},reader)?;",compare_to))
+                let #name: #data_type = #(format!("PacketSwitch::switch_read(&{},reader)?;",compare_to))
             }
         } else {
             quote! {

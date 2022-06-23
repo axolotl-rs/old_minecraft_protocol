@@ -3,9 +3,11 @@ mod switch;
 mod array;
 
 use std::collections::VecDeque;
+use convert_case::{Case, Casing};
 use log::{info, warn};
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes};
-use crate::code_gen::{CompareTo, DataType, GenerateType};
+use serde_json::Value;
+use crate::code_gen::{CompareTo, DataType, GenerateType, InnerType};
 use crate::configs::type_impls::get_default_type_impl;
 use crate::error::GenError;
 
@@ -86,7 +88,7 @@ impl TypesGenerator {
                                 warn!("Type could not be generated.");
                                 self.types_failed_to_generate.push(retu);
                             } else {
-                                warn!("Type could not be generated. Going to try again later");
+                                warn!("Type could not be generated. Going to try again later {retu:#?}");
                                 self.types_to_be_generated.push_back(retu);
                             }
 
@@ -180,7 +182,18 @@ impl TypesGenerator {
             PacketDataType::Other { name, value } => {
                 if let Some(inner_name) = name.as_ref() {
                     if let Some(data) = self.get_data_type(&inner_name.to_string()) {
-                        Ok(SubTypeResponse::AlreadyBuilt(data.clone()))
+                        let mut data_type = data.clone();
+                        if let InnerType::Switch{compare_to} = &data_type.inner_type {
+                           if let Value::Object(mut object) =value {
+                               if let Some(value) = object.remove("compareTo"){
+                                   if let Value::String(compare_to) = value {
+                                       let to1 = ct(compare_to);
+                                       data_type.inner_type = InnerType::Switch{compare_to: to1};
+                                   }
+                               }
+                           }
+                        }
+                        Ok(SubTypeResponse::AlreadyBuilt(data_type))
                     } else {
                         Ok(SubTypeResponse::NotBuiltYet(Box::new(PacketDataType::Other { name, value })))
                     }
