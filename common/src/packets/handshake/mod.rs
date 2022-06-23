@@ -14,7 +14,7 @@ impl Packet for SetProtocol {
         0
     }
 }
-
+#[derive(Debug)]
 pub struct PacketSetProtocolContent {
     pub protocol_version: VarInt,
     pub server_host: String,
@@ -65,7 +65,7 @@ impl Packet for SbPacketLegacyServerListPing {
         254
     }
 }
-
+#[derive(Debug)]
 pub struct PacketLegacyServerListPingContent {
     payload: u8,
 }
