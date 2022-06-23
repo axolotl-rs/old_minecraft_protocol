@@ -620,21 +620,27 @@ impl GenerateType {
             GenerateType::Packet {
                 packet_id,
                 content_name,
-                ..
+                data_type, children
             } => {
                 let packet_id = packet_id.clone();
+                let children: Vec<Tokens<Rust>> =
+                    children.iter().map(|child| child.generate_type()).collect();
                 quote! {
                 pub struct #content_name;
 
                 impl Packet for #content_name {
                     type PacketIDType = i32;
+                    type PacketContent= #data_type;
 
                     fn packet_id() -> Self::PacketIDType
                         where
-                            Self: Sized{
+                            Self: Sized
+                        {
                             #packet_id
                         }
                 }
+                #(for my_child in children => #my_child #<line>)
+
                 }
             }
         }

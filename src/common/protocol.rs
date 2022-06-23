@@ -9,9 +9,27 @@ pub trait Packet {
     where
         Self: Sized;
 
-    fn packet_content() -> Self::PacketContent
-    where
-        Self: Sized;
+}
+#[cfg(test)]
+pub mod test{
+    use crate::common::data::VarInt;
+    use crate::common::protocol::Packet;
+
+    pub struct PacketTest;
+    impl Packet for PacketTest {
+        type PacketIDType = i32;
+        type PacketContent = VarInt;
+        fn packet_id() -> Self::PacketIDType
+        where
+            Self: Sized,
+        {
+            51
+        }
+    }
+    #[test]
+    pub fn test(){
+        println!("{:?}", PacketTest::packet_id());
+    }
 }
 
 pub trait PacketContent {
