@@ -3,7 +3,7 @@
     "name": "varint",
     "type": {
       "PreDefined": {
-        "path": "crate::common::data::VarInt"
+        "path": "minecraft_data::common::data::VarInt"
       }
     }
   },
@@ -107,35 +107,35 @@
     "name": "void",
     "type": {
       "PreDefined": {
-        "path": "crate::common::data::Void"
+        "path": "minecraft_data::common::data::Void"
       }
     }
   },  {
     "name": "optionalNbt",
     "type": {
       "PreDefined": {
-        "path": "crate::common::data::nbt::OptionalNbt"
+        "path": "minecraft_data::common::data::nbt::OptionalNbt"
       }
     }
   }, {
     "name": "nbt",
     "type": {
       "PreDefined": {
-        "path": "crate::common::data::nbt::Nbt"
+        "path": "minecraft_data::common::data::nbt::Nbt"
       }
     }
   }, {
     "name": "position",
     "type": {
       "PreDefined": {
-        "path": "crate::common::data::position::Position"
+        "path": "minecraft_data::common::data::position::Position"
       }
     }
   },{
     "name": "bitfield",
     "type": {
       "PreDefined": {
-        "path": "crate::common::data::bitfield::BitField"
+        "path": "minecraft_data::common::data::bitfield::BitField"
       }
     }
   }

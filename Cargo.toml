@@ -1,16 +1,2 @@
-[package]
-name = "minecraft_data"
-version = "0.1.0"
-edition = "2021"
-build = "build.rs"
-license = "Apache-2.0"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-byteorder="1.4.3"
-bytes="1.1.0"
-uuid="1.1.2"
-
-[features]
-default = ["generic_data"]
-generic_data = []
+[workspace]
+members = ["builder", "common", "java/v1_19"]

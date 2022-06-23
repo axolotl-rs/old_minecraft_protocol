@@ -28,7 +28,7 @@ pub struct ProtocolGenerator {
 }
 
 pub fn generate_protocol(file: PathBuf, json: Protocol, version: Version) -> GenResult<()> {
-    let crate_path = format!("crate::generated::v{}::protocol", version.safe_name());
+    let crate_path = format!("crate::protocol");
     create_dir_all(&file)?;
 
     info!("Generating protocol file: {}", file.display());
