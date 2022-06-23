@@ -35,7 +35,7 @@ impl VersionGenerator {
 
     pub fn generate<'a>(&mut self, version: Version, _replace: bool) -> GenResult<()> {
         let version_data = self.minecraft_data.fetch_version(version)?;
-        let version_dir = self.export_path.join(format!("v{}", version.safe_name()));
+        let version_dir = self.export_path.clone();
 
         create_dir_all(&version_dir).map_err(GenError::Io)?;
 
@@ -62,11 +62,11 @@ impl VersionGenerator {
         }
 
         if let Some(_json) = version_data.entities { // entities::generate_entities(
-             //version_dir.join("entities.rs"), json)?;
+            //version_dir.join("entities.rs"), json)?;
         }
 
         if let Some(_json) = version_data.foods { // foods::generate_foods(
-             // version_dir.join("foods.rs"), json)?;
+            // version_dir.join("foods.rs"), json)?;
         }
 
         if let Some(_json) = version_data.instruments {
@@ -86,7 +86,7 @@ impl VersionGenerator {
         }
 
         if let Some(json) = version_data.protocol {
-            protocol::generate_protocol(version_dir.join("protocol"), json,version)?;
+            protocol::generate_protocol(version_dir.join("protocol"), json, version)?;
         }
 
         if let Some(_json) = version_data.recipes {
