@@ -108,6 +108,7 @@ impl<'data_type> FormatInto<Rust> for &'data_type DataType {
 #[derive(Debug, Clone)]
 pub enum InnerType {
     Container,
+    Array,
     Switch {
         // The variable that should be passed into for the compare_to
         compare_to: CompareTo,
@@ -315,7 +316,7 @@ impl SwitchVariant {
         } else {
             requirement.to_string()
         }
-        .to_case(Case::UpperCamel)
+            .to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::UpperCamel);
@@ -422,6 +423,12 @@ pub enum GenerateType {
         variants: Vec<SwitchVariant>,
         children: Vec<GenerateType>,
     },
+    Array {
+        content_name: String,
+        count_type: DataType,
+        data_type: DataType,
+        children: Vec<GenerateType>,
+    },
 }
 
 impl GenerateType {
@@ -429,8 +436,9 @@ impl GenerateType {
         let mod_name = match self {
             GenerateType::Container { content_name, .. } => content_name,
             GenerateType::SwitchEnum { content_name, .. } => content_name,
+            GenerateType::Array { content_name, .. } => content_name
         }
-        .to_case(Case::Snake);
+            .to_case(Case::Snake);
         let tokens = self.generate_type();
         quote! {
             mod #mod_name {
@@ -568,6 +576,16 @@ impl GenerateType {
 
                         }
                     }
+                }
+            }
+
+            GenerateType::Array { count_type, data_type, children, content_name } => {
+                let children: Vec<Tokens<Rust>> =
+                    children.iter().map(|child| child.generate_type()).collect();
+                quote! {
+                    pub type #content_name = Vec<#data_type>;
+
+                    #(for my_child in children => #my_child #<line>)
                 }
             }
         }

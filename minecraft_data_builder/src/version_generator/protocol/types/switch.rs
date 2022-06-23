@@ -41,6 +41,10 @@ pub fn generate_top_level_switch(name: TypeName, compare_to: String, default: Op
                         GenerateType::SwitchEnum { .. } => {
                             warn!("A Switch was being put directly in a switch{}", requirement);
                         }
+                        GenerateType::Array { .. } => {
+                            warn!("A array was being put directly in a switch{}", requirement);
+
+                        }
                     }
                 }
             };
@@ -98,6 +102,10 @@ pub fn generate_child_level_switch(parent_name: String, compare_to: CompareTo, d
                         }
                         GenerateType::SwitchEnum { .. } => {
                             warn!("A Switch was being put directly in a switch{}", requirement);
+                        }
+                        GenerateType::Array { .. } => {
+                            warn!("A array was being put directly in a switch{}", requirement);
+
                         }
                     }
                 }
