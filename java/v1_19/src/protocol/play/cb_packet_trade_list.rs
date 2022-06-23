@@ -1,18 +1,18 @@
-mod cb_packet_trade_list { use super ::*; use crate :: common :: protocol :: PacketContent ; use crate :: common :: protocol :: PacketSwitch ; use crate :: common :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketTradeList ; impl Packet for CbPacketTradeList { type PacketIDType = i32 ; type PacketContent = PacketTradeListContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 40 } } pub struct PacketTradeListContent { window_id: minecraft_data::common::data::VarInt ,
+ pub struct CbPacketTradeList ; impl Packet for CbPacketTradeList { type PacketIDType = i32 ; type PacketContent = PacketTradeListContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 40 } } pub struct PacketTradeListContent { window_id: minecraft_data::data::VarInt ,
 
 trades: PacketTradeListContentArray ,
 
-villager_level: minecraft_data::common::data::VarInt ,
+villager_level: minecraft_data::data::VarInt ,
 
-experience: minecraft_data::common::data::VarInt ,
+experience: minecraft_data::data::VarInt ,
 
 is_regular_villager: bool ,
 
 can_restock: bool ,
 
- } impl PacketContent for PacketTradeListContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
+ } impl PacketContent for PacketTradeListContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.window_id.write(writer)?;;
 
 total_bytes += self.trades.write(writer)?;;
 
@@ -24,13 +24,13 @@ total_bytes += self.is_regular_villager.write(writer)?;;
 
 total_bytes += self.can_restock.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let window_id : minecraft_data::common::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let window_id : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let trades : PacketTradeListContentArray = PacketContent :: read ( reader ) ?;;
 
-let villager_level : minecraft_data::common::data::VarInt = PacketContent :: read ( reader ) ?;;
+let villager_level : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let experience : minecraft_data::common::data::VarInt = PacketContent :: read ( reader ) ?;;
+let experience : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let is_regular_villager : bool = PacketContent :: read ( reader ) ?;;
 
@@ -56,7 +56,7 @@ price_multiplier: f32 ,
 
 demand: i32 ,
 
- } impl PacketContent for PacketTradeListContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.input_item_1.write(writer)?;;
+ } impl PacketContent for PacketTradeListContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.input_item_1.write(writer)?;;
 
 total_bytes += self.output_item.write(writer)?;;
 
@@ -76,7 +76,7 @@ total_bytes += self.price_multiplier.write(writer)?;;
 
 total_bytes += self.demand.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let input_item_1 : crate::protocol::types::slot::Slot = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let input_item_1 : crate::protocol::types::slot::Slot = PacketContent :: read ( reader ) ?;;
 
 let output_item : crate::protocol::types::slot::Slot = PacketContent :: read ( reader ) ?;;
 
@@ -97,7 +97,3 @@ let price_multiplier : f32 = PacketContent :: read ( reader ) ?;;
 let demand : i32 = PacketContent :: read ( reader ) ?;;
 
  Ok ( Self { input_item_1, output_item, input_item_2, trade_disabled, nb_trade_uses, maximum_nb_trade_uses, xp, special_price, price_multiplier, demand } ) } }
-
- }
-
- pub use cb_packet_trade_list ::*;

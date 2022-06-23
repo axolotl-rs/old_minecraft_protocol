@@ -1,37 +1,35 @@
-use crate::common::protocol::PacketContent;
-use byteorder::{ReadBytesExt, WriteBytesExt};
+use crate::protocol::PacketContent;
 use std::io::{BufRead, Write};
 
-impl PacketContent for f32 {
+pub struct OptionalNbt {}
+impl PacketContent for OptionalNbt {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
     where
         Self: Sized,
     {
-        reader.read_f32::<byteorder::BigEndian>()
+        todo!()
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
     where
         Self: Sized,
     {
-        writer.write_f32::<byteorder::BigEndian>(self)?;
-        Ok(4)
+        todo!()
     }
 }
-
-impl PacketContent for f64 {
+pub struct Nbt {}
+impl PacketContent for Nbt {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
     where
         Self: Sized,
     {
-        reader.read_f64::<byteorder::BigEndian>()
+        todo!()
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
     where
         Self: Sized,
     {
-        writer.write_f64::<byteorder::BigEndian>(self)?;
-        Ok(8)
+        todo!()
     }
 }

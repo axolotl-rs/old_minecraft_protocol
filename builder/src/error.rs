@@ -25,7 +25,7 @@ impl From<std::io::Error> for GenError {
         GenError::Io(err)
     }
 }
-impl From<ParseIntError> for GenError{
+impl From<ParseIntError> for GenError {
     fn from(value: ParseIntError) -> Self {
         GenError::ParseIntError(value)
     }

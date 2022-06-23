@@ -1,4 +1,4 @@
-use crate::common::protocol::PacketContent;
+use crate::protocol::PacketContent;
 use byteorder::{ReadBytesExt, WriteBytesExt};
 use std::io::{BufRead, Write};
 impl PacketContent for i8 {

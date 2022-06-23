@@ -1,10 +1,10 @@
-mod cb_packet_map_chunk { use super ::*; use crate :: common :: protocol :: PacketContent ; use crate :: common :: protocol :: PacketSwitch ; use crate :: common :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketMapChunk ; impl Packet for CbPacketMapChunk { type PacketIDType = i32 ; type PacketContent = PacketMapChunkContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 34 } } pub struct PacketMapChunkContent { x: i32 ,
 
 z: i32 ,
 
-heightmaps: minecraft_data::common::data::nbt::Nbt ,
+heightmaps: minecraft_data::data::nbt::Nbt ,
 
 chunk_data: void ,
 
@@ -24,7 +24,7 @@ sky_light: PacketMapChunkContentArray ,
 
 block_light: PacketMapChunkContentArray ,
 
- } impl PacketContent for PacketMapChunkContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.x.write(writer)?;;
+ } impl PacketContent for PacketMapChunkContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.x.write(writer)?;;
 
 total_bytes += self.z.write(writer)?;;
 
@@ -48,11 +48,11 @@ total_bytes += self.sky_light.write(writer)?;;
 
 total_bytes += self.block_light.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let x : i32 = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let x : i32 = PacketContent :: read ( reader ) ?;;
 
 let z : i32 = PacketContent :: read ( reader ) ?;;
 
-let heightmaps : minecraft_data::common::data::nbt::Nbt = PacketContent :: read ( reader ) ?;;
+let heightmaps : minecraft_data::data::nbt::Nbt = PacketContent :: read ( reader ) ?;;
 
 let chunk_data : void = PacketContent :: read ( reader ) ?;;
 
@@ -85,7 +85,3 @@ pub type PacketMapChunkContentArray = Vec <i64 >;
 pub type PacketMapChunkContentArray = Vec <PacketMapChunkContentArrayArray >; pub type PacketMapChunkContentArrayArray = Vec <u8 >;
 
 pub type PacketMapChunkContentArray = Vec <PacketMapChunkContentArrayArray >; pub type PacketMapChunkContentArrayArray = Vec <u8 >;
-
- }
-
- pub use cb_packet_map_chunk ::*;

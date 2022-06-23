@@ -8,12 +8,11 @@ pub trait Packet {
     fn packet_id() -> Self::PacketIDType
     where
         Self: Sized;
-
 }
 #[cfg(test)]
-pub mod test{
-    use crate::common::data::VarInt;
-    use crate::common::protocol::Packet;
+pub mod test {
+    use crate::data::VarInt;
+    use crate::protocol::Packet;
 
     pub struct PacketTest;
     impl Packet for PacketTest {
@@ -27,7 +26,7 @@ pub mod test{
         }
     }
     #[test]
-    pub fn test(){
+    pub fn test() {
         println!("{:?}", PacketTest::packet_id());
     }
 }

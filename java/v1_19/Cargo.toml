@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 minecraft_data = { path = "../../common" }
+bytes="1.1.0"

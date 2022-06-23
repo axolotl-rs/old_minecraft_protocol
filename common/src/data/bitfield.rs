@@ -1,8 +1,8 @@
-use crate::common::protocol::PacketContent;
+use crate::protocol::PacketContent;
 use std::io::{BufRead, Write};
 
-pub struct Position {}
-impl PacketContent for Position {
+pub struct BitField {}
+impl PacketContent for BitField {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
     where
         Self: Sized,

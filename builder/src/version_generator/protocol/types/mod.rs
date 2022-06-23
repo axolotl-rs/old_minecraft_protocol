@@ -5,6 +5,7 @@ mod switch;
 use crate::code_gen::{CompareTo, DataType, GenerateType, InnerType, LanguageType};
 use crate::configs::type_impls::get_default_type_impl;
 use crate::error::GenError;
+use crate::version_generator::protocol::types::SubTypeResponse::AlreadyBuilt;
 use convert_case::{Case, Casing};
 use log::{info, warn};
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes};
@@ -96,7 +97,11 @@ impl TypesGenerator {
                             mut data_types,
                         } => {
                             data_types.language_type = LanguageType::Rust {
-                                absolute_path: format!("{}::types::{}", crate_path, data_types.language_type.to_string()),
+                                absolute_path: format!(
+                                    "{}::types::{}",
+                                    crate_path,
+                                    data_types.language_type.to_string()
+                                ),
                             };
                             println!("{:?}", data_types.language_type);
                             self.data_types.push(data_types);
@@ -135,8 +140,8 @@ impl TypesGenerator {
         packet_data_type: Box<PacketDataType>,
         ct: CT,
     ) -> Result<SubTypeResponse, GenError>
-        where
-            CT: FnOnce(String) -> CompareTo,
+    where
+        CT: FnOnce(String) -> CompareTo,
     {
         match *packet_data_type {
             PacketDataType::Native(native) => {

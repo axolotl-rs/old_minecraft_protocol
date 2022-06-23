@@ -1,18 +1,20 @@
+pub mod bitfield;
 pub mod fpoints;
 pub mod nbt;
 pub mod position;
 pub mod sints;
 pub mod uints;
 mod var_int;
-pub mod bitfield;
 
-use crate::common::protocol::PacketContent;
+use crate::protocol::PacketContent;
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use bytes::{BufMut, BytesMut};
-use std::io::{BufRead, Write};
-use uuid::Uuid;
+use std::io::{BufRead, Read, Write};
+use uuid::{Bytes, Uuid};
 pub use var_int::VarInt;
+
 pub struct Void;
+
 impl PacketContent for Void {
     fn read<Reader: BufRead>(_reader: &mut Reader) -> std::io::Result<Self>
     where
@@ -28,6 +30,7 @@ impl PacketContent for Void {
         todo!()
     }
 }
+
 impl PacketContent for bool {
     fn read<R: BufRead>(buf: &mut R) -> std::io::Result<Self>
     where
@@ -147,5 +150,25 @@ impl PacketContent for Uuid {
     {
         writer.write_u128::<BigEndian>(self.as_u128())?;
         Ok(16)
+    }
+}
+
+impl PacketContent for bytes::Bytes {
+    fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
+    where
+        Self: Sized,
+    {
+        let len = VarInt::read(reader)?;
+
+        let mut buffer = BytesMut::with_capacity(len.0 as usize);
+        reader.read_exact(&mut buffer)?;
+        Ok(buffer.freeze())
+    }
+
+    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
+    where
+        Self: Sized,
+    {
+        todo!()
     }
 }

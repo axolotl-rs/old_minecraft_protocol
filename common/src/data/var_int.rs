@@ -1,4 +1,4 @@
-use crate::common::protocol::PacketContent;
+use crate::protocol::PacketContent;
 use byteorder::ReadBytesExt;
 use std::fmt::{Debug, Display};
 use std::io::{BufRead, Write};
@@ -64,7 +64,7 @@ impl Display for VarInt {
 /// It is a very marginal performance difference but could be worth it
 /// https://nnethercote.github.io/perf-book/inlining.html
 pub mod inline {
-    use crate::common::data::VarInt;
+    use crate::data::VarInt;
     use byteorder::ReadBytesExt;
     use std::io::{BufRead, Write};
 

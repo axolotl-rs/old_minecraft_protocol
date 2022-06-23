@@ -62,11 +62,11 @@ impl VersionGenerator {
         }
 
         if let Some(_json) = version_data.entities { // entities::generate_entities(
-            //version_dir.join("entities.rs"), json)?;
+             //version_dir.join("entities.rs"), json)?;
         }
 
         if let Some(_json) = version_data.foods { // foods::generate_foods(
-            // version_dir.join("foods.rs"), json)?;
+             // version_dir.join("foods.rs"), json)?;
         }
 
         if let Some(_json) = version_data.instruments {

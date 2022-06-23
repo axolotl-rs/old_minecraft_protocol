@@ -327,7 +327,7 @@ impl SwitchVariant {
         } else {
             requirement.to_string()
         }
-            .to_case(Case::UpperCamel)
+        .to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::UpperCamel);
@@ -463,9 +463,9 @@ impl GenerateType {
         quote! {
             mod #mod_name {
                 use super::*;
-                use crate::common::protocol::PacketContent;
-                use crate::common::protocol::PacketSwitch;
-                use crate::common::protocol::Packet;
+                use minecraft_data::protocol::PacketContent;
+                use minecraft_data::protocol::PacketSwitch;
+                use minecraft_data::protocol::Packet;
                 use std::io::{BufRead, Error, ErrorKind, Result, Write};
                 use std::str::FromStr;
                 #<line>
@@ -474,6 +474,18 @@ impl GenerateType {
             }
             #<line>
             pub use #mod_name::*;
+        }
+    }
+    pub fn generate_with_imports(&self) -> Tokens<Rust> {
+        let tokens = self.generate_type();
+        quote! {
+                use minecraft_data::protocol::PacketContent;
+                use minecraft_data::protocol::PacketSwitch;
+                use minecraft_data::protocol::Packet;
+                use std::io::{BufRead, Error, ErrorKind, Result, Write};
+                use std::str::FromStr;
+                #<line>
+                #tokens
         }
     }
     pub fn generate_type(&self) -> Tokens<Rust> {
@@ -507,12 +519,12 @@ impl GenerateType {
                     }
 
                     impl PacketContent for #content_name {
-                        fn write<Writer: Write>(self,writer: &mut Writer) -> Result<usize> {
+                        fn write<Writer: Write>(self,writer: &mut Writer) -> std::io::Result<usize> {
                             let mut total_bytes = 0;
                             #(for my_write in writes => #my_write; #<line>)
                             Ok(total_bytes)
                         }
-                        fn read<Reader: BufRead>(reader: &mut Reader) -> Result<Self>  {
+                        fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>  {
                             #(for my_read in read_calls =>  #my_read; #<line>)
                             Ok(Self{
                                 #(for my_read in reads_values join (, )  =>  #my_read)
@@ -620,7 +632,8 @@ impl GenerateType {
             GenerateType::Packet {
                 packet_id,
                 content_name,
-                data_type, children
+                data_type,
+                children,
             } => {
                 let packet_id = packet_id.clone();
                 let children: Vec<Tokens<Rust>> =

@@ -1,19 +1,42 @@
-mod sb_packet_login_plugin_response { use super ::*; use crate :: common :: protocol :: PacketContent ; use crate :: common :: protocol :: PacketSwitch ; use crate :: common :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_data::protocol::PacketContent;
+use minecraft_data::protocol::PacketSwitch;
+use minecraft_data::protocol::Packet;
+use std::io::{BufRead, Error, ErrorKind, Result, Write};
+use std::str::FromStr;
 
- pub struct SbPacketLoginPluginResponse ; impl Packet for SbPacketLoginPluginResponse { type PacketIDType = i32 ; type PacketContent = PacketLoginPluginResponseContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 2 } } pub struct PacketLoginPluginResponseContent { message_id: minecraft_data::common::data::VarInt ,
+pub struct SbPacketLoginPluginResponse;
 
-data: void ,
+impl Packet for SbPacketLoginPluginResponse {
+    type PacketIDType = i32;
+    type PacketContent = PacketLoginPluginResponseContent;
+    fn packet_id() -> Self::PacketIDType where Self: Sized { 2 }
+}
 
- } impl PacketContent for PacketLoginPluginResponseContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.message_id.write(writer)?;;
+pub struct PacketLoginPluginResponseContent {
+    message_id: minecraft_data::data::VarInt,
 
-total_bytes += self.data.write(writer)?;;
+    data: void,
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let message_id : minecraft_data::common::data::VarInt = PacketContent :: read ( reader ) ?;;
+}
 
-let data : void = PacketContent :: read ( reader ) ?;;
+impl PacketContent for PacketLoginPluginResponseContent {
+    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
+        let mut total_bytes = 0;
+        total_bytes += self.message_id.write(writer)?;
+        ;
 
- Ok ( Self { message_id, data } ) } }
+        total_bytes += self.data.write(writer)?;
+        ;
 
- }
+        Ok(total_bytes)
+    }
+    fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
+        let message_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        ;
 
- pub use sb_packet_login_plugin_response ::*;
+        let data: void = PacketContent::read(reader)?;
+        ;
+
+        Ok(Self { message_id, data })
+    }
+}

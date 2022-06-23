@@ -24,8 +24,8 @@ struct Configs;
 #[clap(author, version, about, long_about = None)]
 pub struct MinecraftDataBuilder {
     #[clap(
-    long,
-    default_value = "https://github.com/PrismarineJS/minecraft-data.git"
+        long,
+        default_value = "https://github.com/PrismarineJS/minecraft-data.git"
     )]
     pub git_repo: String,
     #[clap(long)]
@@ -43,12 +43,13 @@ fn main() -> GenResult<()> {
         TerminalMode::Mixed,
         ColorChoice::Auto,
     )])
-        .unwrap();
+    .unwrap();
     let args: MinecraftDataBuilder = MinecraftDataBuilder::parse();
     let git_files = GitFiles::clone_repo(&args.git_repo, &args.git_directory)?;
 
     let minecraft_data = MinecraftData::new(git_files);
-    let mut version_generator = VersionGenerator::new(minecraft_data, PathBuf::from(args.output_directory));
+    let mut version_generator =
+        VersionGenerator::new(minecraft_data, PathBuf::from(args.output_directory));
 
     version_generator.generate(args.version, true).unwrap();
 

@@ -1,4 +1,4 @@
-mod cb_packet_advancements { use super ::*; use crate :: common :: protocol :: PacketContent ; use crate :: common :: protocol :: PacketSwitch ; use crate :: common :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketAdvancements ; impl Packet for CbPacketAdvancements { type PacketIDType = i32 ; type PacketContent = PacketAdvancementsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 99 } } pub struct PacketAdvancementsContent { reset: bool ,
 
@@ -8,7 +8,7 @@ identifiers: PacketAdvancementsContentArray ,
 
 progress_mapping: PacketAdvancementsContentArray ,
 
- } impl PacketContent for PacketAdvancementsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.reset.write(writer)?;;
+ } impl PacketContent for PacketAdvancementsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.reset.write(writer)?;;
 
 total_bytes += self.advancement_mapping.write(writer)?;;
 
@@ -16,7 +16,7 @@ total_bytes += self.identifiers.write(writer)?;;
 
 total_bytes += self.progress_mapping.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let reset : bool = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let reset : bool = PacketContent :: read ( reader ) ?;;
 
 let advancement_mapping : PacketAdvancementsContentArray = PacketContent :: read ( reader ) ?;;
 
@@ -28,11 +28,11 @@ let progress_mapping : PacketAdvancementsContentArray = PacketContent :: read ( 
 
 value: PacketAdvancementsContentArrayContentContent ,
 
- } impl PacketContent for PacketAdvancementsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
+ } impl PacketContent for PacketAdvancementsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
 total_bytes += self.value.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
 
 let value : PacketAdvancementsContentArrayContentContent = PacketContent :: read ( reader ) ?;;
 
@@ -44,7 +44,7 @@ criteria: PacketAdvancementsContentArrayContentContentArray ,
 
 requirements: PacketAdvancementsContentArrayContentContentArray ,
 
- } impl PacketContent for PacketAdvancementsContentArrayContentContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.parent_id.write(writer)?;;
+ } impl PacketContent for PacketAdvancementsContentArrayContentContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.parent_id.write(writer)?;;
 
 total_bytes += self.display_data.write(writer)?;;
 
@@ -52,7 +52,7 @@ total_bytes += self.criteria.write(writer)?;;
 
 total_bytes += self.requirements.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let parent_id : void = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let parent_id : void = PacketContent :: read ( reader ) ?;;
 
 let display_data : void = PacketContent :: read ( reader ) ?;;
 
@@ -62,15 +62,15 @@ let requirements : PacketAdvancementsContentArrayContentContentArray = PacketCon
 
  Ok ( Self { parent_id, display_data, criteria, requirements } ) } } pub type PacketAdvancementsContentArrayContentContentArray = Vec <PacketAdvancementsContentArrayContentContentArrayContent >; pub struct PacketAdvancementsContentArrayContentContentArrayContent { key: String ,
 
-value: minecraft_data::common::data::Void ,
+value: minecraft_data::data::Void ,
 
- } impl PacketContent for PacketAdvancementsContentArrayContentContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
+ } impl PacketContent for PacketAdvancementsContentArrayContentContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
 total_bytes += self.value.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
 
-let value : minecraft_data::common::data::Void = PacketContent :: read ( reader ) ?;;
+let value : minecraft_data::data::Void = PacketContent :: read ( reader ) ?;;
 
  Ok ( Self { key, value } ) } }
 
@@ -82,11 +82,11 @@ pub type PacketAdvancementsContentArray = Vec <PacketAdvancementsContentArrayCon
 
 value: PacketAdvancementsContentArrayContentArray ,
 
- } impl PacketContent for PacketAdvancementsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
+ } impl PacketContent for PacketAdvancementsContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
 total_bytes += self.value.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
 
 let value : PacketAdvancementsContentArrayContentArray = PacketContent :: read ( reader ) ?;;
 
@@ -94,16 +94,12 @@ let value : PacketAdvancementsContentArrayContentArray = PacketContent :: read (
 
 criterion_progress: void ,
 
- } impl PacketContent for PacketAdvancementsContentArrayContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> Result < usize > { let mut total_bytes = 0 ; total_bytes += self.criterion_identifier.write(writer)?;;
+ } impl PacketContent for PacketAdvancementsContentArrayContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.criterion_identifier.write(writer)?;;
 
 total_bytes += self.criterion_progress.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> Result < Self > { let criterion_identifier : String = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let criterion_identifier : String = PacketContent :: read ( reader ) ?;;
 
 let criterion_progress : void = PacketContent :: read ( reader ) ?;;
 
  Ok ( Self { criterion_identifier, criterion_progress } ) } }
-
- }
-
- pub use cb_packet_advancements ::*;

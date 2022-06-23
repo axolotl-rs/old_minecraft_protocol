@@ -3,7 +3,7 @@
     "name": "varint",
     "type": {
       "PreDefined": {
-        "path": "minecraft_data::common::data::VarInt"
+        "path": "minecraft_data::data::VarInt"
       }
     }
   },
@@ -107,35 +107,47 @@
     "name": "void",
     "type": {
       "PreDefined": {
-        "path": "minecraft_data::common::data::Void"
+        "path": "minecraft_data::data::Void"
       }
     }
-  },  {
+  },
+  {
     "name": "optionalNbt",
     "type": {
       "PreDefined": {
-        "path": "minecraft_data::common::data::nbt::OptionalNbt"
+        "path": "minecraft_data::data::nbt::OptionalNbt"
       }
     }
-  }, {
+  },
+  {
     "name": "nbt",
     "type": {
       "PreDefined": {
-        "path": "minecraft_data::common::data::nbt::Nbt"
+        "path": "minecraft_data::data::nbt::Nbt"
       }
     }
-  }, {
+  },
+  {
     "name": "position",
     "type": {
       "PreDefined": {
-        "path": "minecraft_data::common::data::position::Position"
+        "path": "minecraft_data::data::position::Position"
       }
     }
-  },{
+  },
+  {
     "name": "bitfield",
     "type": {
       "PreDefined": {
-        "path": "minecraft_data::common::data::bitfield::BitField"
+        "path": "minecraft_data::data::bitfield::BitField"
+      }
+    }
+  },
+  {
+    "name": "buffer",
+    "type": {
+      "PreDefined": {
+        "path": "bytes::Bytes"
       }
     }
   }
