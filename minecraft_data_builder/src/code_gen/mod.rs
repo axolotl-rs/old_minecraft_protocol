@@ -12,7 +12,7 @@ pub enum CompareTo {
         compare_to: String,
         compare_to_type: Box<DataType>,
     },
-    Generic{
+    Generic {
         compare_to_type: Box<DataType>,
     },
 }
@@ -21,7 +21,7 @@ impl Display for CompareTo {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             CompareTo::Specified { compare_to, .. } => write!(f, "{}", compare_to),
-            CompareTo::Generic{..} => write!(f, "compare_to"),
+            CompareTo::Generic { .. } => write!(f, "compare_to"),
         }
     }
 }
@@ -32,7 +32,8 @@ pub struct DataType {
     pub inner_type: InnerType,
     pub language_type: LanguageType,
 }
-impl Default for DataType{
+
+impl Default for DataType {
     fn default() -> Self {
         DataType {
             minecraft_name: "void".to_string(),
@@ -43,6 +44,7 @@ impl Default for DataType{
         }
     }
 }
+
 impl DataType {
     pub fn new_generated_type(minecraft_name: String, inner_type: InnerType) -> Self {
         let string = minecraft_name.to_case(Case::UpperCamel);
@@ -157,26 +159,26 @@ impl Field {
         value
     }
     pub fn generate_write(&self) -> Tokens<Rust> {
-        let name = &self.name;
+        let name = &self.name.to_case(Case::Snake);
         let data_type = &self.data_type;
         if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                    total_bytes += #(format!("self.{}.switch_write(writer)?;",self));
+                    total_bytes += #(format!("self.{}.switch_write(writer)?;",self))
                 }
         } else {
             quote! {
-               total_bytes += #(format!("self.{}.write(writer)?;",self));
+               total_bytes += #(format!("self.{}.write(writer)?;",self))
             }
         }
     }
     pub fn generate_read(&self) -> (Tokens<Rust>, Tokens<Rust>) {
-        let name = &self.name;
+        let name = &self.name.to_case(Case::Snake);
         let data_type = &self.data_type;
 
 
         let v1 = if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
             quote! {
-                let #name: #data_type = #(format!("self.{}.switch_read({},writer)?;",self,compare_to));
+                let #name: #data_type = #(format!("PacketSwitch::switch_read({},reader)?;",compare_to))
             }
         } else {
             quote! {
@@ -285,8 +287,7 @@ pub struct SwitchVariant {
 }
 
 impl SwitchVariant {
-
-    pub fn new(requirement: String,variant_type: SwitchVariantType) -> Self {
+    pub fn new(requirement: String, variant_type: SwitchVariantType) -> Self {
         SwitchVariant {
             name: SwitchVariant::requirement_to_name(requirement.as_str()),
             requirement,
@@ -422,12 +423,13 @@ impl GenerateType {
         }.to_case(Case::Snake);
         let tokens = self.generate_type();
         quote! {
-            mod #&mod_name {
+            mod #mod_name {
                 use super::*;
                 use crate::common::protocol::PacketContent;
                 use crate::common::protocol::PacketSwitch;
                 use std::io::{BufRead, Error, ErrorKind, Result, Write};
                 use std::str::FromStr;
+                #<line>
                 #tokens
             }
         }
@@ -477,9 +479,9 @@ impl GenerateType {
                     CompareTo::Specified { compare_to_type, compare_to } => {
                         let compare_to_type = compare_to_type.as_ref();
                         let match_call = if compare_to_type.minecraft_name.eq_ignore_ascii_case("string") {
-                            format!("{}.as_str()", compare_to)
+                            format!("compare_to.as_str()")
                         } else {
-                            format!("{}", compare_to)
+                            format!("compare_to")
                         };
                         quote! {
 
@@ -488,19 +490,18 @@ impl GenerateType {
                             }
                             impl PacketSwitch for #content_name {
                                 type CompareType = #compare_to_type;
-                                fn switch_read<Reader: BufRead>(#compare_to: &Self::CompareType, reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
-                                    match #match_call {
-                                        #(for my_variant in variants_reads => #my_variant #<line>)
-                                        _ => panic!("Unknown switch variant"),
-                                    }
+                                fn switch_read<Reader: BufRead>(compare_to: &Self::CompareType, reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
+                                    todo!()
+                                }
+                                fn switch_write<Writer: Write>(self, write_compare: bool, writer: &mut Writer) -> std::io::Result<usize> where Self: Sized {
+                                    todo!()
                                 }
                             }
                             #(for my_child in children => #my_child #<line>)
 
                         }
-
                     }
-                    CompareTo::Generic {compare_to_type} => {
+                    CompareTo::Generic { compare_to_type } => {
                         let compare_to_type = compare_to_type.as_ref();
 
                         let match_call = if compare_to_type.minecraft_name.eq_ignore_ascii_case("string") {
@@ -516,10 +517,7 @@ impl GenerateType {
                                 type CompareType = #compare_to_type;
 
                                 fn switch_read<Reader: BufRead>(compare_to: &Self::CompareType, reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
-                                    match #match_call {
-                                        #(for my_variant in variants_reads => #my_variant #<line>)
-                                        _ => std::io::Result(std::io::Error::new(std::io::ErrorKind::InvalidData, "Unknown switch variant")),
-                                    }
+                                    todo!()
                                 }
                                 fn switch_write<Writer: Write>(self, write_compare: bool, writer: &mut Writer) -> std::io::Result<usize> where Self: Sized {
                                     todo!()

@@ -5,7 +5,7 @@ mod array;
 use std::collections::VecDeque;
 use log::{info, warn};
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes};
-use crate::code_gen::{DataType, GenerateType};
+use crate::code_gen::{CompareTo, DataType, GenerateType};
 use crate::configs::type_impls::get_default_type_impl;
 use crate::error::GenError;
 
@@ -107,7 +107,8 @@ impl TypesGenerator {
         }
         Ok(generate_types)
     }
-    pub fn sub_type(&self, parent_name: String, packet_data_type: Box<PacketDataType>) -> Result<SubTypeResponse, GenError> {
+    pub fn sub_type<CT>(&self, parent_name: String, packet_data_type: Box<PacketDataType>, ct: CT) -> Result<SubTypeResponse, GenError>
+        where CT: FnOnce(String) -> CompareTo {
         match *packet_data_type {
             PacketDataType::Native(native) => {
                 if let Some(data) = self.get_data_type(&native.to_string()) {
@@ -132,7 +133,8 @@ impl TypesGenerator {
                             }
                         }
                         NativeType::Switch { compare_to, default, fields } => {
-                            let response = switch::generate_child_level_switch(parent_name, compare_to, default, fields, self)?;
+                            let to = ct(compare_to.to_string());
+                            let response = switch::generate_child_level_switch(parent_name, to, default, fields, self)?;
                             match response {
                                 GenerationResult::Success { generate, data_types } => {
                                     Ok(SubTypeResponse::SubType {
@@ -173,7 +175,7 @@ impl TypesGenerator {
             }
             PacketDataType::Built { name, value } => {
                 warn!("Trying to build a built type as a sub type");
-                self.sub_type(name.to_string(), Box::new(PacketDataType::Native(value)))
+                self.sub_type(name.to_string(), Box::new(PacketDataType::Native(value)), ct)
             }
             PacketDataType::Other { name, value } => {
                 if let Some(inner_name) = name.as_ref() {

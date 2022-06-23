@@ -2,7 +2,7 @@ use convert_case::{Case, Casing};
 use log::warn;
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType};
 use minecraft_data_rs::models::protocol::types::TypeName;
-use crate::code_gen::{DataType, Field, GenerateType, InnerType};
+use crate::code_gen::{CompareTo, DataType, Field, GenerateType, InnerType};
 use crate::error::GenError;
 use crate::version_generator::protocol::types::{GenerationResult, SubTypeResponse, TypesGenerator};
 
@@ -11,8 +11,20 @@ pub fn generate_child_level_container(parent_name: String, built: Vec<(TypeName,
     let mut children = Vec::with_capacity(1);
     let name = format!("{}Content", parent_name);
 
-    for (field_name, field_type) in built {
-        let result = state.sub_type(name.to_string(), field_type)?;
+    for (field_name, field_type) in &built {
+        let result = state.sub_type(name.to_string(), field_type.clone(), |v|{
+            if let Some(v)=fields.iter().find(|f| f.name == v){
+                CompareTo::Specified {
+                    compare_to: v.name.to_string(),
+                    compare_to_type: Box::new(v.data_type.clone())
+                }
+            }else{
+                CompareTo::Specified {
+                    compare_to: "not_found".to_string(),
+                    compare_to_type: Box::new(Default::default())
+                }
+            }
+        })?;
         let data_type = match result {
             SubTypeResponse::NotBuiltYet(built) => {
                 return Ok(GenerationResult::FailureMissingSubType(*built));
@@ -46,7 +58,19 @@ pub fn generate_top_level_container(name: TypeName, built: Vec<(TypeName, Box<Pa
     let mut fields: Vec<Field> = Vec::with_capacity(built.len());
     let mut children = Vec::with_capacity(1);
     for (field_name, field_type) in built {
-        let result = state.sub_type(name.to_string(), field_type)?;
+        let result = state.sub_type(name.to_string(), field_type,|v|{
+            if let Some(v)=fields.iter().find(|f| f.name == v){
+                CompareTo::Specified {
+                    compare_to: v.name.to_string(),
+                    compare_to_type: Box::new(v.data_type.clone())
+                }
+            }else{
+                CompareTo::Specified {
+                    compare_to: "not_found".to_string(),
+                    compare_to_type: Box::new(Default::default())
+                }
+            }
+        })?;
         let data_type = match result {
             SubTypeResponse::NotBuiltYet(built) => {
                 return Ok(GenerationResult::FailureMissingSubType(*built));

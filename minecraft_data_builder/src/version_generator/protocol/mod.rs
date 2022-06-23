@@ -33,11 +33,12 @@ pub fn generate_protocol(file: PathBuf, json: Protocol) -> GenResult<()> {
     let mut generator = types::TypesGenerator::new(json.types)?;
     let generates = generator.generate()?;
     let types_rs = file.join("types.rs");
+    if types_rs.exists() {
+        remove_file(&types_rs)?;
+    }
     let mut file_file = OpenOptions::new().write(true).create(true).open(&types_rs)?;
     for x in generates.into_iter() {
-        debug!("Generating {:?}", x);
-        let content = x.generate_type().to_string().unwrap();
-        println!("{}", content);
+        let content = x.generate_type_wrap_as_mod().to_file_string().unwrap();
         file_file.write_all(content.as_bytes())?;
         file_file.write(b"\n")?;
     }
