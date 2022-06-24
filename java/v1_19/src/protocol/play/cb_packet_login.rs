@@ -4,12 +4,13 @@ use minecraft_data::protocol::PacketSwitch;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::marker::PhantomData;
 use std::str::FromStr;
+use minecraft_data::data::nbt::Nbt;
 
-pub struct CbPacketLogin<NBT: PacketContent>(PhantomData<NBT>);
+pub struct CbPacketLogin;
 
-impl<NBT: PacketContent> Packet for CbPacketLogin<NBT> {
+impl Packet for CbPacketLogin {
     type PacketIDType = i32;
-    type PacketContent = PacketLoginContent<NBT>;
+    type PacketContent = PacketLoginContent;
     fn packet_id() -> Self::PacketIDType
         where
             Self: Sized,
@@ -18,7 +19,7 @@ impl<NBT: PacketContent> Packet for CbPacketLogin<NBT> {
     }
 }
 
-pub struct PacketLoginContent<NBT: PacketContent> {
+pub struct PacketLoginContent {
     pub entity_id: i32,
 
     pub is_hardcore: bool,
@@ -29,9 +30,9 @@ pub struct PacketLoginContent<NBT: PacketContent> {
 
     pub world_names: PacketLoginContentArray,
 
-    pub dimension_codec: NBT,
+    pub dimension_codec: Nbt,
 
-    pub dimension: NBT,
+    pub dimension: Nbt,
 
     pub world_name: String,
 
@@ -52,7 +53,7 @@ pub struct PacketLoginContent<NBT: PacketContent> {
     pub is_flat: bool,
 }
 
-impl<NBT: PacketContent> PacketContent for PacketLoginContent<NBT> {
+impl PacketContent for PacketLoginContent {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
         let entity_id: i32 = PacketContent::read(reader)?;
 
@@ -64,9 +65,9 @@ impl<NBT: PacketContent> PacketContent for PacketLoginContent<NBT> {
 
         let world_names: PacketLoginContentArray = PacketContent::read(reader)?;
 
-        let dimension_codec: NBT = PacketContent::read(reader)?;
+        let dimension_codec: Nbt = PacketContent::read(reader)?;
 
-        let dimension: NBT = PacketContent::read(reader)?;
+        let dimension: Nbt = PacketContent::read(reader)?;
 
         let world_name: String = PacketContent::read(reader)?;
 
