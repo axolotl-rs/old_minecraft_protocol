@@ -2,20 +2,23 @@ use minecraft_data::protocol::Packet;
 use minecraft_data::protocol::PacketContent;
 use minecraft_data::protocol::PacketSwitch;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
+use std::marker::PhantomData;
 use std::str::FromStr;
 
-pub struct CbPacketLogin;
-impl Packet for CbPacketLogin {
+pub struct CbPacketLogin<NBT: PacketContent>(PhantomData<NBT>);
+
+impl<NBT: PacketContent> Packet for CbPacketLogin<NBT> {
     type PacketIDType = i32;
-    type PacketContent = PacketLoginContent;
+    type PacketContent = PacketLoginContent<NBT>;
     fn packet_id() -> Self::PacketIDType
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         38
     }
 }
-pub struct PacketLoginContent {
+
+pub struct PacketLoginContent<NBT: PacketContent> {
     pub entity_id: i32,
 
     pub is_hardcore: bool,
@@ -26,9 +29,9 @@ pub struct PacketLoginContent {
 
     pub world_names: PacketLoginContentArray,
 
-    pub dimension_codec: minecraft_data::data::nbt::Nbt,
+    pub dimension_codec: NBT,
 
-    pub dimension: minecraft_data::data::nbt::Nbt,
+    pub dimension: NBT,
 
     pub world_name: String,
 
@@ -48,43 +51,8 @@ pub struct PacketLoginContent {
 
     pub is_flat: bool,
 }
-impl PacketContent for PacketLoginContent {
-    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
-        let mut total_bytes = 0;
-        total_bytes += self.entity_id.write(writer)?;
 
-        total_bytes += self.is_hardcore.write(writer)?;
-
-        total_bytes += self.game_mode.write(writer)?;
-
-        total_bytes += self.previous_game_mode.write(writer)?;
-
-        total_bytes += self.world_names.write(writer)?;
-
-        total_bytes += self.dimension_codec.write(writer)?;
-
-        total_bytes += self.dimension.write(writer)?;
-
-        total_bytes += self.world_name.write(writer)?;
-
-        total_bytes += self.hashed_seed.write(writer)?;
-
-        total_bytes += self.max_players.write(writer)?;
-
-        total_bytes += self.view_distance.write(writer)?;
-
-        total_bytes += self.simulation_distance.write(writer)?;
-
-        total_bytes += self.reduced_debug_info.write(writer)?;
-
-        total_bytes += self.enable_respawn_screen.write(writer)?;
-
-        total_bytes += self.is_debug.write(writer)?;
-
-        total_bytes += self.is_flat.write(writer)?;
-
-        Ok(total_bytes)
-    }
+impl<NBT: PacketContent> PacketContent for PacketLoginContent<NBT> {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
         let entity_id: i32 = PacketContent::read(reader)?;
 
@@ -96,9 +64,9 @@ impl PacketContent for PacketLoginContent {
 
         let world_names: PacketLoginContentArray = PacketContent::read(reader)?;
 
-        let dimension_codec: minecraft_data::data::nbt::Nbt = PacketContent::read(reader)?;
+        let dimension_codec: NBT = PacketContent::read(reader)?;
 
-        let dimension: minecraft_data::data::nbt::Nbt = PacketContent::read(reader)?;
+        let dimension: NBT = PacketContent::read(reader)?;
 
         let world_name: String = PacketContent::read(reader)?;
 
@@ -137,5 +105,42 @@ impl PacketContent for PacketLoginContent {
             is_flat,
         })
     }
+    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
+        let mut total_bytes = 0;
+        total_bytes += self.entity_id.write(writer)?;
+
+        total_bytes += self.is_hardcore.write(writer)?;
+
+        total_bytes += self.game_mode.write(writer)?;
+
+        total_bytes += self.previous_game_mode.write(writer)?;
+
+        total_bytes += self.world_names.write(writer)?;
+
+        total_bytes += self.dimension_codec.write(writer)?;
+
+        total_bytes += self.dimension.write(writer)?;
+
+        total_bytes += self.world_name.write(writer)?;
+
+        total_bytes += self.hashed_seed.write(writer)?;
+
+        total_bytes += self.max_players.write(writer)?;
+
+        total_bytes += self.view_distance.write(writer)?;
+
+        total_bytes += self.simulation_distance.write(writer)?;
+
+        total_bytes += self.reduced_debug_info.write(writer)?;
+
+        total_bytes += self.enable_respawn_screen.write(writer)?;
+
+        total_bytes += self.is_debug.write(writer)?;
+
+        total_bytes += self.is_flat.write(writer)?;
+
+        Ok(total_bytes)
+    }
 }
+
 pub type PacketLoginContentArray = Vec<String>;
