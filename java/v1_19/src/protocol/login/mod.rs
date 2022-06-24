@@ -40,9 +40,9 @@ impl PacketContent for SigData {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> where Self: Sized {
         let mut total_bytes = 0;
         total_bytes += self.pub_key_length.write(writer)?;
-        total_bytes += self.pub_key.write(writer)?;
+        total_bytes += writer.write(self.pub_key.as_ref())?;
         total_bytes += self.signature_length.write(writer)?;
-        total_bytes += self.signature.write(writer)?;
+        total_bytes += writer.write(self.signature.as_ref())?;
         Ok(total_bytes)
     }
 }

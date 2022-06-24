@@ -15,22 +15,17 @@ impl Packet for SbPacketEncryptionBegin {
 }
 
 pub struct PacketEncryptionBeginContent {
-    pub server_id: String,
-    pub sig: SigData,
+    pub sig: SigData, // Currently reusing the same struct as the login packet. .
 }
 
 impl PacketContent for PacketEncryptionBeginContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
         let mut total_bytes = 0;
-        total_bytes += self.server_id.write(writer)?;
         total_bytes += self.sig.write(writer)?;
 
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let server_id: String = PacketContent::read(reader)?;
-
-
-        Ok(Self { server_id, sig: SigData::read(reader)? })
+        Ok(Self {  sig: SigData::read(reader)? })
     }
 }

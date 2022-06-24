@@ -17,15 +17,15 @@ pub struct Void;
 
 impl PacketContent for Void {
     fn read<Reader: BufRead>(_reader: &mut Reader) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         todo!()
     }
 
     fn write<Writer: Write>(self, _writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         todo!()
     }
@@ -33,16 +33,16 @@ impl PacketContent for Void {
 
 impl PacketContent for bool {
     fn read<R: BufRead>(buf: &mut R) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let i = buf.read_u8()?;
         Ok(i != 0)
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         writer.write_u8(if self { 1 } else { 0 })?;
         Ok(1)
@@ -51,8 +51,8 @@ impl PacketContent for bool {
 
 impl PacketContent for String {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let len = VarInt::read(reader)?;
         let mut buf = Vec::with_capacity(len.0 as usize);
@@ -61,8 +61,8 @@ impl PacketContent for String {
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let length = self.len();
         let len = VarInt(self.len() as i32);
@@ -73,12 +73,12 @@ impl PacketContent for String {
 }
 
 impl<Typ> PacketContent for Vec<Typ>
-where
-    Typ: PacketContent,
+    where
+        Typ: PacketContent,
 {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let len = VarInt::read(reader)?;
         let mut vec = Vec::with_capacity(len.0 as usize);
@@ -88,8 +88,8 @@ where
         Ok(vec)
     }
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let len = VarInt(self.len() as i32);
         let mut size = VarInt::write(len, writer)?;
@@ -101,12 +101,12 @@ where
 }
 
 impl<Typ> PacketContent for Option<Typ>
-where
-    Typ: PacketContent,
+    where
+        Typ: PacketContent,
 {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let i = VarInt::read(reader)?;
         if i.0 == 0 {
@@ -116,8 +116,8 @@ where
         }
     }
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let mut length = 0;
         if let Some(item) = self {
@@ -136,26 +136,26 @@ where
 
 impl PacketContent for Uuid {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let value = reader.read_u128::<BigEndian>()?;
         Ok(Uuid::from_u128(value))
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
-        writer.write_u128::<BigEndian>(self.as_u128())?;
+        writer.write_all(self.as_bytes())?;
         Ok(16)
     }
 }
 
 impl PacketContent for bytes::Bytes {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         let len = VarInt::read(reader)?;
 
@@ -165,8 +165,8 @@ impl PacketContent for bytes::Bytes {
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         todo!()
     }

@@ -3,6 +3,7 @@ use minecraft_data::protocol::PacketContent;
 use minecraft_data::protocol::PacketSwitch;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::str::FromStr;
+use uuid::Uuid;
 
 pub struct CbPacketSuccess;
 
@@ -18,19 +19,23 @@ impl Packet for CbPacketSuccess {
 }
 
 pub struct LoginSuccess {
-    pub uuid: String,
+    pub uuid: Uuid,
     pub username: String,
-    pub properties: Properties,
 }
-impl PacketContent for LoginSuccess{
+
+impl PacketContent for LoginSuccess {
     fn read<Reader: BufRead>(reader: &mut Reader) -> Result<Self> where Self: Sized {
         todo!()
     }
 
     fn write<Writer: Write>(self, writer: &mut Writer) -> Result<usize> where Self: Sized {
-        todo!()
+        let mut total_bytes = 0;
+        total_bytes += self.uuid.write(writer)?;
+        total_bytes += self.username.write(writer)?;
+        Ok(total_bytes)
     }
 }
+
 pub struct Properties {
     pub name: String,
     pub value: String,

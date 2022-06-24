@@ -21,7 +21,7 @@ impl Packet for CbPacketEncryptionBegin {
 
 pub struct PacketEncryptionBeginContent {
     pub server_id: String,
-    pub sig: SigData,
+    pub sig: SigData, // ReUsing the same struct as the login packet.
 }
 
 impl PacketContent for PacketEncryptionBeginContent {
