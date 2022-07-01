@@ -2,7 +2,6 @@
 
 A mix of traits and objects
 
-
 # Common
 
 The common traits and objects are used to represent Minecraft data.
@@ -14,5 +13,8 @@ validation is still required.
 
 # Version Locations
 
-java/ - provides the versions impls for different java versions. 
+java/ - provides the versions impls for different java versions.
 
+# Data Gen Parser
+
+This is a parser for the data dump provided by Mojang.

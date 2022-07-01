@@ -19,6 +19,7 @@ pub mod recipes;
 pub mod tints;
 pub mod version;
 pub mod windows;
+pub mod namespace_key;
 
 pub use protocol_verison::{JavaProtocolVersion, ProtocolVersion};
 
