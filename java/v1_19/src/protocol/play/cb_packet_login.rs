@@ -1,10 +1,10 @@
+use minecraft_data::data::nbt::Nbt;
 use minecraft_data::protocol::Packet;
 use minecraft_data::protocol::PacketContent;
 use minecraft_data::protocol::PacketSwitch;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::marker::PhantomData;
 use std::str::FromStr;
-use minecraft_data::data::nbt::Nbt;
 
 pub struct CbPacketLogin;
 
@@ -12,8 +12,8 @@ impl Packet for CbPacketLogin {
     type PacketIDType = i32;
     type PacketContent = PacketLoginContent;
     fn packet_id() -> Self::PacketIDType
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         38
     }

@@ -29,19 +29,13 @@ impl Display for OwnedNamespaceKey {
 
 impl NamespaceKey<'static> {
     pub const fn new_const(namespace: &'static str, key: &'static str) -> Self {
-        NamespaceKey {
-            namespace,
-            key,
-        }
+        NamespaceKey { namespace, key }
     }
 }
 
 impl<'nk> NamespaceKey<'nk> {
     pub fn new(namespace: &'nk str, key: &'nk str) -> Self {
-        NamespaceKey {
-            namespace,
-            key,
-        }
+        NamespaceKey { namespace, key }
     }
 }
 
@@ -51,8 +45,7 @@ impl<'nk> Display for NamespaceKey<'nk> {
     }
 }
 
-
-pub trait AnyNamespaceKey{
+pub trait AnyNamespaceKey {
     fn namespace(&self) -> &str;
     fn key(&self) -> &str;
 
@@ -94,7 +87,6 @@ impl AnyNamespaceKey for OwnedNamespaceKey {
         self
     }
 }
-
 
 #[cfg(test)]
 pub mod test {

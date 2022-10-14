@@ -3,7 +3,6 @@ use crate::data::MinecraftData;
 use crate::error::GenResult;
 use crate::version_generator::{Version, VersionGenerator};
 use std::path::PathBuf;
-use std::str::FromStr;
 
 pub mod code_gen;
 pub mod configs;
@@ -21,7 +20,7 @@ use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode};
 struct Configs;
 
 #[derive(Parser)]
-#[clap(author, version, about, long_about = None)]
+#[clap(author, about, long_about = None)]
 pub struct MinecraftDataBuilder {
     #[clap(
         long,

@@ -2,24 +2,21 @@ pub mod packet_generator;
 pub mod types;
 
 use crate::{GenResult, Version};
-use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes, Protocol};
-use std::cmp::Ordering;
-use std::collections::{HashMap, VecDeque};
+use minecraft_data_rs::models::protocol::{PacketDataType, Protocol};
 
-use std::fs::{create_dir_all, remove_file, OpenOptions};
+use std::collections::VecDeque;
+
+use std::fs::{create_dir_all, OpenOptions};
 use std::path::PathBuf;
 
 use crate::code_gen::DataType;
-use crate::configs::type_impls::PacketContentType;
+
 use crate::error::GenError;
 use crate::version_generator::protocol::packet_generator::PacketGenerator;
 use convert_case::{Case, Casing};
-use log::{debug, error, info, warn};
-use minecraft_data_rs::models::protocol::types::TypeName;
-use serde::Deserialize;
+use log::info;
+
 use std::io::Write;
-use std::process::Command;
-use std::str::FromStr;
 
 pub struct ProtocolGenerator {
     pub data_types: Vec<DataType>,
@@ -27,7 +24,7 @@ pub struct ProtocolGenerator {
     pub types_failed_to_generate: Vec<PacketDataType>,
 }
 
-pub fn generate_protocol(file: PathBuf, json: Protocol, version: Version) -> GenResult<()> {
+pub fn generate_protocol(file: PathBuf, json: Protocol, _version: Version) -> GenResult<()> {
     let crate_path = format!("crate::protocol");
     create_dir_all(&file)?;
 
@@ -46,7 +43,6 @@ pub fn generate_protocol(file: PathBuf, json: Protocol, version: Version) -> Gen
             file_file.write(b"\n")?;
         }
     }
-
 
     let mut packet_generator =
         packet_generator::PacketGenerator::new(&type_generator, json.handshaking)?;

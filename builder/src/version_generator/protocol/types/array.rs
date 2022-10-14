@@ -23,7 +23,7 @@ pub fn generate_child_level_array(
             name: name.into(),
             value: NativeType::Array {
                 count_type: Box::new(count_type),
-                array_type: Box::new((data_type)),
+                array_type: Box::new(data_type),
             },
         }));
     }
@@ -41,12 +41,12 @@ pub fn generate_child_level_array(
                     name: TypeName::Anonymous,
                     value: NativeType::Array {
                         count_type: Box::new(count_type),
-                        array_type: Box::new((data_type)),
+                        array_type: Box::new(data_type),
                     },
                 },
             ));
         }
-        SubTypeResponse::CanNotBuild(build) => {
+        SubTypeResponse::CanNotBuild(_build) => {
             warn!("Can not build type: {}", name);
             DataType::default()
         }
@@ -90,7 +90,7 @@ pub fn generate_top_level_array(
             name: name.into(),
             value: NativeType::Array {
                 count_type: Box::new(count_type),
-                array_type: Box::new((data_type)),
+                array_type: Box::new(data_type),
             },
         }));
     }
@@ -108,12 +108,12 @@ pub fn generate_top_level_array(
                     name: TypeName::Anonymous,
                     value: NativeType::Array {
                         count_type: Box::new(count_type),
-                        array_type: Box::new((data_type)),
+                        array_type: Box::new(data_type),
                     },
                 },
             ));
         }
-        SubTypeResponse::CanNotBuild(build) => {
+        SubTypeResponse::CanNotBuild(_build) => {
             warn!("Can not build type: {}", name);
             DataType::default()
         }

@@ -1,17 +1,22 @@
+use crate::protocol::login::SigData;
+use bytes::Bytes;
+use minecraft_data::protocol::Packet;
 use minecraft_data::protocol::PacketContent;
 use minecraft_data::protocol::PacketSwitch;
-use minecraft_data::protocol::Packet;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::str::FromStr;
-use bytes::Bytes;
-use crate::protocol::login::SigData;
 
 pub struct SbPacketEncryptionBegin;
 
 impl Packet for SbPacketEncryptionBegin {
     type PacketIDType = i32;
     type PacketContent = PacketEncryptionBeginContent;
-    fn packet_id() -> Self::PacketIDType where Self: Sized { 1 }
+    fn packet_id() -> Self::PacketIDType
+    where
+        Self: Sized,
+    {
+        1
+    }
 }
 
 pub struct PacketEncryptionBeginContent {
@@ -26,6 +31,8 @@ impl PacketContent for PacketEncryptionBeginContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        Ok(Self {  sig: SigData::read(reader)? })
+        Ok(Self {
+            sig: SigData::read(reader)?,
+        })
     }
 }

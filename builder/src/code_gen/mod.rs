@@ -1,8 +1,8 @@
 use convert_case::{Case, Casing};
-use genco::fmt;
+
 use genco::prelude::*;
 use minecraft_data_rs::models::protocol::types::TypeName;
-use serde::Serialize;
+
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
@@ -51,7 +51,7 @@ impl DataType {
         inner_type: InnerType,
         language_type: LanguageType,
     ) -> Self {
-        let string = minecraft_name.to_case(Case::UpperCamel);
+        let _string = minecraft_name.to_case(Case::UpperCamel);
         DataType {
             minecraft_name,
             inner_type,
@@ -98,7 +98,7 @@ impl Display for LanguageType {
 impl<'data_type> FormatInto<Rust> for &'data_type DataType {
     fn format_into(self, tokens: &mut Tokens<Rust>) {
         match &self.language_type {
-            LanguageType::Rust { absolute_path } => {
+            LanguageType::Rust { absolute_path: _ } => {
                 tokens.append(quote! {
                     #absolute_path
                 });
@@ -152,17 +152,17 @@ impl Field {
         }
     }
     pub fn generate_field_definition(&self) -> Tokens<Rust> {
-        let name = &self.name.to_case(Case::Snake);
-        let data_type = &self.data_type;
-        let mut value = quote! {
+        let _name = &self.name.to_case(Case::Snake);
+        let _data_type = &self.data_type;
+        let value = quote! {
             #name: #data_type,
         };
         value
     }
     pub fn generate_write(&self) -> Tokens<Rust> {
-        let name = &self.name.to_case(Case::Snake);
-        let data_type = &self.data_type;
-        if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
+        let _name = &self.name.to_case(Case::Snake);
+        let _data_type = &self.data_type;
+        if let InnerType::Switch { compare_to: _ } = &self.data_type.inner_type {
             quote! {
                 total_bytes += #(format!("self.{}.switch_write(false,writer)?;",self))
             }
@@ -173,10 +173,10 @@ impl Field {
         }
     }
     pub fn generate_read(&self) -> (Tokens<Rust>, Tokens<Rust>) {
-        let name = &self.name.to_case(Case::Snake);
-        let data_type = &self.data_type;
+        let _name = &self.name.to_case(Case::Snake);
+        let _data_type = &self.data_type;
 
-        let v1 = if let InnerType::Switch { compare_to } = &self.data_type.inner_type {
+        let v1 = if let InnerType::Switch { compare_to: _ } = &self.data_type.inner_type {
             quote! {
                 let #name: #data_type = #(format!("PacketSwitch::switch_read(&{},reader)?;",compare_to))
             }
@@ -318,7 +318,7 @@ impl SwitchVariant {
     }
     /// Converts the requirements to the name.
     pub fn requirement_to_name(requirement: &str) -> String {
-        if let Ok(v) = bool::from_str(requirement) {
+        if let Ok(_v) = bool::from_str(requirement) {
             format!("Switch{}", requirement)
         } else if i64::from_str(requirement).is_ok() {
             format!("Switch{}", requirement)
@@ -330,9 +330,9 @@ impl SwitchVariant {
         .to_case(Case::UpperCamel)
     }
     pub fn generate_variant_def(&self) -> Tokens<Rust> {
-        let name = &self.name.to_case(Case::UpperCamel);
-        let requirement = &self.requirement;
-        let switch_variant_type = self.switch_variant_type.generate_variant_type();
+        let _name = &self.name.to_case(Case::UpperCamel);
+        let _requirement = &self.requirement;
+        let _switch_variant_type = self.switch_variant_type.generate_variant_type();
         quote! {
             #(format!("/// This switch variant requires a value {requirement} in the compare_to field"))
             #<line>
@@ -341,8 +341,8 @@ impl SwitchVariant {
     }
     pub fn generate_read_call(&self) -> Tokens<Rust> {
         let name = &self.name.to_case(Case::Snake);
-        let requirement = &self.requirement;
-        let read_def = self.switch_variant_type.generate_read_call(name.as_str());
+        let _requirement = &self.requirement;
+        let _read_def = self.switch_variant_type.generate_read_call(name.as_str());
         quote! {
             #requirement =>{
                 #read_def
@@ -363,7 +363,7 @@ impl SwitchVariantType {
         match self {
             SwitchVariantType::Void => quote! {},
             SwitchVariantType::Container(fields) => {
-                let fields: Vec<Tokens<Rust>> = fields
+                let _fields: Vec<Tokens<Rust>> = fields
                     .iter()
                     .map(|field| field.generate_field_definition())
                     .collect();
@@ -375,7 +375,7 @@ impl SwitchVariantType {
                 }
             }
             SwitchVariantType::Single(data_type) => {
-                let data_type = &data_type.data_type;
+                let _data_type = &data_type.data_type;
                 quote! {
 
                     (#data_type)
@@ -383,7 +383,7 @@ impl SwitchVariantType {
             }
         }
     }
-    pub fn generate_read_call(&self, name: &str) -> Tokens<Rust> {
+    pub fn generate_read_call(&self, _name: &str) -> Tokens<Rust> {
         match self {
             SwitchVariantType::Void => quote! {
                 Ok(Self::#name)
@@ -408,7 +408,7 @@ impl SwitchVariantType {
                 }
             }
             SwitchVariantType::Single(data_type) => {
-                let (call, variable) = &data_type.generate_read();
+                let (_call, _variable) = &data_type.generate_read();
                 quote! {
                     {
                         #call
@@ -458,8 +458,8 @@ impl GenerateType {
         }
     }
     pub fn generate_type_wrap_as_mod(&self) -> Tokens<Rust> {
-        let mod_name = &self.content_name().to_case(Case::Snake);
-        let tokens = self.generate_type();
+        let _mod_name = &self.content_name().to_case(Case::Snake);
+        let _tokens = self.generate_type();
         quote! {
             mod #mod_name {
                 use super::*;
@@ -477,7 +477,7 @@ impl GenerateType {
         }
     }
     pub fn generate_with_imports(&self) -> Tokens<Rust> {
-        let tokens = self.generate_type();
+        let _tokens = self.generate_type();
         quote! {
                 use minecraft_data::protocol::PacketContent;
                 use minecraft_data::protocol::PacketSwitch;
@@ -495,12 +495,12 @@ impl GenerateType {
                 fields,
                 children,
             } => {
-                let content_name = &content_name.to_case(Case::UpperCamel);
-                let fields_defs: Vec<Tokens<Rust>> = fields
+                let _content_name = &content_name.to_case(Case::UpperCamel);
+                let _fields_defs: Vec<Tokens<Rust>> = fields
                     .iter()
                     .map(|field| field.generate_field_definition())
                     .collect();
-                let writes: Vec<Tokens<Rust>> =
+                let _writes: Vec<Tokens<Rust>> =
                     fields.iter().map(|field| field.generate_write()).collect();
                 let reads: Vec<(Tokens<Rust>, Tokens<Rust>)> =
                     fields.iter().map(|field| field.generate_read()).collect();
@@ -511,7 +511,7 @@ impl GenerateType {
                     read_calls.push(name);
                     reads_values.push(value);
                 }
-                let children: Vec<Tokens<Rust>> =
+                let _children: Vec<Tokens<Rust>> =
                     children.iter().map(|child| child.generate_type()).collect();
                 quote! {
                     pub struct #content_name {
@@ -540,24 +540,24 @@ impl GenerateType {
                 compare_to,
                 variants,
             } => {
-                let content_name = &content_name.to_case(Case::UpperCamel);
-                let variants_defs: Vec<Tokens<Rust>> = variants
+                let _content_name = &content_name.to_case(Case::UpperCamel);
+                let _variants_defs: Vec<Tokens<Rust>> = variants
                     .iter()
                     .map(|variant| variant.generate_variant_def())
                     .collect();
-                let variants_reads: Vec<Tokens<Rust>> = variants
+                let _variants_reads: Vec<Tokens<Rust>> = variants
                     .iter()
                     .map(|variant| variant.generate_read_call())
                     .collect();
-                let children: Vec<Tokens<Rust>> =
+                let _children: Vec<Tokens<Rust>> =
                     children.iter().map(|child| child.generate_type()).collect();
                 match compare_to {
                     CompareTo::Specified {
                         compare_to_type,
-                        compare_to,
+                        compare_to: _,
                     } => {
                         let compare_to_type = compare_to_type.as_ref();
-                        let match_call = if compare_to_type
+                        let _match_call = if compare_to_type
                             .minecraft_name
                             .eq_ignore_ascii_case("string")
                         {
@@ -586,7 +586,7 @@ impl GenerateType {
                     CompareTo::Generic { compare_to_type } => {
                         let compare_to_type = compare_to_type.as_ref();
 
-                        let match_call = if compare_to_type
+                        let _match_call = if compare_to_type
                             .minecraft_name
                             .eq_ignore_ascii_case("string")
                         {
@@ -616,12 +616,12 @@ impl GenerateType {
             }
 
             GenerateType::Array {
-                count_type,
-                data_type,
+                count_type: _,
+                data_type: _,
                 children,
-                content_name,
+                content_name: _,
             } => {
-                let children: Vec<Tokens<Rust>> =
+                let _children: Vec<Tokens<Rust>> =
                     children.iter().map(|child| child.generate_type()).collect();
                 quote! {
                     pub type #content_name = Vec<#data_type>;
@@ -632,13 +632,13 @@ impl GenerateType {
             GenerateType::Packet {
                 packet_id,
                 content_name,
-                data_type,
+                data_type: _,
                 children,
             } => {
-                let packet_id = packet_id.clone();
-                let children: Vec<Tokens<Rust>> =
+                let _packet_id = packet_id.clone();
+                let _children: Vec<Tokens<Rust>> =
                     children.iter().map(|child| child.generate_type()).collect();
-                let content_name = &content_name.to_case(Case::UpperCamel);
+                let _content_name = &content_name.to_case(Case::UpperCamel);
                 quote! {
                 pub struct #content_name;
 

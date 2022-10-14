@@ -10,6 +10,7 @@ pub mod foods;
 pub mod instruments;
 pub mod items;
 pub mod materials;
+pub mod namespace_key;
 pub mod packets;
 pub mod particles;
 pub mod protocol;
@@ -19,7 +20,6 @@ pub mod recipes;
 pub mod tints;
 pub mod version;
 pub mod windows;
-pub mod namespace_key;
 
 pub use protocol_verison::{JavaProtocolVersion, ProtocolVersion};
 
@@ -30,4 +30,9 @@ pub trait Variation {
     fn metadata(&self) -> Self::Metadata;
 
     fn display_name(&self) -> Self::DisplayName;
+}
+
+#[test]
+pub fn test(){
+
 }

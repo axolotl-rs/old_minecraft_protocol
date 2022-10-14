@@ -40,7 +40,7 @@ pub fn generate_child_level_container(
                     },
                 ));
             }
-            SubTypeResponse::CanNotBuild(build) => {
+            SubTypeResponse::CanNotBuild(_build) => {
                 warn!("Can not build type: {}", field_name);
                 DataType::default()
             }
@@ -102,7 +102,7 @@ pub fn generate_top_level_container(
                     },
                 ));
             }
-            SubTypeResponse::CanNotBuild(build) => {
+            SubTypeResponse::CanNotBuild(_build) => {
                 warn!("Can not build type: {}", field_name);
                 DataType::default()
             }

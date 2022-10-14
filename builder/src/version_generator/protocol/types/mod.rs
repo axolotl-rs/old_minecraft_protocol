@@ -5,8 +5,7 @@ mod switch;
 use crate::code_gen::{CompareTo, DataType, GenerateType, InnerType, LanguageType};
 use crate::configs::type_impls::get_default_type_impl;
 use crate::error::GenError;
-use crate::version_generator::protocol::types::SubTypeResponse::AlreadyBuilt;
-use convert_case::{Case, Casing};
+
 use log::{info, warn};
 use minecraft_data_rs::models::protocol::{NativeType, PacketDataType, PacketDataTypes};
 use serde_json::Value;
@@ -244,7 +243,7 @@ impl TypesGenerator {
                 if let Some(inner_name) = name.as_ref() {
                     if let Some(data) = self.get_data_type(&inner_name.to_string()) {
                         let mut data_type = data.clone();
-                        if let InnerType::Switch { compare_to } = &data_type.inner_type {
+                        if let InnerType::Switch { compare_to: _ } = &data_type.inner_type {
                             if let Value::Object(mut object) = value {
                                 if let Some(value) = object.remove("compareTo") {
                                     if let Value::String(compare_to) = value {

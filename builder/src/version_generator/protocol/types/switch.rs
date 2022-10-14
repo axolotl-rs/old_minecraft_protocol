@@ -7,15 +7,15 @@ use crate::version_generator::protocol::types::{
     GenerationResult, SubTypeResponse, TypesGenerator,
 };
 use convert_case::{Case, Casing};
-use git2::SubmoduleUpdate::Default;
+
 use log::warn;
 use minecraft_data_rs::models::protocol::types::{SwitchType, TypeName};
-use minecraft_data_rs::models::protocol::{NativeType, PacketDataType};
+
 use std::collections::HashMap;
 pub fn generate_top_level_switch(
     name: TypeName,
     compare_to: String,
-    default: Option<String>,
+    _default: Option<String>,
     fields: HashMap<String, SwitchType>,
     state: &TypesGenerator,
 ) -> Result<GenerationResult, GenError> {
@@ -34,7 +34,7 @@ pub fn generate_top_level_switch(
                 SubTypeResponse::NotBuiltYet(built) => {
                     return Ok(GenerationResult::FailureMissingSubType(*built));
                 }
-                SubTypeResponse::CanNotBuild(build) => {
+                SubTypeResponse::CanNotBuild(_build) => {
                     warn!("Can not build type: {}", requirement);
                     variants.push(SwitchVariant::new(
                         requirement.to_string(),
@@ -54,13 +54,13 @@ pub fn generate_top_level_switch(
                     ));
                 }
                 SubTypeResponse::SubType {
-                    data_type,
+                    data_type: _,
                     generate,
                 } => match generate {
                     GenerateType::Container {
                         children,
                         fields,
-                        content_name,
+                        content_name: _,
                     } => {
                         variants.push(SwitchVariant::new(
                             requirement.to_string(),
@@ -112,7 +112,7 @@ pub fn generate_top_level_switch(
 pub fn generate_child_level_switch(
     parent_name: String,
     compare_to: CompareTo,
-    default: Option<String>,
+    _default: Option<String>,
     fields: HashMap<String, SwitchType>,
     state: &TypesGenerator,
 ) -> Result<GenerationResult, GenError> {
@@ -133,7 +133,7 @@ pub fn generate_child_level_switch(
                 SubTypeResponse::NotBuiltYet(built) => {
                     return Ok(GenerationResult::FailureMissingSubType(*built));
                 }
-                SubTypeResponse::CanNotBuild(build) => {
+                SubTypeResponse::CanNotBuild(_build) => {
                     warn!("Can not build type: {}", requirement);
                     variants.push(SwitchVariant::new(
                         requirement.to_string(),
@@ -153,13 +153,13 @@ pub fn generate_child_level_switch(
                     ));
                 }
                 SubTypeResponse::SubType {
-                    data_type,
+                    data_type: _,
                     generate,
                 } => match generate {
                     GenerateType::Container {
                         children,
                         fields,
-                        content_name,
+                        content_name: _,
                     } => {
                         variants.push(SwitchVariant::new(
                             requirement.to_string(),

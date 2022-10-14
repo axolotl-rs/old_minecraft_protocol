@@ -1,7 +1,7 @@
-use std::io::{BufRead, Read, Write};
 use bytes::Bytes;
 use minecraft_data::data::VarInt;
 use minecraft_data::protocol::PacketContent;
+use std::io::{BufRead, Read, Write};
 
 pub mod cb_packet_compress;
 pub mod cb_packet_disconnect;
@@ -20,14 +20,21 @@ pub struct SigData {
 }
 
 impl PacketContent for SigData {
-    fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> where Self: Sized {
+    fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self>
+    where
+        Self: Sized,
+    {
         let pub_key_len = VarInt::read(reader)?;
         let mut pub_key = Vec::with_capacity(pub_key_len.0 as usize);
-        reader.take(pub_key_len.0 as u64).read_to_end(&mut pub_key)?;
+        reader
+            .take(pub_key_len.0 as u64)
+            .read_to_end(&mut pub_key)?;
 
         let signature_length = VarInt::read(reader)?;
         let mut signature = Vec::with_capacity(signature_length.0 as usize);
-        reader.take(signature_length.0 as u64).read_to_end(&mut signature)?;
+        reader
+            .take(signature_length.0 as u64)
+            .read_to_end(&mut signature)?;
 
         Ok(Self {
             pub_key_length: pub_key_len,
@@ -37,7 +44,10 @@ impl PacketContent for SigData {
         })
     }
 
-    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> where Self: Sized {
+    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize>
+    where
+        Self: Sized,
+    {
         let mut total_bytes = 0;
         total_bytes += self.pub_key_length.write(writer)?;
         total_bytes += writer.write(self.pub_key.as_ref())?;

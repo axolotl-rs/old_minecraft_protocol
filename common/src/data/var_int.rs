@@ -1,10 +1,11 @@
 use crate::protocol::PacketContent;
-use byteorder::ReadBytesExt;
+
 use std::fmt::{Debug, Display};
 use std::io::{BufRead, Write};
 use std::num::ParseIntError;
 use std::str::FromStr;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct VarInt(pub i32);
 
 impl PacketContent for VarInt {
@@ -33,33 +34,27 @@ impl From<i32> for VarInt {
         VarInt(value)
     }
 }
+
 impl Into<i32> for VarInt {
     fn into(self) -> i32 {
         self.0
     }
 }
 
-impl PartialEq for VarInt {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
-    }
-}
+
 
 impl PartialEq<i32> for VarInt {
     fn eq(&self, other: &i32) -> bool {
         self.0 == *other
     }
 }
-impl Debug for VarInt {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self.0)
-    }
-}
+
 impl Display for VarInt {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
 }
+
 /// Allows you to inline the VarInt read and write into the packet
 /// It is a very marginal performance difference but could be worth it
 /// https://nnethercote.github.io/perf-book/inlining.html

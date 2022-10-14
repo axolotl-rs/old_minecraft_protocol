@@ -1,6 +1,7 @@
 use crate::data::MinecraftData;
 use crate::error::GenError;
 use crate::GenResult;
+use clap::ValueEnum;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 
@@ -105,7 +106,7 @@ impl VersionGenerator {
     }
 }
 
-#[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, clap::ArgEnum)]
+#[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq, ValueEnum)]
 pub enum Version {
     One8,
     One19,
@@ -131,13 +132,5 @@ impl Version {
             Version::One8 => true,
             Version::One19 => false,
         }
-    }
-}
-
-fn capitalize_string(s: &str) -> String {
-    let mut c = s.chars();
-    match c.next() {
-        None => String::new(),
-        Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
     }
 }

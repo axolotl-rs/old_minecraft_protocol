@@ -11,8 +11,8 @@ impl Packet for CbPacketSuccess {
     type PacketIDType = i32;
     type PacketContent = LoginSuccess;
     fn packet_id() -> Self::PacketIDType
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         2
     }
@@ -24,11 +24,17 @@ pub struct LoginSuccess {
 }
 
 impl PacketContent for LoginSuccess {
-    fn read<Reader: BufRead>(reader: &mut Reader) -> Result<Self> where Self: Sized {
+    fn read<Reader: BufRead>(reader: &mut Reader) -> Result<Self>
+    where
+        Self: Sized,
+    {
         todo!()
     }
 
-    fn write<Writer: Write>(self, writer: &mut Writer) -> Result<usize> where Self: Sized {
+    fn write<Writer: Write>(self, writer: &mut Writer) -> Result<usize>
+    where
+        Self: Sized,
+    {
         let mut total_bytes = 0;
         total_bytes += self.uuid.write(writer)?;
         total_bytes += self.username.write(writer)?;
