@@ -1,5 +1,4 @@
 mod slot {
-
     use minecraft_protocol::protocol::PacketContent;
     use minecraft_protocol::protocol::PacketSwitch;
     use std::io::{BufRead, Write};
@@ -10,7 +9,15 @@ mod slot {
 
         pub content: SlotContent,
     }
+
     impl PacketContent for Slot {
+        fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
+            let present: bool = PacketContent::read(reader)?;
+
+            let content: SlotContent = PacketSwitch::switch_read(&present, reader)?;
+
+            Ok(Self { present, content })
+        }
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
             let mut total_bytes = 0;
             total_bytes += self.present.write(writer)?;
@@ -19,14 +26,8 @@ mod slot {
 
             Ok(total_bytes)
         }
-        fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-            let present: bool = PacketContent::read(reader)?;
-
-            let content: SlotContent = PacketSwitch::switch_read(&present, reader)?;
-
-            Ok(Self { present, content })
-        }
     }
+
     pub enum SlotContent {
         /// This switch variant requires a value true in the compare_to field
         Switchtrue {
@@ -40,14 +41,15 @@ mod slot {
         /// This switch variant requires a value false in the compare_to field
         Switchfalse(minecraft_protocol::data::Void),
     }
+
     impl PacketSwitch for SlotContent {
         type CompareType = bool;
         fn switch_read<Reader: BufRead>(
             _compare_to: &Self::CompareType,
             _reader: &mut Reader,
         ) -> std::io::Result<Self>
-        where
-            Self: Sized,
+            where
+                Self: Sized,
         {
             todo!()
         }
@@ -56,8 +58,8 @@ mod slot {
             _write_compare: bool,
             _writer: &mut Writer,
         ) -> std::io::Result<usize>
-        where
-            Self: Sized,
+            where
+                Self: Sized,
         {
             todo!()
         }
@@ -67,7 +69,6 @@ mod slot {
 pub use slot::*;
 
 mod particle_data {
-
     use minecraft_protocol::protocol::PacketSwitch;
     use std::io::{BufRead, Write};
 
@@ -131,14 +132,15 @@ mod particle_data {
             ticks: minecraft_protocol::data::VarInt,
         },
     }
+
     impl PacketSwitch for ParticleData {
         type CompareType = minecraft_protocol::data::VarInt;
         fn switch_read<Reader: BufRead>(
             _compare_to: &Self::CompareType,
             _reader: &mut Reader,
         ) -> std::io::Result<Self>
-        where
-            Self: Sized,
+            where
+                Self: Sized,
         {
             todo!()
         }
@@ -147,12 +149,13 @@ mod particle_data {
             _write_compare: bool,
             _writer: &mut Writer,
         ) -> std::io::Result<usize>
-        where
-            Self: Sized,
+            where
+                Self: Sized,
         {
             todo!()
         }
     }
+
     pub enum ParticleDataContentContent {
         /// This switch variant requires a value minecraft:entity in the compare_to field
         MinecraftEntity(minecraft_protocol::data::VarInt),
@@ -160,14 +163,15 @@ mod particle_data {
         /// This switch variant requires a value minecraft:block in the compare_to field
         MinecraftBlock(minecraft_protocol::data::position::Position),
     }
+
     impl PacketSwitch for ParticleDataContentContent {
         type CompareType = String;
         fn switch_read<Reader: BufRead>(
             _compare_to: &Self::CompareType,
             _reader: &mut Reader,
         ) -> std::io::Result<Self>
-        where
-            Self: Sized,
+            where
+                Self: Sized,
         {
             todo!()
         }
@@ -176,8 +180,8 @@ mod particle_data {
             _write_compare: bool,
             _writer: &mut Writer,
         ) -> std::io::Result<usize>
-        where
-            Self: Sized,
+            where
+                Self: Sized,
         {
             todo!()
         }
@@ -187,14 +191,12 @@ mod particle_data {
 pub use particle_data::*;
 
 mod ingredient {
-
     pub type Ingredient = Vec<crate::protocol::types::slot::Slot>;
 }
 
 pub use ingredient::*;
 
 mod minecraft_smelting_format {
-
     use minecraft_protocol::protocol::PacketContent;
 
     use std::io::{BufRead, Write};
@@ -210,21 +212,8 @@ mod minecraft_smelting_format {
 
         pub cook_time: minecraft_protocol::data::VarInt,
     }
+
     impl PacketContent for MinecraftSmeltingFormat {
-        fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
-            let mut total_bytes = 0;
-            total_bytes += self.group.write(writer)?;
-
-            total_bytes += self.ingredient.write(writer)?;
-
-            total_bytes += self.result.write(writer)?;
-
-            total_bytes += self.experience.write(writer)?;
-
-            total_bytes += self.cook_time.write(writer)?;
-
-            Ok(total_bytes)
-        }
         fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
             let group: String = PacketContent::read(reader)?;
 
@@ -245,24 +234,46 @@ mod minecraft_smelting_format {
                 cook_time,
             })
         }
+        fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
+            let mut total_bytes = 0;
+            total_bytes += self.group.write(writer)?;
+
+            total_bytes += self.ingredient.write(writer)?;
+
+            total_bytes += self.result.write(writer)?;
+
+            total_bytes += self.experience.write(writer)?;
+
+            total_bytes += self.cook_time.write(writer)?;
+
+            Ok(total_bytes)
+        }
     }
 }
 
 pub use minecraft_smelting_format::*;
 
 mod tags {
-
     use minecraft_protocol::protocol::PacketContent;
 
     use std::io::{BufRead, Write};
 
     pub type Tags = Vec<TagsContent>;
+
     pub struct TagsContent {
         pub tag_name: String,
 
         pub entries: TagsContentArray,
     }
+
     impl PacketContent for TagsContent {
+        fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
+            let tag_name: String = PacketContent::read(reader)?;
+
+            let entries: TagsContentArray = PacketContent::read(reader)?;
+
+            Ok(Self { tag_name, entries })
+        }
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
             let mut total_bytes = 0;
             total_bytes += self.tag_name.write(writer)?;
@@ -271,21 +282,14 @@ mod tags {
 
             Ok(total_bytes)
         }
-        fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-            let tag_name: String = PacketContent::read(reader)?;
-
-            let entries: TagsContentArray = PacketContent::read(reader)?;
-
-            Ok(Self { tag_name, entries })
-        }
     }
+
     pub type TagsContentArray = Vec<minecraft_protocol::data::VarInt>;
 }
 
 pub use tags::*;
 
 mod chunk_block_entity {
-
     use minecraft_protocol::protocol::PacketContent;
 
     use std::io::{BufRead, Write};
@@ -300,19 +304,8 @@ mod chunk_block_entity {
 
         pub nbt_data: minecraft_protocol::data::nbt::OptionalNbt<Value>,
     }
+
     impl PacketContent for ChunkBlockEntity {
-        fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
-            let mut total_bytes = 0;
-            total_bytes += self.content.write(writer)?;
-
-            total_bytes += self.y.write(writer)?;
-
-            total_bytes += self.data_type.write(writer)?;
-
-            total_bytes += self.nbt_data.write(writer)?;
-
-            Ok(total_bytes)
-        }
         fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
             let content: minecraft_protocol::data::bitfield::BitField =
                 PacketContent::read(reader)?;
@@ -330,13 +323,24 @@ mod chunk_block_entity {
                 nbt_data,
             })
         }
+        fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
+            let mut total_bytes = 0;
+            total_bytes += self.content.write(writer)?;
+
+            total_bytes += self.y.write(writer)?;
+
+            total_bytes += self.data_type.write(writer)?;
+
+            total_bytes += self.nbt_data.write(writer)?;
+
+            Ok(total_bytes)
+        }
     }
 }
 
 pub use chunk_block_entity::*;
 
 mod particle {
-
     use minecraft_protocol::protocol::PacketContent;
     use minecraft_protocol::protocol::PacketSwitch;
     use std::io::{BufRead, Write};
@@ -346,15 +350,8 @@ mod particle {
 
         pub data: crate::protocol::types::particle_data::ParticleData,
     }
+
     impl PacketContent for Particle {
-        fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
-            let mut total_bytes = 0;
-            total_bytes += self.particle_id.write(writer)?;
-
-            total_bytes += self.data.switch_write(false, writer)?;
-
-            Ok(total_bytes)
-        }
         fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
             let particle_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
@@ -362,6 +359,14 @@ mod particle {
                 PacketSwitch::switch_read(&particle_id, reader)?;
 
             Ok(Self { particle_id, data })
+        }
+        fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
+            let mut total_bytes = 0;
+            total_bytes += self.particle_id.write(writer)?;
+
+            total_bytes += self.data.switch_write(false, writer)?;
+
+            Ok(total_bytes)
         }
     }
 }
