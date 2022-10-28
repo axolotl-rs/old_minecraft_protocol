@@ -3,7 +3,6 @@ use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
 
-
 pub struct CbPacketPing;
 impl Packet for CbPacketPing {
     type PacketIDType = i32;

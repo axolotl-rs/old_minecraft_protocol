@@ -3,7 +3,6 @@ use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
 
-
 pub struct CbPacketDisconnect;
 impl Packet for CbPacketDisconnect {
     type PacketIDType = i32;

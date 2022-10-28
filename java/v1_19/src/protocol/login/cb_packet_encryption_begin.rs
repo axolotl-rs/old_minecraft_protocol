@@ -5,7 +5,6 @@ use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
 
-
 pub struct CbPacketEncryptionBegin;
 
 impl Packet for CbPacketEncryptionBegin {

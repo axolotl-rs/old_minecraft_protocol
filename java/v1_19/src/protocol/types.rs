@@ -1,10 +1,9 @@
 mod slot {
-    
-    
+
     use minecraft_protocol::protocol::PacketContent;
     use minecraft_protocol::protocol::PacketSwitch;
     use std::io::{BufRead, Write};
-    
+    use axolotl_nbt::value::Value;
 
     pub struct Slot {
         pub present: bool,
@@ -35,7 +34,7 @@ mod slot {
 
             item_count: i8,
 
-            nbt_data: minecraft_protocol::data::nbt::OptionalNbt,
+            nbt_data: minecraft_protocol::data::nbt::OptionalNbt<Value>,
         },
 
         /// This switch variant requires a value false in the compare_to field
@@ -68,12 +67,9 @@ mod slot {
 pub use slot::*;
 
 mod particle_data {
-    
-    
-    
+
     use minecraft_protocol::protocol::PacketSwitch;
     use std::io::{BufRead, Write};
-    
 
     pub enum ParticleData {
         /// This switch variant requires a value 15 in the compare_to field
@@ -191,12 +187,6 @@ mod particle_data {
 pub use particle_data::*;
 
 mod ingredient {
-    
-    
-    
-    
-    
-    
 
     pub type Ingredient = Vec<crate::protocol::types::slot::Slot>;
 }
@@ -204,12 +194,10 @@ mod ingredient {
 pub use ingredient::*;
 
 mod minecraft_smelting_format {
-    
-    
+
     use minecraft_protocol::protocol::PacketContent;
-    
+
     use std::io::{BufRead, Write};
-    
 
     pub struct MinecraftSmeltingFormat {
         pub group: String,
@@ -263,12 +251,10 @@ mod minecraft_smelting_format {
 pub use minecraft_smelting_format::*;
 
 mod tags {
-    
-    
+
     use minecraft_protocol::protocol::PacketContent;
-    
+
     use std::io::{BufRead, Write};
-    
 
     pub type Tags = Vec<TagsContent>;
     pub struct TagsContent {
@@ -299,12 +285,11 @@ mod tags {
 pub use tags::*;
 
 mod chunk_block_entity {
-    
-    
+
     use minecraft_protocol::protocol::PacketContent;
-    
+
     use std::io::{BufRead, Write};
-    
+    use axolotl_nbt::value::Value;
 
     pub struct ChunkBlockEntity {
         pub content: minecraft_protocol::data::bitfield::BitField,
@@ -313,7 +298,7 @@ mod chunk_block_entity {
 
         pub data_type: minecraft_protocol::data::VarInt,
 
-        pub nbt_data: minecraft_protocol::data::nbt::OptionalNbt,
+        pub nbt_data: minecraft_protocol::data::nbt::OptionalNbt<Value>,
     }
     impl PacketContent for ChunkBlockEntity {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -336,7 +321,7 @@ mod chunk_block_entity {
 
             let data_type: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
-            let nbt_data: minecraft_protocol::data::nbt::OptionalNbt = PacketContent::read(reader)?;
+            let nbt_data: minecraft_protocol::data::nbt::OptionalNbt<Value> = PacketContent::read(reader)?;
 
             Ok(Self {
                 content,
@@ -351,12 +336,10 @@ mod chunk_block_entity {
 pub use chunk_block_entity::*;
 
 mod particle {
-    
-    
+
     use minecraft_protocol::protocol::PacketContent;
     use minecraft_protocol::protocol::PacketSwitch;
     use std::io::{BufRead, Write};
-    
 
     pub struct Particle {
         pub particle_id: minecraft_protocol::data::VarInt,

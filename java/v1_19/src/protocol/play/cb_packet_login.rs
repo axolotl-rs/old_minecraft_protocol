@@ -2,9 +2,9 @@ use minecraft_protocol::data::nbt::Nbt;
 use minecraft_protocol::protocol::Packet;
 use minecraft_protocol::protocol::PacketContent;
 
-use std::io::{BufRead, Write};
 use minecraft_protocol::data::VarInt;
-
+use std::io::{BufRead, Write};
+use axolotl_nbt::value::Value;
 
 pub struct CbPacketLogin;
 
@@ -12,8 +12,8 @@ impl Packet for CbPacketLogin {
     type PacketIDType = i32;
     type PacketContent = PacketLoginContent;
     fn packet_id() -> Self::PacketIDType
-        where
-            Self: Sized,
+    where
+        Self: Sized,
     {
         38
     }
@@ -26,7 +26,7 @@ pub struct PacketLoginContent {
     pub game_mode: u8,
     pub previous_game_mode: i8,
     pub world_names: PacketLoginContentArray,
-    pub registry_codec: Nbt,
+    pub registry_codec: Nbt<Value>,
     pub dimension_type: String,
     pub world_name: String,
     pub hashed_seed: i64,
@@ -51,7 +51,7 @@ impl PacketContent for PacketLoginContent {
 
         let world_names: PacketLoginContentArray = PacketContent::read(reader)?;
 
-        let registry_codec: Nbt = PacketContent::read(reader)?;
+        let registry_codec: Nbt<Value> = PacketContent::read(reader)?;
         let dimension_type: String = PacketContent::read(reader)?;
         let world_name: String = PacketContent::read(reader)?;
 

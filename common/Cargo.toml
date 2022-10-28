@@ -6,7 +6,9 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-byteorder="1"
-bytes="1"
-uuid="1"
-axolotl-nbt={git="https://github.com/axolotl-rs/axolotl-nbt.git", features=["value"]}
+byteorder = "1"
+bytes = "1"
+uuid = "1"
+axolotl-nbt = { git = "https://github.com/axolotl-rs/axolotl-nbt.git", features = ["value", "serde"] }
+thiserror = "1"
+serde = { version = "1", features = ["derive"] }

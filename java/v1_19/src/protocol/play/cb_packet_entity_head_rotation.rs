@@ -3,7 +3,6 @@ use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
 
-
 pub struct CbPacketEntityHeadRotation;
 impl Packet for CbPacketEntityHeadRotation {
     type PacketIDType = i32;

@@ -3,7 +3,6 @@ use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
 
-
 pub struct CbPacketCompress;
 impl Packet for CbPacketCompress {
     type PacketIDType = i32;

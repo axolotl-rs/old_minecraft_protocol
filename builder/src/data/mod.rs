@@ -56,7 +56,6 @@ impl MinecraftData {
             let string = read_to_string(buf)?;
 
             match name.as_str() {
-
                 "protocol" => {
                     protocol = Some(
                         serde_json::from_str(&string)
@@ -73,11 +72,7 @@ impl MinecraftData {
             }
         }
 
-        Ok(VersionData {
-            protocol,
-
-            version,
-        })
+        Ok(VersionData { protocol, version })
     }
 }
 

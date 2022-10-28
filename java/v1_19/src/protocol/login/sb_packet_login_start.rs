@@ -1,11 +1,9 @@
 use crate::protocol::login::SigData;
 
-
 use minecraft_protocol::protocol::Packet;
 use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
-
 
 pub struct SbPacketLoginStart;
 

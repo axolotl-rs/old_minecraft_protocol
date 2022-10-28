@@ -8,13 +8,14 @@ impl Packet for SetProtocol {
     type PacketIDType = i32;
     type PacketContent = PacketSetProtocolContent;
     fn packet_id() -> Self::PacketIDType
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         0
     }
 }
-#[derive(Debug)]
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PacketSetProtocolContent {
     pub protocol_version: VarInt,
     pub server_host: String,
@@ -59,12 +60,13 @@ impl Packet for SbPacketLegacyServerListPing {
     type PacketIDType = i32;
     type PacketContent = PacketLegacyServerListPingContent;
     fn packet_id() -> Self::PacketIDType
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         254
     }
 }
+
 #[derive(Debug)]
 pub struct PacketLegacyServerListPingContent {
     payload: u8,

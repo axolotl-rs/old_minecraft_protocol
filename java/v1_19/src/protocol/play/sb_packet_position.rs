@@ -3,7 +3,6 @@ use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
 
-
 pub struct SbPacketPosition;
 impl Packet for SbPacketPosition {
     type PacketIDType = i32;

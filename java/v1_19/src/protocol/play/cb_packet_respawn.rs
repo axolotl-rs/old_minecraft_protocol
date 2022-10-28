@@ -2,7 +2,7 @@ use minecraft_protocol::protocol::Packet;
 use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
-
+use axolotl_nbt::value::Value;
 
 pub struct CbPacketRespawn;
 impl Packet for CbPacketRespawn {
@@ -16,7 +16,7 @@ impl Packet for CbPacketRespawn {
     }
 }
 pub struct PacketRespawnContent {
-    pub dimension: minecraft_protocol::data::nbt::Nbt,
+    pub dimension: minecraft_protocol::data::nbt::Nbt<Value>,
 
     pub world_name: String,
 
@@ -54,7 +54,7 @@ impl PacketContent for PacketRespawnContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let dimension: minecraft_protocol::data::nbt::Nbt = PacketContent::read(reader)?;
+        let dimension: minecraft_protocol::data::nbt::Nbt<Value> = PacketContent::read(reader)?;
 
         let world_name: String = PacketContent::read(reader)?;
 
