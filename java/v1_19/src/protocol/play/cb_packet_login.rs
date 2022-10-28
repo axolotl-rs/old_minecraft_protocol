@@ -51,7 +51,7 @@ impl PacketContent for PacketLoginContent {
 
         let world_names: PacketLoginContentArray = PacketContent::read(reader)?;
 
-        let registry_codec: Nbt<Value> = PacketContent::read(reader)?;
+        let registry_codec: Nbt<Value>= PacketContent::read(reader)?;
         let dimension_type: String = PacketContent::read(reader)?;
         let world_name: String = PacketContent::read(reader)?;
 
