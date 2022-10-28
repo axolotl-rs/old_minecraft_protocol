@@ -1,8 +1,8 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketSoundEffect ; impl Packet for CbPacketSoundEffect { type PacketIDType = i32 ; type PacketContent = PacketSoundEffectContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 93 } } pub struct PacketSoundEffectContent { pub sound_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketSoundEffect ; impl Packet for CbPacketSoundEffect { type PacketIDType = i32 ; type PacketContent = PacketSoundEffectContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 93 } } pub struct PacketSoundEffectContent { pub sound_id: minecraft_protocol::data::VarInt ,
 
-pub sound_category: minecraft_data::data::VarInt ,
+pub sound_category: minecraft_protocol::data::VarInt ,
 
 pub x: i32 ,
 
@@ -28,9 +28,9 @@ total_bytes += self.volume.write(writer)?;;
 
 total_bytes += self.pitch.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let sound_id : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let sound_id : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let sound_category : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let sound_category : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let x : i32 = PacketContent :: read ( reader ) ?;;
 

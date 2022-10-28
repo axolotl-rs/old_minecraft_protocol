@@ -5,20 +5,8 @@ use clap::ValueEnum;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
 
-pub mod biomes;
-pub mod block_collision_shapes;
-pub mod blocks;
-pub mod effects;
-pub mod enchantments;
-pub mod entities;
-pub mod foods;
-pub mod instruments;
-pub mod items;
-pub mod materials;
-pub mod particles;
 pub mod protocol;
-pub mod recipes;
-pub mod tints;
+
 pub mod version;
 
 pub struct VersionGenerator {
@@ -40,62 +28,8 @@ impl VersionGenerator {
 
         create_dir_all(&version_dir).map_err(GenError::Io)?;
 
-        if let Some(_json) = version_data.biomes {
-            // biomes::generate_biomes(version, version_dir.join("biomes.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.block_collision_shapes {
-            // block_collision_shapes::generate_block_collision_shapes(
-            //     version_dir.join("block_collision_shapes.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.blocks {
-            // blocks::generate_blocks(version_dir.join("blocks.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.effects {
-            // effects::generate_effects(version_dir.join("effects.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.enchantments {
-            //  enchantments::generate_enchantments(version_dir.join("enchantments.rs"),
-            //                                       json)?;
-        }
-
-        if let Some(_json) = version_data.entities { // entities::generate_entities(
-             //version_dir.join("entities.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.foods { // foods::generate_foods(
-             // version_dir.join("foods.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.instruments {
-            //  instruments::generate_instruments(version_dir.join("instruments.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.items {
-            //  items::generate_items(version_dir.join("items.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.materials {
-            // materials::generate_materials(version_dir.join("materials.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.particles {
-            //  particles::generate_particles(version_dir.join("particles.rs"), json)?;
-        }
-
         if let Some(json) = version_data.protocol {
             protocol::generate_protocol(version_dir.join("protocol"), json, version)?;
-        }
-
-        if let Some(_json) = version_data.recipes {
-            //  recipes::generate_recipes(version_dir.join("recipes.rs"), json)?;
-        }
-
-        if let Some(_json) = version_data.tints {
-            //tints::generate_tints(version_dir.join("tints.rs"), json)?;
         }
 
         if let Some(_json) = version_data.version {

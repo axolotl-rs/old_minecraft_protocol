@@ -1,10 +1,10 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUpdateStructureBlock ; impl Packet for SbPacketUpdateStructureBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateStructureBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 42 } } pub struct PacketUpdateStructureBlockContent { pub location: minecraft_data::data::position::Position ,
+ pub struct SbPacketUpdateStructureBlock ; impl Packet for SbPacketUpdateStructureBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateStructureBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 42 } } pub struct PacketUpdateStructureBlockContent { pub location: minecraft_protocol::data::position::Position ,
 
-pub action: minecraft_data::data::VarInt ,
+pub action: minecraft_protocol::data::VarInt ,
 
-pub mode: minecraft_data::data::VarInt ,
+pub mode: minecraft_protocol::data::VarInt ,
 
 pub name: String ,
 
@@ -20,15 +20,15 @@ pub size_y: u8 ,
 
 pub size_z: u8 ,
 
-pub mirror: minecraft_data::data::VarInt ,
+pub mirror: minecraft_protocol::data::VarInt ,
 
-pub rotation: minecraft_data::data::VarInt ,
+pub rotation: minecraft_protocol::data::VarInt ,
 
 pub metadata: String ,
 
 pub integrity: f32 ,
 
-pub seed: minecraft_data::data::VarInt ,
+pub seed: minecraft_protocol::data::VarInt ,
 
 pub flags: u8 ,
 
@@ -64,11 +64,11 @@ total_bytes += self.seed.write(writer)?;;
 
 total_bytes += self.flags.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let location : minecraft_data::data::position::Position = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let location : minecraft_protocol::data::position::Position = PacketContent :: read ( reader ) ?;;
 
-let action : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let action : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let mode : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let mode : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let name : String = PacketContent :: read ( reader ) ?;;
 
@@ -84,15 +84,15 @@ let size_y : u8 = PacketContent :: read ( reader ) ?;;
 
 let size_z : u8 = PacketContent :: read ( reader ) ?;;
 
-let mirror : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let mirror : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let rotation : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let rotation : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let metadata : String = PacketContent :: read ( reader ) ?;;
 
 let integrity : f32 = PacketContent :: read ( reader ) ?;;
 
-let seed : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let seed : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let flags : u8 = PacketContent :: read ( reader ) ?;;
 

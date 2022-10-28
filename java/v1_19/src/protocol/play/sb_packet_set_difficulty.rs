@@ -1,4 +1,4 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct SbPacketSetDifficulty ; impl Packet for SbPacketSetDifficulty { type PacketIDType = i32 ; type PacketContent = PacketSetDifficultyContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 2 } } pub struct PacketSetDifficultyContent { pub new_difficulty: u8 ,
 

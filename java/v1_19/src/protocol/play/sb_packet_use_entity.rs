@@ -1,8 +1,8 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUseEntity ; impl Packet for SbPacketUseEntity { type PacketIDType = i32 ; type PacketContent = PacketUseEntityContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 13 } } pub struct PacketUseEntityContent { pub target: minecraft_data::data::VarInt ,
+ pub struct SbPacketUseEntity ; impl Packet for SbPacketUseEntity { type PacketIDType = i32 ; type PacketContent = PacketUseEntityContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 13 } } pub struct PacketUseEntityContent { pub target: minecraft_protocol::data::VarInt ,
 
-pub mouse: minecraft_data::data::VarInt ,
+pub mouse: minecraft_protocol::data::VarInt ,
 
 pub x: PacketUseEntityContentContent ,
 
@@ -28,9 +28,9 @@ total_bytes += self.hand.switch_write(false,writer)?;;
 
 total_bytes += self.sneaking.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let target : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let target : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let mouse : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let mouse : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let x : PacketUseEntityContentContent = PacketSwitch::switch_read(&mouse,reader)?;;
 
@@ -46,26 +46,26 @@ let sneaking : bool = PacketContent :: read ( reader ) ?;;
 
  Switch2 (f32 ) ,
 
- } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+ } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_protocol::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
 pub enum PacketUseEntityContentContent { /// This switch variant requires a value 2 in the compare_to field
 
  Switch2 (f32 ) ,
 
- } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+ } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_protocol::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
 pub enum PacketUseEntityContentContent { /// This switch variant requires a value 2 in the compare_to field
 
  Switch2 (f32 ) ,
 
- } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+ } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_protocol::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
 pub enum PacketUseEntityContentContent { /// This switch variant requires a value 0 in the compare_to field
 
- Switch0 (minecraft_data::data::VarInt ) ,
+ Switch0 (minecraft_protocol::data::VarInt ) ,
 
 /// This switch variant requires a value 2 in the compare_to field
 
- Switch2 (minecraft_data::data::VarInt ) ,
+ Switch2 (minecraft_protocol::data::VarInt ) ,
 
- } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+ } impl PacketSwitch for PacketUseEntityContentContent { type CompareType = minecraft_protocol::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }

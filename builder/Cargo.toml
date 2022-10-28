@@ -1,5 +1,5 @@
 [package]
-name = "minecraft_data_builder"
+name = "minecraft_protocol_builder"
 version = "0.1.0"
 edition = "2021"
 

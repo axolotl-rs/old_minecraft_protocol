@@ -1,6 +1,6 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+use minecraft_protocol::protocol::PacketSwitch;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::str::FromStr;
 
@@ -18,13 +18,13 @@ impl Packet for SbPacketWindowClick {
 pub struct PacketWindowClickContent {
     pub window_id: u8,
 
-    pub state_id: minecraft_data::data::VarInt,
+    pub state_id: minecraft_protocol::data::VarInt,
 
     pub slot: i16,
 
     pub mouse_button: i8,
 
-    pub mode: minecraft_data::data::VarInt,
+    pub mode: minecraft_protocol::data::VarInt,
 
     pub changed_slots: PacketWindowClickContentArray,
 
@@ -52,13 +52,13 @@ impl PacketContent for PacketWindowClickContent {
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
         let window_id: u8 = PacketContent::read(reader)?;
 
-        let state_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let state_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let slot: i16 = PacketContent::read(reader)?;
 
         let mouse_button: i8 = PacketContent::read(reader)?;
 
-        let mode: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let mode: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let changed_slots: PacketWindowClickContentArray = PacketContent::read(reader)?;
 

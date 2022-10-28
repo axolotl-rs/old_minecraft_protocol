@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketPosition;
 impl Packet for CbPacketPosition {
@@ -28,7 +28,7 @@ pub struct PacketPositionContent {
 
     pub flags: i8,
 
-    pub teleport_id: minecraft_data::data::VarInt,
+    pub teleport_id: minecraft_protocol::data::VarInt,
 
     pub dismount_vehicle: bool,
 }
@@ -66,7 +66,7 @@ impl PacketContent for PacketPositionContent {
 
         let flags: i8 = PacketContent::read(reader)?;
 
-        let teleport_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let teleport_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let dismount_vehicle: bool = PacketContent::read(reader)?;
 

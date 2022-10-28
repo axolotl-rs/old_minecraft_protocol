@@ -1,8 +1,8 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketWindowItems ; impl Packet for CbPacketWindowItems { type PacketIDType = i32 ; type PacketContent = PacketWindowItemsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 20 } } pub struct PacketWindowItemsContent { pub window_id: u8 ,
 
-pub state_id: minecraft_data::data::VarInt ,
+pub state_id: minecraft_protocol::data::VarInt ,
 
 pub items: PacketWindowItemsContentArray ,
 
@@ -18,7 +18,7 @@ total_bytes += self.carried_item.write(writer)?;;
 
  Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let window_id : u8 = PacketContent :: read ( reader ) ?;;
 
-let state_id : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let state_id : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let items : PacketWindowItemsContentArray = PacketContent :: read ( reader ) ?;;
 

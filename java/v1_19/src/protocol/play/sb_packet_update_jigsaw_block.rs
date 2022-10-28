@@ -1,6 +1,6 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct SbPacketUpdateJigsawBlock ; impl Packet for SbPacketUpdateJigsawBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateJigsawBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 41 } } pub struct PacketUpdateJigsawBlockContent { pub location: minecraft_data::data::position::Position ,
+ pub struct SbPacketUpdateJigsawBlock ; impl Packet for SbPacketUpdateJigsawBlock { type PacketIDType = i32 ; type PacketContent = PacketUpdateJigsawBlockContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 41 } } pub struct PacketUpdateJigsawBlockContent { pub location: minecraft_protocol::data::position::Position ,
 
 pub name: String ,
 
@@ -24,7 +24,7 @@ total_bytes += self.final_state.write(writer)?;;
 
 total_bytes += self.joint_type.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let location : minecraft_data::data::position::Position = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let location : minecraft_protocol::data::position::Position = PacketContent :: read ( reader ) ?;;
 
 let name : String = PacketContent :: read ( reader ) ?;;
 

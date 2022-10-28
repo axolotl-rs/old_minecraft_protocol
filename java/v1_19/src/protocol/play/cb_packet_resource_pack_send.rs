@@ -1,4 +1,4 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketResourcePackSend ; impl Packet for CbPacketResourcePackSend { type PacketIDType = i32 ; type PacketContent = PacketResourcePackSendContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 60 } } pub struct PacketResourcePackSendContent { pub url: String ,
 

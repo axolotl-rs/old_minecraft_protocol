@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketEntityLook;
 impl Packet for CbPacketEntityLook {
@@ -16,7 +16,7 @@ impl Packet for CbPacketEntityLook {
     }
 }
 pub struct PacketEntityLookContent {
-    pub entity_id: minecraft_data::data::VarInt,
+    pub entity_id: minecraft_protocol::data::VarInt,
 
     pub yaw: i8,
 
@@ -38,7 +38,7 @@ impl PacketContent for PacketEntityLookContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let entity_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let entity_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let yaw: i8 = PacketContent::read(reader)?;
 

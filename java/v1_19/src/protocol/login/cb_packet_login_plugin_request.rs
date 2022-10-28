@@ -1,6 +1,6 @@
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use minecraft_data::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+use minecraft_protocol::protocol::PacketSwitch;
+use minecraft_protocol::protocol::Packet;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::str::FromStr;
 

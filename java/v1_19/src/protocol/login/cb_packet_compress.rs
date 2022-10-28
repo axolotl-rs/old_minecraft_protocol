@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketCompress;
 impl Packet for CbPacketCompress {
@@ -16,7 +16,7 @@ impl Packet for CbPacketCompress {
     }
 }
 pub struct PacketCompressContent {
-    pub threshold: minecraft_data::data::VarInt,
+    pub threshold: minecraft_protocol::data::VarInt,
 }
 impl PacketContent for PacketCompressContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -26,7 +26,7 @@ impl PacketContent for PacketCompressContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let threshold: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let threshold: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         Ok(Self { threshold })
     }

@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketEntityHeadRotation;
 impl Packet for CbPacketEntityHeadRotation {
@@ -16,7 +16,7 @@ impl Packet for CbPacketEntityHeadRotation {
     }
 }
 pub struct PacketEntityHeadRotationContent {
-    pub entity_id: minecraft_data::data::VarInt,
+    pub entity_id: minecraft_protocol::data::VarInt,
 
     pub head_yaw: i8,
 }
@@ -30,7 +30,7 @@ impl PacketContent for PacketEntityHeadRotationContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let entity_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let entity_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let head_yaw: i8 = PacketContent::read(reader)?;
 

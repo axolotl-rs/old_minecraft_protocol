@@ -1,6 +1,6 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketSetPassengers ; impl Packet for CbPacketSetPassengers { type PacketIDType = i32 ; type PacketContent = PacketSetPassengersContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 84 } } pub struct PacketSetPassengersContent { pub entity_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketSetPassengers ; impl Packet for CbPacketSetPassengers { type PacketIDType = i32 ; type PacketContent = PacketSetPassengersContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 84 } } pub struct PacketSetPassengersContent { pub entity_id: minecraft_protocol::data::VarInt ,
 
 pub passengers: PacketSetPassengersContentArray ,
 
@@ -8,8 +8,8 @@ pub passengers: PacketSetPassengersContentArray ,
 
 total_bytes += self.passengers.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let entity_id : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let entity_id : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let passengers : PacketSetPassengersContentArray = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { entity_id, passengers } ) } } pub type PacketSetPassengersContentArray = Vec <minecraft_data::data::VarInt >;
+ Ok ( Self { entity_id, passengers } ) } } pub type PacketSetPassengersContentArray = Vec <minecraft_protocol::data::VarInt >;

@@ -1,10 +1,10 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketTabComplete ; impl Packet for CbPacketTabComplete { type PacketIDType = i32 ; type PacketContent = PacketTabCompleteContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 17 } } pub struct PacketTabCompleteContent { pub transaction_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketTabComplete ; impl Packet for CbPacketTabComplete { type PacketIDType = i32 ; type PacketContent = PacketTabCompleteContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 17 } } pub struct PacketTabCompleteContent { pub transaction_id: minecraft_protocol::data::VarInt ,
 
-pub start: minecraft_data::data::VarInt ,
+pub start: minecraft_protocol::data::VarInt ,
 
-pub length: minecraft_data::data::VarInt ,
+pub length: minecraft_protocol::data::VarInt ,
 
 pub matches: PacketTabCompleteContentArray ,
 
@@ -16,11 +16,11 @@ total_bytes += self.length.write(writer)?;;
 
 total_bytes += self.matches.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let transaction_id : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let transaction_id : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let start : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let start : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let length : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let length : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let matches : PacketTabCompleteContentArray = PacketContent :: read ( reader ) ?;;
 

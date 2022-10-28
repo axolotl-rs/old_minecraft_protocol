@@ -1,10 +1,10 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketMapChunk ; impl Packet for CbPacketMapChunk { type PacketIDType = i32 ; type PacketContent = PacketMapChunkContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 34 } } pub struct PacketMapChunkContent { pub x: i32 ,
 
 pub z: i32 ,
 
-pub heightmaps: minecraft_data::data::nbt::Nbt ,
+pub heightmaps: minecraft_protocol::data::nbt::Nbt ,
 
 pub chunk_data: void ,
 
@@ -52,7 +52,7 @@ total_bytes += self.block_light.write(writer)?;;
 
 let z : i32 = PacketContent :: read ( reader ) ?;;
 
-let heightmaps : minecraft_data::data::nbt::Nbt = PacketContent :: read ( reader ) ?;;
+let heightmaps : minecraft_protocol::data::nbt::Nbt = PacketContent :: read ( reader ) ?;;
 
 let chunk_data : void = PacketContent :: read ( reader ) ?;;
 

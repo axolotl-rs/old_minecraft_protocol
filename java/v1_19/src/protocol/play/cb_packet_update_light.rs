@@ -1,8 +1,8 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketUpdateLight ; impl Packet for CbPacketUpdateLight { type PacketIDType = i32 ; type PacketContent = PacketUpdateLightContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 37 } } pub struct PacketUpdateLightContent { pub chunk_x: minecraft_data::data::VarInt ,
+ pub struct CbPacketUpdateLight ; impl Packet for CbPacketUpdateLight { type PacketIDType = i32 ; type PacketContent = PacketUpdateLightContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 37 } } pub struct PacketUpdateLightContent { pub chunk_x: minecraft_protocol::data::VarInt ,
 
-pub chunk_z: minecraft_data::data::VarInt ,
+pub chunk_z: minecraft_protocol::data::VarInt ,
 
 pub trust_edges: bool ,
 
@@ -36,9 +36,9 @@ total_bytes += self.sky_light.write(writer)?;;
 
 total_bytes += self.block_light.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let chunk_x : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let chunk_x : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let chunk_z : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let chunk_z : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let trust_edges : bool = PacketContent :: read ( reader ) ?;;
 

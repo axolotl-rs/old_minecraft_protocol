@@ -1,8 +1,8 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketDeclareCommands ; impl Packet for CbPacketDeclareCommands { type PacketIDType = i32 ; type PacketContent = PacketDeclareCommandsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 18 } } pub struct PacketDeclareCommandsContent { pub nodes: PacketDeclareCommandsContentArray ,
 
-pub root_index: minecraft_data::data::VarInt ,
+pub root_index: minecraft_protocol::data::VarInt ,
 
  } impl PacketContent for PacketDeclareCommandsContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.nodes.write(writer)?;;
 
@@ -10,9 +10,9 @@ total_bytes += self.root_index.write(writer)?;;
 
  Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let nodes : PacketDeclareCommandsContentArray = PacketContent :: read ( reader ) ?;;
 
-let root_index : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let root_index : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
- Ok ( Self { nodes, root_index } ) } } pub type PacketDeclareCommandsContentArray = Vec <PacketDeclareCommandsContentArrayContent >; pub struct PacketDeclareCommandsContentArrayContent { pub flags: minecraft_data::data::bitfield::BitField ,
+ Ok ( Self { nodes, root_index } ) } } pub type PacketDeclareCommandsContentArray = Vec <PacketDeclareCommandsContentArrayContent >; pub struct PacketDeclareCommandsContentArrayContent { pub flags: minecraft_protocol::data::bitfield::BitField ,
 
 pub children: PacketDeclareCommandsContentArrayContentArray ,
 
@@ -28,7 +28,7 @@ total_bytes += self.redirect_node.switch_write(false,writer)?;;
 
 total_bytes += self.extra_node_data.switch_write(false,writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let flags : minecraft_data::data::bitfield::BitField = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let flags : minecraft_protocol::data::bitfield::BitField = PacketContent :: read ( reader ) ?;;
 
 let children : PacketDeclareCommandsContentArrayContentArray = PacketContent :: read ( reader ) ?;;
 
@@ -36,17 +36,17 @@ let redirect_node : PacketDeclareCommandsContentArrayContentContent = PacketSwit
 
 let extra_node_data : PacketDeclareCommandsContentArrayContentContent = PacketSwitch::switch_read(&not_found,reader)?;;
 
- Ok ( Self { flags, children, redirect_node, extra_node_data } ) } } pub type PacketDeclareCommandsContentArrayContentArray = Vec <minecraft_data::data::VarInt >;
+ Ok ( Self { flags, children, redirect_node, extra_node_data } ) } } pub type PacketDeclareCommandsContentArrayContentArray = Vec <minecraft_protocol::data::VarInt >;
 
 pub enum PacketDeclareCommandsContentArrayContentContent { /// This switch variant requires a value 1 in the compare_to field
 
- Switch1 (minecraft_data::data::VarInt ) ,
+ Switch1 (minecraft_protocol::data::VarInt ) ,
 
  } impl PacketSwitch for PacketDeclareCommandsContentArrayContentContent { type CompareType = void ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
 
 pub enum PacketDeclareCommandsContentArrayContentContent { /// This switch variant requires a value 0 in the compare_to field
 
- Switch0 (minecraft_data::data::Void ) ,
+ Switch0 (minecraft_protocol::data::Void ) ,
 
 /// This switch variant requires a value 1 in the compare_to field
 
@@ -74,7 +74,7 @@ suggests: PacketDeclareCommandsContentArrayContentContentContentContent ,
 
  BrigadierDouble {
 
- flags: minecraft_data::data::bitfield::BitField ,
+ flags: minecraft_protocol::data::bitfield::BitField ,
 
 min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
 
@@ -86,7 +86,7 @@ max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent
 
  BrigadierFloat {
 
- flags: minecraft_data::data::bitfield::BitField ,
+ flags: minecraft_protocol::data::bitfield::BitField ,
 
 min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
 
@@ -98,7 +98,7 @@ max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent
 
  BrigadierInteger {
 
- flags: minecraft_data::data::bitfield::BitField ,
+ flags: minecraft_protocol::data::bitfield::BitField ,
 
 min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
 
@@ -110,7 +110,7 @@ max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent
 
  BrigadierLong {
 
- flags: minecraft_data::data::bitfield::BitField ,
+ flags: minecraft_protocol::data::bitfield::BitField ,
 
 min: PacketDeclareCommandsContentArrayContentContentContentContentContentContent ,
 
@@ -120,7 +120,7 @@ max: PacketDeclareCommandsContentArrayContentContentContentContentContentContent
 
 /// This switch variant requires a value brigadier:string in the compare_to field
 
- BrigadierString (minecraft_data::data::VarInt ) ,
+ BrigadierString (minecraft_protocol::data::VarInt ) ,
 
 /// This switch variant requires a value minecraft:range in the compare_to field
 

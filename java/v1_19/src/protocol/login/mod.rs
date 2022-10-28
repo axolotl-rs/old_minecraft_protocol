@@ -1,6 +1,6 @@
 use bytes::Bytes;
-use minecraft_data::data::VarInt;
-use minecraft_data::protocol::PacketContent;
+use minecraft_protocol::data::VarInt;
+use minecraft_protocol::protocol::PacketContent;
 use std::io::{BufRead, Read, Write};
 
 pub mod cb_packet_compress;

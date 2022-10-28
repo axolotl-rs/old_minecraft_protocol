@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct SbPacketPingStart;
 impl Packet for SbPacketPingStart {
@@ -17,11 +17,11 @@ impl Packet for SbPacketPingStart {
 }
 pub struct PacketPingStartContent {}
 impl PacketContent for PacketPingStartContent {
-    fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
-        let mut total_bytes = 0;
+    fn write<Writer: Write>(self, _writer: &mut Writer) -> std::io::Result<usize> {
+        let total_bytes = 0;
         Ok(total_bytes)
     }
-    fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
+    fn read<Reader: BufRead>(_reader: &mut Reader) -> std::io::Result<Self> {
         Ok(Self {})
     }
 }

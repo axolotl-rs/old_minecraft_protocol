@@ -1,4 +1,4 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct SbPacketCraftRecipeRequest ; impl Packet for SbPacketCraftRecipeRequest { type PacketIDType = i32 ; type PacketContent = PacketCraftRecipeRequestContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 24 } } pub struct PacketCraftRecipeRequestContent { pub window_id: i8 ,
 

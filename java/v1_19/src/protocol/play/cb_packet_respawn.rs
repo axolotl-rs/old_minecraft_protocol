@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketRespawn;
 impl Packet for CbPacketRespawn {
@@ -16,7 +16,7 @@ impl Packet for CbPacketRespawn {
     }
 }
 pub struct PacketRespawnContent {
-    pub dimension: minecraft_data::data::nbt::Nbt,
+    pub dimension: minecraft_protocol::data::nbt::Nbt,
 
     pub world_name: String,
 
@@ -54,7 +54,7 @@ impl PacketContent for PacketRespawnContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let dimension: minecraft_data::data::nbt::Nbt = PacketContent::read(reader)?;
+        let dimension: minecraft_protocol::data::nbt::Nbt = PacketContent::read(reader)?;
 
         let world_name: String = PacketContent::read(reader)?;
 

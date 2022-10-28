@@ -1,4 +1,4 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketSelectAdvancementTab ; impl Packet for CbPacketSelectAdvancementTab { type PacketIDType = i32 ; type PacketContent = PacketSelectAdvancementTabContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 64 } } pub struct PacketSelectAdvancementTabContent { pub id: void ,
 

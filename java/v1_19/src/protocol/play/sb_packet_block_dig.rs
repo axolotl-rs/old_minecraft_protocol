@@ -1,8 +1,8 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct SbPacketBlockDig ; impl Packet for SbPacketBlockDig { type PacketIDType = i32 ; type PacketContent = PacketBlockDigContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 26 } } pub struct PacketBlockDigContent { pub status: i8 ,
 
-pub location: minecraft_data::data::position::Position ,
+pub location: minecraft_protocol::data::position::Position ,
 
 pub face: i8 ,
 
@@ -14,7 +14,7 @@ total_bytes += self.face.write(writer)?;;
 
  Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let status : i8 = PacketContent :: read ( reader ) ?;;
 
-let location : minecraft_data::data::position::Position = PacketContent :: read ( reader ) ?;;
+let location : minecraft_protocol::data::position::Position = PacketContent :: read ( reader ) ?;;
 
 let face : i8 = PacketContent :: read ( reader ) ?;;
 

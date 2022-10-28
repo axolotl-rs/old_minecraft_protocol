@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketEntityVelocity;
 impl Packet for CbPacketEntityVelocity {
@@ -16,7 +16,7 @@ impl Packet for CbPacketEntityVelocity {
     }
 }
 pub struct PacketEntityVelocityContent {
-    pub entity_id: minecraft_data::data::VarInt,
+    pub entity_id: minecraft_protocol::data::VarInt,
 
     pub velocity_x: i16,
 
@@ -38,7 +38,7 @@ impl PacketContent for PacketEntityVelocityContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let entity_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let entity_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let velocity_x: i16 = PacketContent::read(reader)?;
 

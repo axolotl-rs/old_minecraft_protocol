@@ -1,12 +1,12 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketTradeList ; impl Packet for CbPacketTradeList { type PacketIDType = i32 ; type PacketContent = PacketTradeListContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 40 } } pub struct PacketTradeListContent { pub window_id: minecraft_data::data::VarInt ,
+ pub struct CbPacketTradeList ; impl Packet for CbPacketTradeList { type PacketIDType = i32 ; type PacketContent = PacketTradeListContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 40 } } pub struct PacketTradeListContent { pub window_id: minecraft_protocol::data::VarInt ,
 
 pub trades: PacketTradeListContentArray ,
 
-pub villager_level: minecraft_data::data::VarInt ,
+pub villager_level: minecraft_protocol::data::VarInt ,
 
-pub experience: minecraft_data::data::VarInt ,
+pub experience: minecraft_protocol::data::VarInt ,
 
 pub is_regular_villager: bool ,
 
@@ -24,13 +24,13 @@ total_bytes += self.is_regular_villager.write(writer)?;;
 
 total_bytes += self.can_restock.write(writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let window_id : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let window_id : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let trades : PacketTradeListContentArray = PacketContent :: read ( reader ) ?;;
 
-let villager_level : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let villager_level : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
-let experience : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let experience : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let is_regular_villager : bool = PacketContent :: read ( reader ) ?;;
 

@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Result, Write};
+
 use uuid::Uuid;
 
 pub struct CbPacketSuccess;
@@ -24,7 +24,7 @@ pub struct LoginSuccess {
 }
 
 impl PacketContent for LoginSuccess {
-    fn read<Reader: BufRead>(reader: &mut Reader) -> Result<Self>
+    fn read<Reader: BufRead>(_reader: &mut Reader) -> Result<Self>
     where
         Self: Sized,
     {

@@ -1,6 +1,6 @@
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use minecraft_data::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+use minecraft_protocol::protocol::PacketSwitch;
+use minecraft_protocol::protocol::Packet;
 use std::io::{BufRead, Error, ErrorKind, Result, Write};
 use std::str::FromStr;
 
@@ -13,7 +13,7 @@ impl Packet for SbPacketUseItem {
 }
 
 pub struct PacketUseItemContent {
-    pub hand: minecraft_data::data::VarInt,
+    pub hand: minecraft_protocol::data::VarInt,
 
 }
 
@@ -26,7 +26,7 @@ impl PacketContent for PacketUseItemContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let hand: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let hand: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
         ;
 
         Ok(Self { hand })

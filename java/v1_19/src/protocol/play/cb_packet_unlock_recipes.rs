@@ -1,6 +1,6 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
- pub struct CbPacketUnlockRecipes ; impl Packet for CbPacketUnlockRecipes { type PacketIDType = i32 ; type PacketContent = PacketUnlockRecipesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 57 } } pub struct PacketUnlockRecipesContent { pub action: minecraft_data::data::VarInt ,
+ pub struct CbPacketUnlockRecipes ; impl Packet for CbPacketUnlockRecipes { type PacketIDType = i32 ; type PacketContent = PacketUnlockRecipesContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 57 } } pub struct PacketUnlockRecipesContent { pub action: minecraft_protocol::data::VarInt ,
 
 pub crafting_book_open: bool ,
 
@@ -44,7 +44,7 @@ total_bytes += self.recipes_1.write(writer)?;;
 
 total_bytes += self.recipes_2.switch_write(false,writer)?;;
 
- Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let action : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+ Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let action : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let crafting_book_open : bool = PacketContent :: read ( reader ) ?;;
 
@@ -68,4 +68,4 @@ let recipes_2 : PacketUnlockRecipesContentContent = PacketSwitch::switch_read(&a
 
  Ok ( Self { action, crafting_book_open, filtering_craftable, smelting_book_open, filtering_smeltable, blast_furnace_open, filtering_blast_furnace, smoker_book_open, filtering_smoker, recipes_1, recipes_2 } ) } } pub type PacketUnlockRecipesContentArray = Vec <String >;
 
-pub enum PacketUnlockRecipesContentContent { } impl PacketSwitch for PacketUnlockRecipesContentContent { type CompareType = minecraft_data::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }
+pub enum PacketUnlockRecipesContentContent { } impl PacketSwitch for PacketUnlockRecipesContentContent { type CompareType = minecraft_protocol::data::VarInt ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }

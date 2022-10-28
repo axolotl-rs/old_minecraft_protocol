@@ -1,8 +1,8 @@
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::str::FromStr;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
 
 pub struct CbPacketCamera;
 impl Packet for CbPacketCamera {
@@ -16,7 +16,7 @@ impl Packet for CbPacketCamera {
     }
 }
 pub struct PacketCameraContent {
-    pub camera_id: minecraft_data::data::VarInt,
+    pub camera_id: minecraft_protocol::data::VarInt,
 }
 impl PacketContent for PacketCameraContent {
     fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -26,7 +26,7 @@ impl PacketContent for PacketCameraContent {
         Ok(total_bytes)
     }
     fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-        let camera_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let camera_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         Ok(Self { camera_id })
     }

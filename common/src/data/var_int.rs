@@ -41,8 +41,6 @@ impl Into<i32> for VarInt {
     }
 }
 
-
-
 impl PartialEq<i32> for VarInt {
     fn eq(&self, other: &i32) -> bool {
         self.0 == *other

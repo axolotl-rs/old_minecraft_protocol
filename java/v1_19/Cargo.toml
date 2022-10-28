@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-minecraft_data = { path = "../../common" }
+minecraft_protocol = { path = "../../common" }
 bytes="1.1.0"
 uuid = "1.1.2"
 axolotl-nbt={git="https://github.com/axolotl-rs/axolotl-nbt.git"}

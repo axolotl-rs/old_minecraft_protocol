@@ -1,4 +1,4 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketScoreboardScore ; impl Packet for CbPacketScoreboardScore { type PacketIDType = i32 ; type PacketContent = PacketScoreboardScoreContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 86 } } pub struct PacketScoreboardScoreContent { pub item_name: String ,
 
@@ -26,6 +26,6 @@ let value : PacketScoreboardScoreContentContent = PacketSwitch::switch_read(&act
 
  Ok ( Self { item_name, action, score_name, value } ) } } pub enum PacketScoreboardScoreContentContent { /// This switch variant requires a value 1 in the compare_to field
 
- Switch1 (minecraft_data::data::Void ) ,
+ Switch1 (minecraft_protocol::data::Void ) ,
 
  } impl PacketSwitch for PacketScoreboardScoreContentContent { type CompareType = i8 ; fn switch_read < Reader : BufRead > ( compare_to : & Self :: CompareType , reader : & mut Reader ) -> std :: io :: Result < Self > where Self : Sized { todo ! ( ) } fn switch_write < Writer : Write > ( self , write_compare : bool , writer : & mut Writer ) -> std :: io :: Result < usize > where Self : Sized { todo ! ( ) } }

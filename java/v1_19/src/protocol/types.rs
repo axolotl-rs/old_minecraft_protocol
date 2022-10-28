@@ -1,10 +1,10 @@
 mod slot {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    use minecraft_protocol::protocol::PacketContent;
+    use minecraft_protocol::protocol::PacketSwitch;
+    use std::io::{BufRead, Write};
+    
 
     pub struct Slot {
         pub present: bool,
@@ -31,21 +31,21 @@ mod slot {
     pub enum SlotContent {
         /// This switch variant requires a value true in the compare_to field
         Switchtrue {
-            item_id: minecraft_data::data::VarInt,
+            item_id: minecraft_protocol::data::VarInt,
 
             item_count: i8,
 
-            nbt_data: minecraft_data::data::nbt::OptionalNbt,
+            nbt_data: minecraft_protocol::data::nbt::OptionalNbt,
         },
 
         /// This switch variant requires a value false in the compare_to field
-        Switchfalse(minecraft_data::data::Void),
+        Switchfalse(minecraft_protocol::data::Void),
     }
     impl PacketSwitch for SlotContent {
         type CompareType = bool;
         fn switch_read<Reader: BufRead>(
-            compare_to: &Self::CompareType,
-            reader: &mut Reader,
+            _compare_to: &Self::CompareType,
+            _reader: &mut Reader,
         ) -> std::io::Result<Self>
         where
             Self: Sized,
@@ -54,8 +54,8 @@ mod slot {
         }
         fn switch_write<Writer: Write>(
             self,
-            write_compare: bool,
-            writer: &mut Writer,
+            _write_compare: bool,
+            _writer: &mut Writer,
         ) -> std::io::Result<usize>
         where
             Self: Sized,
@@ -68,12 +68,12 @@ mod slot {
 pub use slot::*;
 
 mod particle_data {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    
+    use minecraft_protocol::protocol::PacketSwitch;
+    use std::io::{BufRead, Write};
+    
 
     pub enum ParticleData {
         /// This switch variant requires a value 15 in the compare_to field
@@ -95,12 +95,12 @@ mod particle_data {
 
         /// This switch variant requires a value 24 in the compare_to field
         Switch24 {
-            block_state: minecraft_data::data::VarInt,
+            block_state: minecraft_protocol::data::VarInt,
         },
 
         /// This switch variant requires a value 3 in the compare_to field
         Switch3 {
-            block_state: minecraft_data::data::VarInt,
+            block_state: minecraft_protocol::data::VarInt,
         },
 
         /// This switch variant requires a value 35 in the compare_to field
@@ -121,25 +121,25 @@ mod particle_data {
 
         /// This switch variant requires a value 2 in the compare_to field
         Switch2 {
-            block_state: minecraft_data::data::VarInt,
+            block_state: minecraft_protocol::data::VarInt,
         },
 
         /// This switch variant requires a value 36 in the compare_to field
         Switch36 {
-            origin: minecraft_data::data::position::Position,
+            origin: minecraft_protocol::data::position::Position,
 
             position_type: String,
 
             destination: ParticleDataContentContent,
 
-            ticks: minecraft_data::data::VarInt,
+            ticks: minecraft_protocol::data::VarInt,
         },
     }
     impl PacketSwitch for ParticleData {
-        type CompareType = minecraft_data::data::VarInt;
+        type CompareType = minecraft_protocol::data::VarInt;
         fn switch_read<Reader: BufRead>(
-            compare_to: &Self::CompareType,
-            reader: &mut Reader,
+            _compare_to: &Self::CompareType,
+            _reader: &mut Reader,
         ) -> std::io::Result<Self>
         where
             Self: Sized,
@@ -148,8 +148,8 @@ mod particle_data {
         }
         fn switch_write<Writer: Write>(
             self,
-            write_compare: bool,
-            writer: &mut Writer,
+            _write_compare: bool,
+            _writer: &mut Writer,
         ) -> std::io::Result<usize>
         where
             Self: Sized,
@@ -159,16 +159,16 @@ mod particle_data {
     }
     pub enum ParticleDataContentContent {
         /// This switch variant requires a value minecraft:entity in the compare_to field
-        MinecraftEntity(minecraft_data::data::VarInt),
+        MinecraftEntity(minecraft_protocol::data::VarInt),
 
         /// This switch variant requires a value minecraft:block in the compare_to field
-        MinecraftBlock(minecraft_data::data::position::Position),
+        MinecraftBlock(minecraft_protocol::data::position::Position),
     }
     impl PacketSwitch for ParticleDataContentContent {
         type CompareType = String;
         fn switch_read<Reader: BufRead>(
-            compare_to: &Self::CompareType,
-            reader: &mut Reader,
+            _compare_to: &Self::CompareType,
+            _reader: &mut Reader,
         ) -> std::io::Result<Self>
         where
             Self: Sized,
@@ -177,8 +177,8 @@ mod particle_data {
         }
         fn switch_write<Writer: Write>(
             self,
-            write_compare: bool,
-            writer: &mut Writer,
+            _write_compare: bool,
+            _writer: &mut Writer,
         ) -> std::io::Result<usize>
         where
             Self: Sized,
@@ -191,12 +191,12 @@ mod particle_data {
 pub use particle_data::*;
 
 mod ingredient {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    
+    
+    
+    
 
     pub type Ingredient = Vec<crate::protocol::types::slot::Slot>;
 }
@@ -204,12 +204,12 @@ mod ingredient {
 pub use ingredient::*;
 
 mod minecraft_smelting_format {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    use minecraft_protocol::protocol::PacketContent;
+    
+    use std::io::{BufRead, Write};
+    
 
     pub struct MinecraftSmeltingFormat {
         pub group: String,
@@ -220,7 +220,7 @@ mod minecraft_smelting_format {
 
         pub experience: f32,
 
-        pub cook_time: minecraft_data::data::VarInt,
+        pub cook_time: minecraft_protocol::data::VarInt,
     }
     impl PacketContent for MinecraftSmeltingFormat {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -247,7 +247,7 @@ mod minecraft_smelting_format {
 
             let experience: f32 = PacketContent::read(reader)?;
 
-            let cook_time: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+            let cook_time: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
             Ok(Self {
                 group,
@@ -263,12 +263,12 @@ mod minecraft_smelting_format {
 pub use minecraft_smelting_format::*;
 
 mod tags {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    use minecraft_protocol::protocol::PacketContent;
+    
+    use std::io::{BufRead, Write};
+    
 
     pub type Tags = Vec<TagsContent>;
     pub struct TagsContent {
@@ -293,27 +293,27 @@ mod tags {
             Ok(Self { tag_name, entries })
         }
     }
-    pub type TagsContentArray = Vec<minecraft_data::data::VarInt>;
+    pub type TagsContentArray = Vec<minecraft_protocol::data::VarInt>;
 }
 
 pub use tags::*;
 
 mod chunk_block_entity {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    use minecraft_protocol::protocol::PacketContent;
+    
+    use std::io::{BufRead, Write};
+    
 
     pub struct ChunkBlockEntity {
-        pub content: minecraft_data::data::bitfield::BitField,
+        pub content: minecraft_protocol::data::bitfield::BitField,
 
         pub y: i16,
 
-        pub data_type: minecraft_data::data::VarInt,
+        pub data_type: minecraft_protocol::data::VarInt,
 
-        pub nbt_data: minecraft_data::data::nbt::OptionalNbt,
+        pub nbt_data: minecraft_protocol::data::nbt::OptionalNbt,
     }
     impl PacketContent for ChunkBlockEntity {
         fn write<Writer: Write>(self, writer: &mut Writer) -> std::io::Result<usize> {
@@ -329,13 +329,14 @@ mod chunk_block_entity {
             Ok(total_bytes)
         }
         fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-            let content: minecraft_data::data::bitfield::BitField = PacketContent::read(reader)?;
+            let content: minecraft_protocol::data::bitfield::BitField =
+                PacketContent::read(reader)?;
 
             let y: i16 = PacketContent::read(reader)?;
 
-            let data_type: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+            let data_type: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
-            let nbt_data: minecraft_data::data::nbt::OptionalNbt = PacketContent::read(reader)?;
+            let nbt_data: minecraft_protocol::data::nbt::OptionalNbt = PacketContent::read(reader)?;
 
             Ok(Self {
                 content,
@@ -350,15 +351,15 @@ mod chunk_block_entity {
 pub use chunk_block_entity::*;
 
 mod particle {
-    use super::*;
-    use minecraft_data::protocol::Packet;
-    use minecraft_data::protocol::PacketContent;
-    use minecraft_data::protocol::PacketSwitch;
-    use std::io::{BufRead, Error, ErrorKind, Result, Write};
-    use std::str::FromStr;
+    
+    
+    use minecraft_protocol::protocol::PacketContent;
+    use minecraft_protocol::protocol::PacketSwitch;
+    use std::io::{BufRead, Write};
+    
 
     pub struct Particle {
-        pub particle_id: minecraft_data::data::VarInt,
+        pub particle_id: minecraft_protocol::data::VarInt,
 
         pub data: crate::protocol::types::particle_data::ParticleData,
     }
@@ -372,7 +373,7 @@ mod particle {
             Ok(total_bytes)
         }
         fn read<Reader: BufRead>(reader: &mut Reader) -> std::io::Result<Self> {
-            let particle_id: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+            let particle_id: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
             let data: crate::protocol::types::particle_data::ParticleData =
                 PacketSwitch::switch_read(&particle_id, reader)?;

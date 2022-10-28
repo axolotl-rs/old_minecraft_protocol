@@ -1,10 +1,10 @@
-use minecraft_data::data::nbt::Nbt;
-use minecraft_data::protocol::Packet;
-use minecraft_data::protocol::PacketContent;
-use minecraft_data::protocol::PacketSwitch;
-use std::io::{BufRead, Error, ErrorKind, Result, Write};
-use std::marker::PhantomData;
-use std::str::FromStr;
+use minecraft_protocol::data::nbt::Nbt;
+use minecraft_protocol::protocol::Packet;
+use minecraft_protocol::protocol::PacketContent;
+
+use std::io::{BufRead, Write};
+
+
 
 pub struct CbPacketLogin;
 
@@ -38,11 +38,11 @@ pub struct PacketLoginContent {
 
     pub hashed_seed: i64,
 
-    pub max_players: minecraft_data::data::VarInt,
+    pub max_players: minecraft_protocol::data::VarInt,
 
-    pub view_distance: minecraft_data::data::VarInt,
+    pub view_distance: minecraft_protocol::data::VarInt,
 
-    pub simulation_distance: minecraft_data::data::VarInt,
+    pub simulation_distance: minecraft_protocol::data::VarInt,
 
     pub reduced_debug_info: bool,
 
@@ -73,11 +73,11 @@ impl PacketContent for PacketLoginContent {
 
         let hashed_seed: i64 = PacketContent::read(reader)?;
 
-        let max_players: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let max_players: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
-        let view_distance: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let view_distance: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
-        let simulation_distance: minecraft_data::data::VarInt = PacketContent::read(reader)?;
+        let simulation_distance: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
 
         let reduced_debug_info: bool = PacketContent::read(reader)?;
 

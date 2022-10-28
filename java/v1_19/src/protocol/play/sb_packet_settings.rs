@@ -1,16 +1,16 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct SbPacketSettings ; impl Packet for SbPacketSettings { type PacketIDType = i32 ; type PacketContent = PacketSettingsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 5 } } pub struct PacketSettingsContent { pub locale: String ,
 
 pub view_distance: i8 ,
 
-pub chat_flags: minecraft_data::data::VarInt ,
+pub chat_flags: minecraft_protocol::data::VarInt ,
 
 pub chat_colors: bool ,
 
 pub skin_parts: u8 ,
 
-pub main_hand: minecraft_data::data::VarInt ,
+pub main_hand: minecraft_protocol::data::VarInt ,
 
 pub enable_text_filtering: bool ,
 
@@ -36,13 +36,13 @@ total_bytes += self.enable_server_listing.write(writer)?;;
 
 let view_distance : i8 = PacketContent :: read ( reader ) ?;;
 
-let chat_flags : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let chat_flags : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let chat_colors : bool = PacketContent :: read ( reader ) ?;;
 
 let skin_parts : u8 = PacketContent :: read ( reader ) ?;;
 
-let main_hand : minecraft_data::data::VarInt = PacketContent :: read ( reader ) ?;;
+let main_hand : minecraft_protocol::data::VarInt = PacketContent :: read ( reader ) ?;;
 
 let enable_text_filtering : bool = PacketContent :: read ( reader ) ?;;
 

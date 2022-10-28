@@ -1,4 +1,4 @@
-use minecraft_data :: protocol :: PacketContent ; use minecraft_data :: protocol :: PacketSwitch ; use minecraft_data :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
+use minecraft_protocol :: protocol :: PacketContent ; use minecraft_protocol :: protocol :: PacketSwitch ; use minecraft_protocol :: protocol :: Packet ; use std :: io :: { BufRead , Error , ErrorKind , Result , Write } ; use std :: str :: FromStr ;
 
  pub struct CbPacketAdvancements ; impl Packet for CbPacketAdvancements { type PacketIDType = i32 ; type PacketContent = PacketAdvancementsContent ; fn packet_id ( ) -> Self :: PacketIDType where Self : Sized { 99 } } pub struct PacketAdvancementsContent { pub reset: bool ,
 
@@ -62,7 +62,7 @@ let requirements : PacketAdvancementsContentArrayContentContentArray = PacketCon
 
  Ok ( Self { parent_id, display_data, criteria, requirements } ) } } pub type PacketAdvancementsContentArrayContentContentArray = Vec <PacketAdvancementsContentArrayContentContentArrayContent >; pub struct PacketAdvancementsContentArrayContentContentArrayContent { pub key: String ,
 
-pub value: minecraft_data::data::Void ,
+pub value: minecraft_protocol::data::Void ,
 
  } impl PacketContent for PacketAdvancementsContentArrayContentContentArrayContent { fn write < Writer : Write > ( self , writer : & mut Writer ) -> std :: io :: Result < usize > { let mut total_bytes = 0 ; total_bytes += self.key.write(writer)?;;
 
@@ -70,7 +70,7 @@ total_bytes += self.value.write(writer)?;;
 
  Ok ( total_bytes ) } fn read < Reader : BufRead > ( reader : & mut Reader ) -> std :: io :: Result < Self > { let key : String = PacketContent :: read ( reader ) ?;;
 
-let value : minecraft_data::data::Void = PacketContent :: read ( reader ) ?;;
+let value : minecraft_protocol::data::Void = PacketContent :: read ( reader ) ?;;
 
  Ok ( Self { key, value } ) } }
 
