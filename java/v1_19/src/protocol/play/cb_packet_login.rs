@@ -3,7 +3,7 @@ use minecraft_protocol::protocol::Packet;
 use minecraft_protocol::protocol::PacketContent;
 
 use std::io::{BufRead, Write};
-
+use minecraft_protocol::data::VarInt;
 
 
 pub struct CbPacketLogin;
@@ -12,44 +12,30 @@ impl Packet for CbPacketLogin {
     type PacketIDType = i32;
     type PacketContent = PacketLoginContent;
     fn packet_id() -> Self::PacketIDType
-    where
-        Self: Sized,
+        where
+            Self: Sized,
     {
         38
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct PacketLoginContent {
     pub entity_id: i32,
-
     pub is_hardcore: bool,
-
     pub game_mode: u8,
-
     pub previous_game_mode: i8,
-
     pub world_names: PacketLoginContentArray,
-
-    pub dimension_codec: Nbt,
-
-    pub dimension: Nbt,
-
+    pub registry_codec: Nbt,
+    pub dimension_type: String,
     pub world_name: String,
-
     pub hashed_seed: i64,
-
-    pub max_players: minecraft_protocol::data::VarInt,
-
-    pub view_distance: minecraft_protocol::data::VarInt,
-
-    pub simulation_distance: minecraft_protocol::data::VarInt,
-
+    pub max_players: VarInt,
+    pub view_distance: VarInt,
+    pub simulation_distance: VarInt,
     pub reduced_debug_info: bool,
-
     pub enable_respawn_screen: bool,
-
     pub is_debug: bool,
-
     pub is_flat: bool,
 }
 
@@ -65,19 +51,17 @@ impl PacketContent for PacketLoginContent {
 
         let world_names: PacketLoginContentArray = PacketContent::read(reader)?;
 
-        let dimension_codec: Nbt = PacketContent::read(reader)?;
-
-        let dimension: Nbt = PacketContent::read(reader)?;
-
+        let registry_codec: Nbt = PacketContent::read(reader)?;
+        let dimension_type: String = PacketContent::read(reader)?;
         let world_name: String = PacketContent::read(reader)?;
 
         let hashed_seed: i64 = PacketContent::read(reader)?;
 
-        let max_players: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
+        let max_players: VarInt = PacketContent::read(reader)?;
 
-        let view_distance: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
+        let view_distance: VarInt = PacketContent::read(reader)?;
 
-        let simulation_distance: minecraft_protocol::data::VarInt = PacketContent::read(reader)?;
+        let simulation_distance: VarInt = PacketContent::read(reader)?;
 
         let reduced_debug_info: bool = PacketContent::read(reader)?;
 
@@ -93,8 +77,9 @@ impl PacketContent for PacketLoginContent {
             game_mode,
             previous_game_mode,
             world_names,
-            dimension_codec,
-            dimension,
+
+            registry_codec,
+            dimension_type,
             world_name,
             hashed_seed,
             max_players,
@@ -118,9 +103,9 @@ impl PacketContent for PacketLoginContent {
 
         total_bytes += self.world_names.write(writer)?;
 
-        total_bytes += self.dimension_codec.write(writer)?;
+        total_bytes += self.registry_codec.write(writer)?;
 
-        total_bytes += self.dimension.write(writer)?;
+        total_bytes += self.dimension_type.write(writer)?;
 
         total_bytes += self.world_name.write(writer)?;
 
